@@ -3,15 +3,21 @@ import './ParticleBackground.css';
 
 const PARTICLE_COUNT = 80;
 const MOUSE_RADIUS = 231;
-const PARTICLE_COLOR = '#0ed176';
+const PARTICLE_COLOR = `#ffffff`;
 
 function ParticleBackground() {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    const container = containerRef.current;
+
+    if (!canvas || !container) {
+      return undefined;
+    }
+
     const context = canvas.getContext('2d');
-    const container = canvas.parentElement;
     const particles = [];
     const mouse = { x: -1000, y: -1000 };
     let animationFrame;
@@ -54,7 +60,7 @@ function ParticleBackground() {
     });
 
     const updateMouse = (event) => {
-      const bounds = canvas.getBoundingClientRect();
+      const bounds = container.getBoundingClientRect();
       mouse.x = event.clientX - bounds.left;
       mouse.y = event.clientY - bounds.top;
     };
@@ -147,7 +153,11 @@ function ParticleBackground() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="particle-background" aria-hidden="true" />;
+  return (
+    <div ref={containerRef} className="particle-background-wrapper">
+      <canvas ref={canvasRef} className="particle-background" aria-hidden="true" />
+    </div>
+  );
 }
 
 export default ParticleBackground;
