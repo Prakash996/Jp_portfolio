@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
-import './ParticleBackground.css';
+import './css/ParticleBackground.css';
 
 const PARTICLE_COUNT = 80;
 const MOUSE_RADIUS = 231;
-const PARTICLE_COLOR = `#ffffff`;
+const PARTICLE_COLOR = ['red', 'purple'];
 
-function ParticleBackground() {
+function ParticleBackground({ children }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -74,6 +74,11 @@ function ParticleBackground() {
       const elapsed = lastTime ? Math.min(time - lastTime, 32) : 16;
       const movementScale = elapsed / 16;
       lastTime = time;
+      const particleGradient = context.createLinearGradient(0, 0, width, 0);
+      particleGradient.addColorStop(0, 'cyan');
+      particleGradient.addColorStop(0.5, 'white');
+      particleGradient.addColorStop(1, 'yellow');
+
       context.clearRect(0, 0, width, height);
 
       particles.forEach((particle) => {
@@ -86,15 +91,15 @@ function ParticleBackground() {
         if (particle.y > height + 10) particle.y = -10;
       });
 
-      for (let index = 0; index < particles.length; index += 1) {
+      for (let index = 0; index < particles.length; index++) {
         const particle = particles[index];
         context.beginPath();
         context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        context.fillStyle = PARTICLE_COLOR;
+        context.fillStyle = particleGradient;
         context.globalAlpha = 0.4;
         context.fill();
 
-        for (let nextIndex = index + 1; nextIndex < particles.length; nextIndex += 1) {
+        for (let nextIndex = index + 1; nextIndex < particles.length; nextIndex++) {
           const otherParticle = particles[nextIndex];
           const dx = particle.x - otherParticle.x;
           const dy = particle.y - otherParticle.y;
@@ -104,7 +109,7 @@ function ParticleBackground() {
             context.beginPath();
             context.moveTo(particle.x, particle.y);
             context.lineTo(otherParticle.x, otherParticle.y);
-            context.strokeStyle = PARTICLE_COLOR;
+            context.strokeStyle = particleGradient;
             context.globalAlpha = 0.09 * (1 - distance / 145);
             context.lineWidth = 1;
             context.stroke();
@@ -120,7 +125,7 @@ function ParticleBackground() {
           context.beginPath();
           context.moveTo(particle.x, particle.y);
           context.lineTo(mouse.x, mouse.y);
-          context.strokeStyle = PARTICLE_COLOR;
+          context.strokeStyle = particleGradient;
           context.globalAlpha = 0.55 * opacity;
           context.lineWidth = 1.2;
           context.stroke();
@@ -156,6 +161,13 @@ function ParticleBackground() {
   return (
     <div ref={containerRef} className="particle-background-wrapper">
       <canvas ref={canvasRef} className="particle-background" aria-hidden="true" />
+      {children ? 
+        <div className="particle-background-content rounded-lg shadow-lg">
+          {/* <div className="container mx-auto px-4 py-8 rounded-lg shadow-lg"> */}
+            {children}
+          {/* </div> */}
+        </div>: null
+      }
     </div>
   );
 }
