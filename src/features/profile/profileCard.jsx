@@ -1,11 +1,30 @@
 import { useState, useEffect } from "react";
 import { FiDownload, FiSend } from "react-icons/fi";
 import personImage from "../../assets/images/person.png";
-import Loading from "../../utils/Loading";
+import Loading from "../components/Loading";
+import Icons from "../components/Icons";
 import "./ProfileCard.css";
+import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
-export default function ProfileCard({ personDetails, socialLinks }) {
+export default function ProfileCard({ personDetails }) {
     const [isLoading, setIsLoading] = useState(true);
+    const socialLinks = [
+        {
+        name: "Instagram",
+        icon: FaInstagram,
+        href: "https://instagram.com/",
+        },
+        {
+        name: "Twitter",
+        icon: FaTwitter,
+        href: "https://twitter.com/",
+        },
+        {
+        name: "YouTube",
+        icon: FaYoutube,
+        href: "https://youtube.com/",
+        },
+    ];
 
     // Simulated fetch delay (Remove or tie to your layout load as needed)
     useEffect(() => {
@@ -32,7 +51,6 @@ export default function ProfileCard({ personDetails, socialLinks }) {
                 </div>
             </Loading>
             {!isLoading && (
-                /* === ACTUAL PROFILE CARD CONTENT === */
                 <>
                     {/* Profile Image */}
                     <div className="relative mb-6 aspect-square w-full overflow-hidden rounded-2xl">
@@ -40,26 +58,18 @@ export default function ProfileCard({ personDetails, socialLinks }) {
                     </div>
 
                     {/* Availability */}
-                    <div id="availabilityStatus" className="mb-4 inline-flex items-center gap-2 rounded-full border hover:border-be-emerald-600 border-zinc-800 bg-zinc-900 px-3 py-1.5">
+                    <button id="availabilityStatus" className="mb-4 inline-flex items-center gap-2 rounded-full border bg-zinc-900 px-3 py-1.5 hover:border-emerald-600">
                         <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
                         <span className="text-xs font-medium text-zinc-300">Open to work</span>
-                    </div>
+                    </button>
 
                     {/* Animated Signature Name */}
-                    <h2 className="mb-4 text-3xl font-semibold font-mono signature-write">
-                        {personDetails.name}
-                    </h2>
+                    <h2 className="text-4xl md:text-3xl my-4 select-none signature-design">{`< ${personDetails.name} />`}</h2>
 
                     {/* Social Links */}
-                    <div id="social-links" className="mb-6 flex gap-3">
-                        {socialLinks.map(({ name, icon: Icon, href }) => (
-                            <a key={name} href={href} target="_blank" rel="noopener noreferrer" aria-label={name} className="rounded-lg border border-zinc-800 bg-zinc-900 p-2.5 text-zinc-400 transition-colors hover:border-zinc-700 hover:border-be-emerald-500 hover:text-emerald-500">
-                                <Icon size={18} />
-                            </a>
-                        ))}
-                    </div>
+                    <Icons iconLinks={socialLinks} />
 
-                    {/* CTA Buttons */}
+                    {/* Buttons */}
                     <div className="grid w-full grid-cols-2 gap-3">
                         <a href="/" className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-xs font-semibold text-white transition-colors hover:bg-zinc-800">
                             <FiDownload size={14} />Download CV
