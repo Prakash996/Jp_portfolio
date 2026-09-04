@@ -55,7 +55,7 @@ export default function MainBody() {
   ];
 
   return (
-    <section className="min-h-screen bg-white/10 rounded-3xl p-6 font-sans text-white md:p-12">
+    <section id="home" className="portfolio-shell min-h-screen rounded-[2rem] p-5 font-sans text-white sm:p-8 md:p-12">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-12">
 
         {/* Profile Card */}
@@ -65,15 +65,14 @@ export default function MainBody() {
           experiences={experiences}
           socialLinks={socialLinks}
         />
-
         {/* Main Content */}
         <section className="flex flex-col space-y-10 lg:col-span-8">
 
           {/* Hero */}
-          <div>
-            <div className="mb-4 flex items-center gap-2 text-sm text-zinc-400">
-              <span aria-hidden="true">👋</span>
-              <span>Say Hello</span>
+          <div className="hero-copy">
+            <div className="mb-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-300/80">
+              <span className="h-px w-8 bg-emerald-400/70" aria-hidden="true" />
+              <span>Available for select projects</span>
             </div>
 
             <h1 className="mb-6 text-4xl font-bold leading-tight md:text-6xl">
@@ -99,7 +98,7 @@ export default function MainBody() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-6 border-y border-zinc-900 py-4 md:grid-cols-4">
+          <div id="skills" className="stats-grid grid grid-cols-2 gap-6 border-y border-zinc-900 py-5 md:grid-cols-4">
             {stats.map((stat) => (
               <div
                 key={stat.label}
@@ -117,7 +116,7 @@ export default function MainBody() {
           </div>
 
           {/* Experience */}
-          <div>
+          <div id="projects">
             <div className="mb-4 flex items-center gap-2 text-xl font-bold">
               <FiBriefcase
                 size={20}
@@ -131,7 +130,7 @@ export default function MainBody() {
               {experiences.map((experience) => (
                 <article
                   key={`${experience.company}-${experience.period}`}
-                  className="rounded-2xl border border-zinc-800/80 bg-[#111111] p-6 transition-all hover:border-zinc-700"
+                    className="experience-card rounded-2xl border border-zinc-800/80 bg-[#111111] p-6 transition-all hover:border-zinc-700"
                 >
                   <div className="mb-2 flex flex-col justify-between gap-2 md:flex-row md:items-center">
 

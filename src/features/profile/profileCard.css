@@ -1,0 +1,27 @@
+/* --- Custom Signature Text Effect --- */
+.signature-write {
+    font-family: "Great Vibes", cursive !important;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid rgb(0 188 125) !important; /* emerald-500 pen tip color */
+    padding-right: 4px;
+    transform: rotate(0deg);
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    width: 0;
+    max-width: max-content;
+    animation: 
+        signature-type 2s steps(30, end) forwards,
+        pen-blink 0.75s step-end infinite 1.5s;
+}
+
+@keyframes signature-type {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes pen-blink {
+    from, to { border-color: transparent; }
+    50% { border-color: rgb(141, 0, 87); }
+}

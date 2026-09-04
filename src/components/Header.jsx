@@ -17,7 +17,7 @@ export default function Header() {
       <button
         type="button"
         onClick={() => setMenuOpen((open) => !open)}
-        className="fixed right-6 top-6 z-[60] flex h-[50px] w-[50px] items-center justify-center rounded-full bg-slate-800/90 shadow-lg shadow-black/20 ring-0 ring-white/20 backdrop-blur-md transition-all duration-300 hover:ring-8 focus:outline-none focus:ring-4"
+        className="fixed right-5 top-5 z-60 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-200/15 bg-[#10251f]/90 shadow-lg shadow-black/20 ring-0 ring-emerald-300/20 backdrop-blur-md transition-all duration-300 hover:ring-8 focus:outline-none focus:ring-4 sm:right-8 sm:top-7"
         aria-label={menuOpen ? "Close menu" : "Open menu"}
         aria-expanded={menuOpen}
       >
@@ -27,7 +27,7 @@ export default function Header() {
             className={`absolute left-0 top-1/2 h-[2px] w-6 rounded-full bg-white transition-all duration-300 ${
               menuOpen
                 ? "translate-y-0 rotate-45"
-                : "-translate-y-[7px] rotate-0"
+                : "translate-y-[-7px] rotate-0"
             }`}
           />
 
@@ -54,7 +54,7 @@ export default function Header() {
       {/* Menu Overlay */}
       <div
         onClick={() => setMenuOpen(false)}
-        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6 backdrop-blur-xl transition-all duration-500 ${
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-[#07100e]/85 px-6 backdrop-blur-xl transition-all duration-500 ${
           menuOpen
             ? "pointer-events-auto visible opacity-100"
             : "pointer-events-none invisible opacity-0"
@@ -63,7 +63,7 @@ export default function Header() {
         {/* Navigation */}
         <nav
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-2xl"
+          className="w-full max-w-3xl rounded-3xl border border-white/10 bg-[#0d1c18]/90 p-6 shadow-2xl shadow-black/30 sm:p-10"
           aria-label="Main navigation"
         >
           <ul className="space-y-2">
@@ -84,11 +84,11 @@ export default function Header() {
                 <a
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="group flex items-center justify-between border-b border-white/10 py-4 text-4xl font-bold tracking-tight text-white transition-colors hover:text-orange-400 md:text-6xl"
+                    className="group flex items-center justify-between border-b border-white/10 py-4 text-4xl font-bold tracking-tight text-white transition-colors hover:text-emerald-300 md:text-6xl"
                 >
                   <span>{link.name}</span>
 
-                  <span className="translate-x-0 text-2xl font-normal text-white/30 transition-all duration-300 group-hover:translate-x-2 group-hover:text-orange-400 md:text-3xl">
+                  <span className="translate-x-0 text-2xl font-normal text-white/30 transition-all duration-300 group-hover:translate-x-2 group-hover:text-emerald-300 md:text-3xl">
                     ↗
                   </span>
                 </a>
