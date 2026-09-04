@@ -1,7 +1,7 @@
-import "./css/MainBody.css";
-import ProfileCard from "../features/profile/profileCard";
+import "../css/MainBody.css";
+import ProfileCard from "../views/profile/profileCard";
 import {FiBriefcase} from "react-icons/fi";
-import DiaTextReveal from "../features/components/DiaTextReveal";
+import DiaTextReveal from "../views/DiaTextReveal";
 
 export default function MainBody() {
 

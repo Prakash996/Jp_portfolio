@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import './css/ParticleBackground.css';
+import '../css/ParticleBackground.css';
 
 const PARTICLE_COUNT = 80;
 const MOUSE_RADIUS = 231;

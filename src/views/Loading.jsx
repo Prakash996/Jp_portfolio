@@ -1,4 +1,4 @@
-import "./Loading.css";
+import "../css/Loading.css";
 
 export default function Loading({ isLoading, children, className = "" }) {
     if (!isLoading) {
