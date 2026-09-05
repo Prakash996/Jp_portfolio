@@ -1,0 +1,244 @@
+/* ================================================================
+   EXPERIENCE
+   ================================================================ */
+
+.experience-section {
+  --white: #ffffff;
+  --primary: #f4f4f5;
+  --secondary: #a1a1aa;
+  --muted: #71717a;
+  --subtle: #52525b;
+  --faint: #3f3f46;
+
+  --border: #27272a;
+  --border-soft: rgba(39, 39, 42, 0.7);
+
+  --emerald: #34d399;
+  --emerald-500: #10b981;
+  --emerald-dark: #059669;
+  --amber: #fbbf24;
+
+  --background: #111111;
+  --background-hover: #121614;
+}
+
+
+/* ================================================================
+   SHARED COLORS
+   ================================================================ */
+
+.experience-title,
+.experience-role {
+  color: var(--white);
+}
+
+.experience-description,
+.experience-intro {
+  color: var(--muted);
+}
+
+.experience-label,
+.experience-icon {
+  color: var(--emerald-500);
+}
+
+.experience-count {
+  color: var(--faint);
+}
+
+
+/* ================================================================
+   TIMELINE BASE
+   ================================================================ */
+
+.timeline-base {
+  background: linear-gradient(
+    to bottom,
+    var(--faint),
+    var(--border),
+    transparent
+  );
+}
+
+
+/* ================================================================
+   TIMELINE HIGHLIGHT
+   ================================================================ */
+
+.timeline-highlight {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--emerald),
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.55);
+}
+
+.timeline-highlight--mobile {
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+}
+
+
+/* ================================================================
+   TIMELINE CONNECTORS
+   ================================================================ */
+
+.timeline-connector {
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.25);
+}
+
+.timeline-connector--left {
+  left: calc(50% - 32px);
+  transform-origin: right;
+  background: linear-gradient(
+    to left,
+    rgba(52, 211, 153, 0.8),
+    rgba(16, 185, 129, 0.5),
+    transparent
+  );
+}
+
+.timeline-connector--right {
+  left: 50%;
+  transform-origin: left;
+  background: linear-gradient(
+    to right,
+    rgba(52, 211, 153, 0.8),
+    rgba(16, 185, 129, 0.5),
+    transparent
+  );
+}
+
+
+/* ================================================================
+   TIMELINE NODE
+   ================================================================ */
+
+.timeline-node-glow {
+  background: var(--emerald-500);
+}
+
+.timeline-node-ring {
+  background: var(--background);
+}
+
+.timeline-node-dot {
+  background: var(--subtle);
+}
+
+.timeline-node-number {
+  color: var(--faint);
+}
+
+
+/* ================================================================
+   EXPERIENCE CARD
+   ================================================================ */
+
+.experience-card {
+  background: var(--background);
+  border-color: var(--border);
+}
+
+.experience-card:hover {
+  background: var(--background-hover);
+  border-color: rgba(6, 78, 59, 0.7);
+}
+
+.experience-card-accent {
+  background: linear-gradient(
+    to right,
+    var(--emerald),
+    rgba(16, 185, 129, 0.4),
+    transparent
+  );
+}
+
+.experience-card-glow {
+  background: rgba(16, 185, 129, 0.04);
+}
+
+
+/* ================================================================
+   CARD CONTENT
+   ================================================================ */
+
+.experience-current-dot {
+  background: var(--emerald);
+}
+
+.experience-company {
+  color: var(--secondary);
+}
+
+.experience-card:hover .experience-company {
+  color: rgba(52, 211, 153, 0.8);
+}
+
+
+/* ================================================================
+   PERIOD
+   ================================================================ */
+
+.experience-period,
+.experience-text {
+  color: var(--subtle);
+}
+
+.experience-icon {
+  color: var(--emerald-dark);
+}
+
+
+/* ================================================================
+   SHARED HOVER COLOR
+   ================================================================ */
+
+
+.experience-card:hover {
+    & .experience-icon {
+        color: var(--amber);
+    }
+    & .experience-text {
+        color: var(--emerald-500);
+    }
+}
+
+
+/* ================================================================
+   DIVIDERS
+   ================================================================ */
+
+.experience-divider {
+  background: var(--border-soft);
+}
+
+.experience-card-footer {
+  border-color: var(--border-soft);
+}
+
+
+/* ================================================================
+   DESCRIPTION
+   ================================================================ */
+
+.experience-card:hover .experience-description {
+  color: var(--secondary);
+}
+
+
+/* ================================================================
+   TAGS
+   ================================================================ */
+
+.experience-tag {
+  border-color: var(--border);
+  background: rgba(24, 24, 27, 0.5);
+  color: var(--subtle);
+}
+
+.experience-card:hover .experience-tag {
+  border-color: rgba(6, 78, 59, 0.6);
+  color: rgba(16, 185, 129, 0.8);
+}

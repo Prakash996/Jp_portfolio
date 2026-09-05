@@ -3,7 +3,6 @@ import '../css/ParticleBackground.css';
 
 const PARTICLE_COUNT = 80;
 const MOUSE_RADIUS = 231;
-const PARTICLE_COLOR = ['red', 'purple'];
 
 function ParticleBackground({ children }) {
   const canvasRef = useRef(null);
