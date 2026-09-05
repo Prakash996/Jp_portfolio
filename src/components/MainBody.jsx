@@ -1,5 +1,5 @@
 import "@/css/MainBody.css";
-import ProfileCard from "@/views/profile/profileCard";
+import ProfileCard from "@/components/profileCard";
 import DiaTextReveal from "@/views/DiaTextReveal";
 import ExperienceSection from "./ExperienceCards";
 
@@ -50,7 +50,7 @@ export default function MainBody() {
         </div>
 
         {/* Stats */}
-        <div id="skills" className="stats-grid mb-10 grid grid-cols-2 gap-6 border-y border-emerald-300/80 py-5 md:grid-cols-4">
+        <div id="skills" className="stats-grid mt-8 mb-10 grid grid-cols-2 gap-6 border-y border-emerald-300/80 py-5 md:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label} className="space-y-1">
               <div className="text-3xl font-extrabold text-white">
