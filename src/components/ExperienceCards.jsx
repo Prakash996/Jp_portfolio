@@ -88,16 +88,8 @@ export default function ExperienceSection() {
         </div>
 
         <div className="mt-3 flex items-center gap-3">
-          <h2
-            id="experience-heading"
-            className="experience-title text-2xl font-semibold tracking-tight sm:text-3xl"
-          >
-            Professional Journey
-          </h2>
-
-          <span className="experience-count font-mono text-[10px] tracking-widest">
-            / 03
-          </span>
+          <h2 id="experience-heading" className="experience-title text-2xl font-semibold tracking-tight sm:text-3xl">Professional Journey</h2>
+          <span className="experience-count font-mono text-[10px] tracking-widest hidden">/ 03</span>
         </div>
 
         <p className="experience-description mt-3 max-w-2xl text-sm leading-6">
@@ -106,22 +98,12 @@ export default function ExperienceSection() {
         </p>
       </motion.header>
 
-      <div
-        id="experience-timeline"
-        ref={timelineRef}
-        onMouseMove={handleMouseMove}
-        className="experience-timeline relative"
-      >
+      <div id="experience-timeline" ref={timelineRef} onMouseMove={handleMouseMove} className="experience-timeline relative">
         <TimelineBase />
         <TimelineMouseHighlight smoothMouseY={smoothMouseY} />
-
         <div id="experience-items" className="space-y-16 md:space-y-24">
           {experiences.map((experience, index) => (
-            <ExperienceItem
-              key={`${experience.company}-${experience.period}`}
-              experience={experience}
-              index={index}
-            />
+            <ExperienceItem key={`${experience.company}-${experience.period}`} experience={experience} index={index}/>
           ))}
         </div>
       </div>
@@ -136,17 +118,8 @@ export default function ExperienceSection() {
 function TimelineBase() {
   return (
     <>
-      <div
-        id="timeline-base-desktop"
-        aria-hidden="true"
-        className="timeline-base absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 md:block"
-      />
-
-      <div
-        id="timeline-base-mobile"
-        aria-hidden="true"
-        className="timeline-base absolute inset-y-0 left-[17px] w-px md:hidden"
-      />
+      <div id="timeline-base-desktop" aria-hidden="true" className="timeline-base absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 md:block"/>
+      <div id="timeline-base-mobile" aria-hidden="true" className="timeline-base absolute inset-y-0 left-4.25 w-px md:hidden"/>
     </>
   );
 }
@@ -158,19 +131,8 @@ function TimelineBase() {
 function TimelineMouseHighlight({ smoothMouseY }) {
   return (
     <>
-      <motion.div
-        id="timeline-mouse-highlight-desktop"
-        aria-hidden="true"
-        style={{ top: smoothMouseY }}
-        className="timeline-highlight absolute left-1/2 z-20 hidden h-24 w-px -translate-x-1/2 -translate-y-1/2 md:block"
-      />
-
-      <motion.div
-        id="timeline-mouse-highlight-mobile"
-        aria-hidden="true"
-        style={{ top: smoothMouseY }}
-        className="timeline-highlight timeline-highlight--mobile absolute left-[17px] z-20 h-20 w-px -translate-x-1/2 -translate-y-1/2 md:hidden"
-      />
+      <motion.div id="timeline-mouse-highlight-desktop" aria-hidden="true" style={{ top: smoothMouseY }} className="timeline-highlight absolute left-1/2 z-20 hidden h-24 w-px -translate-x-1/2 -translate-y-1/2 md:block"/>
+      <motion.div id="timeline-mouse-highlight-mobile" aria-hidden="true" style={{ top: smoothMouseY }} className="timeline-highlight timeline-highlight--mobile absolute left-4.25 z-20 h-20 w-px -translate-x-1/2 -translate-y-1/2 md:hidden"/>
     </>
   );
 }
@@ -189,62 +151,30 @@ function ExperienceItem({ experience, index }) {
   const isLeft = index % 2 === 0;
 
   return (
-    <div
-      id={`experience-item-${experience.id}`}
-      ref={itemRef}
-      className="experience-item relative md:grid md:grid-cols-[minmax(0,1fr)_64px_minmax(0,1fr)] md:items-start"
-    >
+    <div id={`experience-item-${experience.id}`} ref={itemRef} className="experience-item relative md:grid md:grid-cols-[minmax(0,1fr)_64px_minmax(0,1fr)] md:items-start">
       {isLeft ? (
         <div className="md:col-start-1 md:row-start-1">
-          <ExperienceCard
-            experience={experience}
-            active={isInView}
-            direction="left"
-          />
+          <ExperienceCard experience={experience} active={isInView} direction="left"/>
         </div>
       ) : (
-        <div
-          aria-hidden="true"
-          className="hidden md:col-start-1 md:row-start-1 md:block"
-        />
+        <div aria-hidden="true" className="hidden md:col-start-1 md:row-start-1 md:block"/>
       )}
 
       <div className="experience-node-wrapper absolute left-[17px] top-7 z-30 -translate-x-1/2 md:static md:col-start-2 md:row-start-1 md:flex md:h-8 md:w-16 md:items-start md:justify-center md:translate-x-0 md:pt-8">
-        <TimelineNode
-          id={`experience-node-${experience.id}`}
-          active={isInView}
-          number={experience.id}
-        />
+        <TimelineNode id={`experience-node-${experience.id}`} active={isInView} number={experience.id}/>
       </div>
 
       {!isLeft ? (
         <div className="md:col-start-3 md:row-start-1">
-          <ExperienceCard
-            experience={experience}
-            active={isInView}
-            direction="right"
-          />
+          <ExperienceCard experience={experience} active={isInView} direction="right"/>
         </div>
       ) : (
-        <div
-          aria-hidden="true"
-          className="hidden md:col-start-3 md:row-start-1 md:block"
-        />
+        <div aria-hidden="true" className="hidden md:col-start-3 md:row-start-1 md:block"/>
       )}
 
-      <TimelineConnector
-        side="left"
-        active={isInView}
-        visible={isLeft}
-        id={`experience-connector-left-${experience.id}`}
-      />
+      <TimelineConnector side="left" active={isInView} visible={isLeft} id={`experience-connector-left-${experience.id}`}/>
 
-      <TimelineConnector
-        side="right"
-        active={isInView}
-        visible={!isLeft}
-        id={`experience-connector-right-${experience.id}`}
-      />
+      <TimelineConnector side="right" active={isInView} visible={!isLeft} id={`experience-connector-right-${experience.id}`}/>
     </div>
   );
 }
@@ -280,10 +210,7 @@ function TimelineConnector({ side, active, visible, id }) {
 
 function TimelineNode({ id, active, number }) {
   return (
-    <div
-      id={id}
-      className="timeline-node relative flex h-8 w-8 items-center justify-center"
-    >
+    <div id={id} className="timeline-node relative flex h-8 w-8 items-center justify-center">
       <motion.div
         aria-hidden="true"
         initial={false}
@@ -316,10 +243,7 @@ function TimelineNode({ id, active, number }) {
         />
       </motion.div>
 
-      <span
-        aria-hidden="true"
-        className="timeline-node-number absolute left-9 hidden font-mono text-[9px] md:hidden"
-      >
+      <span aria-hidden="true" className="timeline-node-number absolute left-9 hidden font-mono text-[9px] md:hidden">
         {number}
       </span>
     </div>
@@ -349,29 +273,17 @@ function ExperienceCard({ experience, active, direction }) {
       }}
       className="experience-card group relative ml-12 overflow-hidden border p-5 sm:p-6 md:ml-0 md:min-h-67.5 md:p-7"
     >
-      <div
-        aria-hidden="true"
-        className="experience-card-accent absolute inset-x-0 top-0 h-px"
-      />
+      <div aria-hidden="true" className="experience-card-accent absolute inset-x-0 top-0 h-px"/>
 
-      <div
-        aria-hidden="true"
-        className="experience-card-glow pointer-events-none absolute -right-24 -top-24 h-48 w-48 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
-      />
+      <div aria-hidden="true" className="experience-card-glow pointer-events-none absolute -right-24 -top-24 h-48 w-48 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"/>
 
       <div className="relative z-10">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             {experience.current && (
               <div className="experience-current mb-3 flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="experience-current-dot h-1.5 w-1.5 animate-pulse rounded-full"
-                />
-
-                <span className="experience-label text-[9px] font-medium uppercase tracking-[0.18em]">
-                  Current role
-                </span>
+                <span aria-hidden="true" className="experience-current-dot h-1.5 w-1.5 animate-pulse rounded-full"/>
+                <span className="experience-label text-[9px] font-medium uppercase tracking-[0.18em]">Current role</span>
               </div>
             )}
 
@@ -400,10 +312,7 @@ function ExperienceCard({ experience, active, direction }) {
 
         <div className="mt-5 flex flex-wrap gap-2">
           {experience.tags.map((tag) => (
-            <span
-              key={tag}
-              className="experience-tag border px-2.5 py-1.5 text-[10px] transition-colors duration-300"
-            >
+            <span key={tag} className="experience-tag border px-2.5 py-1.5 text-[10px] transition-colors duration-300">
               {tag}
             </span>
           ))}
@@ -412,16 +321,12 @@ function ExperienceCard({ experience, active, direction }) {
         <footer className="experience-card-footer mt-6 flex items-center justify-between border-t pt-4">
           <div className="flex items-center gap-2">
             <FiMapPin size={14} className="experience-icon" />
-
             <span className="experience-text text-[12px] uppercase tracking-[0.18em]">
               {experience.location}
             </span>
           </div>
 
-          <FiArrowUpRight
-            size={15}
-            className="experience-icon transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-          />
+          <FiArrowUpRight size={15} className="experience-icon transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"/>
         </footer>
       </div>
     </motion.article>
