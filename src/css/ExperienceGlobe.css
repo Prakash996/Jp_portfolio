@@ -1,0 +1,961 @@
+/* ==========================================================================
+   EXPERIENCE SECTION
+   ========================================================================== */
+
+.experience-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 12%,
+      rgba(16, 185, 129, 0.055),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 10% 55%,
+      rgba(16, 185, 129, 0.025),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(52, 211, 153, 0.018),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #020807 0%,
+      #030908 50%,
+      #020706 100%
+    );
+
+  border: 1px solid rgba(52, 211, 153, 0.055);
+}
+
+/* Subtle technical grid */
+
+.experience-section::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(110, 231, 183, 0.018) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(110, 231, 183, 0.018) 1px,
+      transparent 1px
+    );
+
+  background-size: 64px 64px;
+
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0, 0, 0, 0.7) 45%,
+    transparent 90%
+  );
+}
+
+/* Soft center atmosphere */
+
+.experience-section::after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+
+  width: 55rem;
+  height: 32rem;
+
+  transform: translateX(-50%);
+
+  z-index: -1;
+  pointer-events: none;
+
+  background: radial-gradient(
+    ellipse,
+    rgba(16, 185, 129, 0.035),
+    transparent 68%
+  );
+
+  filter: blur(30px);
+}
+
+
+/* ==========================================================================
+   GLOBE WRAPPER
+   ========================================================================== */
+
+.experience-globe-wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+
+  margin: -0.5rem 0 3rem;
+
+  z-index: 2;
+}
+
+
+/* ==========================================================================
+   EXPERIENCE GLOBE
+   ========================================================================== */
+
+.experience-globe {
+  --size: clamp(12rem, 28vw, 21rem);
+
+  position: relative;
+
+  width: min(100%, 23rem);
+  height: min(100%, 23rem);
+  aspect-ratio: 1 / 1;
+
+  overflow: visible;
+
+  isolation: isolate;
+}
+
+
+/* ==========================================================================
+   ATMOSPHERE
+   ========================================================================== */
+
+.experience-globe-atmosphere {
+  position: absolute;
+  inset: 0;
+
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+.experience-globe-glow {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+/* Main emerald glow */
+
+.experience-globe-glow--emerald {
+  width: min(100%, 25rem);
+  height: min(100%, 25rem);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(52, 211, 153, 0.07) 0%,
+      rgba(16, 185, 129, 0.035) 35%,
+      rgba(16, 185, 129, 0.012) 55%,
+      transparent 73%
+    );
+
+  filter: blur(62px);
+}
+
+
+/* Purple — intentionally subtle */
+
+.experience-globe-glow--purple {
+  top: 38%;
+  left: 42%;
+
+  width: 10rem;
+  height: 10rem;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(139, 92, 246, 0.055),
+      transparent 72%
+    );
+
+  filter: blur(55px);
+}
+
+
+/* Orange — intentionally subtle */
+
+.experience-globe-glow--orange {
+  top: 62%;
+  left: 59%;
+
+  width: 9rem;
+  height: 9rem;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(245, 158, 11, 0.045),
+      transparent 72%
+    );
+
+  filter: blur(52px);
+}
+
+
+/* ==========================================================================
+   SPHERE
+   ========================================================================== */
+
+.experience-globe-sphere {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: min(var(--size), 100%);
+  height: min(var(--size), 100%);
+
+  transform:
+    translate(-50%, -50%)
+    perspective(900px);
+
+  transform-style: preserve-3d;
+
+  z-index: 5;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================================
+   SPHERE SURFACE
+   ========================================================================== */
+
+.experience-globe-surface {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(52, 211, 153, 0.18);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 38% 30%,
+      rgba(52, 211, 153, 0.085),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 65% 68%,
+      rgba(16, 185, 129, 0.035),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(4, 20, 15, 0.92),
+      rgba(2, 9, 7, 0.98) 72%
+    );
+
+  box-shadow:
+    inset 0 0 35px rgba(52, 211, 153, 0.075),
+    inset 0 0 85px rgba(16, 185, 129, 0.035),
+    0 0 35px rgba(52, 211, 153, 0.045);
+
+  transform-style: preserve-3d;
+}
+
+
+/* ==========================================================================
+   SPHERE INNER SHADING
+   ========================================================================== */
+
+.experience-globe-surface::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 32% 25%,
+      rgba(255, 255, 255, 0.045),
+      transparent 18%
+    ),
+    linear-gradient(
+      120deg,
+      rgba(52, 211, 153, 0.035),
+      transparent 38%,
+    );
+
+  mix-blend-mode: screen;
+}
+
+.experience-globe-surface::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 15;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      transparent 52%,
+      rgba(0, 0, 0, 0.08) 72%,
+      rgba(0, 0, 0, 0.32) 100%
+    );
+}
+
+
+/* ==========================================================================
+   RIM
+   ========================================================================== */
+
+.experience-globe-rim {
+  position: absolute;
+  inset: 0;
+
+  z-index: 20;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  box-shadow:
+    inset 0 0 20px rgba(52, 211, 153, 0.08),
+    inset 0 0 55px rgba(16, 185, 129, 0.035);
+
+  border: 1px solid rgba(167, 243, 208, 0.035);
+}
+
+
+/* ==========================================================================
+   GRID
+   ========================================================================== */
+
+.experience-globe-grid {
+  position: absolute;
+  inset: -1px;
+
+  z-index: 4;
+
+  transform-origin: center;
+
+  will-change: transform;
+
+  transform-style: preserve-3d;
+}
+
+.globe-line {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================================
+   LONGITUDE
+   ========================================================================== */
+
+.globe-line--longitude-1 {
+  inset-block: 0;
+  left: 50%;
+
+  width: 25%;
+
+  transform: translateX(-50%);
+
+  border-inline:
+    1px solid rgba(110, 231, 183, 0.13);
+}
+
+.globe-line--longitude-2 {
+  inset-block: 0;
+  left: 50%;
+
+  width: 50%;
+
+  transform: translateX(-50%);
+
+  border-inline:
+    1px solid rgba(110, 231, 183, 0.075);
+}
+
+.globe-line--longitude-3 {
+  inset-block: 0;
+  left: 50%;
+
+  width: 75%;
+
+  transform: translateX(-50%);
+
+  border-inline:
+    1px solid rgba(110, 231, 183, 0.035);
+}
+
+
+/* ==========================================================================
+   LATITUDE
+   ========================================================================== */
+
+.globe-line--latitude-1 {
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  height: 25%;
+
+  transform: translateY(-50%);
+
+  border-block:
+    1px solid rgba(110, 231, 183, 0.105);
+}
+
+.globe-line--latitude-2 {
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  height: 50%;
+
+  transform: translateY(-50%);
+
+  border-block:
+    1px solid rgba(110, 231, 183, 0.06);
+}
+
+.globe-line--latitude-purple {
+  top: 39%;
+  left: 0;
+  right: 0;
+
+  height: 31%;
+
+  transform: translateY(-50%);
+
+  border-block:
+    1px solid rgba(139, 92, 246, 0.025);
+}
+
+.globe-line--latitude-orange {
+  top: 62%;
+  left: 0;
+  right: 0;
+
+  height: 22%;
+
+  transform: translateY(-50%);
+
+  border-block:
+    1px solid rgba(245, 158, 11, 0.022);
+}
+
+
+/* ==========================================================================
+   EQUATOR
+   ========================================================================== */
+
+.globe-equator {
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  height: 1px;
+
+  transform: translateY(-50%);
+
+  background:
+    linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(110, 231, 183, 0.04) 12%,
+      rgba(110, 231, 183, 0.16) 50%,
+      rgba(110, 231, 183, 0.04) 88%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 0 8px rgba(52, 211, 153, 0.04);
+}
+
+
+/* ==========================================================================
+   DATA POINTS
+   ========================================================================== */
+
+.experience-globe-data-points {
+  position: absolute;
+  inset: 0;
+
+  z-index: 8;
+
+  pointer-events: none;
+}
+
+.globe-point {
+  position: absolute;
+
+  width: 4px;
+  height: 4px;
+
+  border-radius: 50%;
+}
+
+
+/* Emerald */
+
+.globe-point--emerald {
+  top: 25%;
+  left: 23%;
+
+  background: #a7f3d0;
+
+  box-shadow:
+    0 0 7px rgba(110, 231, 183, 0.75),
+    0 0 15px rgba(52, 211, 153, 0.3);
+}
+
+
+/* Purple */
+
+.globe-point--purple {
+  top: 63%;
+  right: 22%;
+
+  background: #c4b5fd;
+
+  box-shadow:
+    0 0 7px rgba(139, 92, 246, 0.55);
+}
+
+
+/* Orange */
+
+.globe-point--orange {
+  bottom: 19%;
+  left: 36%;
+
+  background: #fdba74;
+
+  box-shadow:
+    0 0 7px rgba(249, 115, 22, 0.5);
+}
+
+
+/* ==========================================================================
+   SECONDARY RINGS
+   ========================================================================== */
+
+.experience-globe-secondary-ring {
+  position: absolute;
+  inset: 0;
+
+  z-index: 10;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+.experience-globe-secondary-ring__vertical {
+  position: absolute;
+
+  inset-block: 0;
+  left: 50%;
+
+  width: 44%;
+
+  transform: translateX(-50%);
+
+  border-inline:
+    1px solid rgba(167, 243, 208, 0.04);
+
+  border-radius: 50%;
+}
+
+.experience-globe-secondary-ring__horizontal {
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  height: 44%;
+
+  transform: translateY(-50%);
+
+  border-block:
+    1px solid rgba(167, 243, 208, 0.035);
+
+  border-radius: 50%;
+}
+
+
+/* ==========================================================================
+   COUNTER
+   ========================================================================== */
+
+.experience-globe-counter {
+  position: absolute;
+  inset: 0;
+
+  z-index: 30;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: none;
+}
+
+.experience-globe-count-wrapper {
+  display: flex;
+  align-items: flex-end;
+
+  height: 5.5rem;
+
+  line-height: 1;
+}
+
+.experience-globe-count {
+  display: block;
+
+  font-size: clamp(3.75rem, 7vw, 5.125rem);
+  font-weight: 700;
+
+  line-height: 0.88;
+
+  letter-spacing: -0.09em;
+
+  color: #fff;
+
+  font-variant-numeric: tabular-nums;
+
+  text-shadow:
+    0 0 30px rgba(255, 255, 255, 0.025);
+}
+
+.experience-globe-plus {
+  display: block;
+
+  margin-bottom: 0.55rem;
+  margin-left: 0.25rem;
+
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 700;
+
+  line-height: 1;
+
+  color: #34d399;
+
+  text-shadow:
+    0 0 10px rgba(52, 211, 153, 0.35),
+    0 0 22px rgba(52, 211, 153, 0.12);
+}
+
+
+/* ==========================================================================
+   LABEL
+   ========================================================================== */
+
+.experience-globe-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  margin-top: 0.55rem;
+}
+
+.experience-globe-label span {
+  flex: none;
+}
+
+.experience-globe-label span:first-child,
+.experience-globe-label span:last-child {
+  width: 1.1rem;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(52, 211, 153, 0.3)
+    );
+}
+
+.experience-globe-label span:last-child {
+  background:
+    linear-gradient(
+      to left,
+      transparent,
+      rgba(52, 211, 153, 0.3)
+    );
+}
+
+.experience-globe-label span:nth-child(2) {
+  font-size: 9px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  white-space: nowrap;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.28em;
+
+  color: rgba(110, 231, 183, 0.55);
+}
+
+
+/* ==========================================================================
+   WORLDWIDE STATUS
+   ========================================================================== */
+
+.experience-globe-status {
+  position: absolute;
+
+  bottom: 0.7rem;
+  left: 50%;
+
+  z-index: 35;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  transform: translateX(-50%);
+
+  white-space: nowrap;
+
+  pointer-events: none;
+}
+
+.experience-globe-status > span:last-child {
+  font-size: 8px;
+  font-weight: 500;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.28em;
+
+  color: rgba(110, 231, 183, 0.38);
+}
+
+.experience-globe-status__indicator {
+  position: relative;
+
+  width: 6px;
+  height: 6px;
+}
+
+.experience-globe-status__indicator::before {
+  content: "";
+
+  position: absolute;
+  inset: -2px;
+
+  border-radius: 50%;
+
+  background: rgba(52, 211, 153, 0.22);
+
+  animation: globe-status-ping 1.8s ease-out infinite;
+}
+
+.experience-globe-status__indicator > span {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  background: #34d399;
+
+  box-shadow:
+    0 0 8px rgba(52, 211, 153, 0.85);
+}
+
+
+/* ==========================================================================
+   TIMELINE BACKGROUND
+   ========================================================================== */
+
+.experience-timeline {
+  position: relative;
+
+  isolation: isolate;
+}
+
+.timeline-base {
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(52, 211, 153, 0.12) 8%,
+      rgba(52, 211, 153, 0.18) 50%,
+      rgba(52, 211, 153, 0.08) 92%,
+      transparent
+    );
+}
+
+.timeline-highlight {
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(52, 211, 153, 0.8),
+      transparent
+    );
+
+  box-shadow:
+    0 0 12px rgba(52, 211, 153, 0.25);
+}
+
+.timeline-connector {
+  background:
+    linear-gradient(
+      to right,
+      rgba(52, 211, 153, 0.05),
+      rgba(52, 211, 153, 0.45)
+    );
+}
+
+.timeline-connector--right {
+  background:
+    linear-gradient(
+      to left,
+      rgba(52, 211, 153, 0.05),
+      rgba(52, 211, 153, 0.45)
+    );
+}
+
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .experience-globe {
+    --size: clamp(12rem, 42vw, 19rem);
+  }
+
+  .experience-globe-glow--emerald {
+    width: min(100%, 23rem);
+    height: min(100%, 23rem);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .experience-globe-wrapper {
+    margin-top: 0;
+    margin-bottom: 2rem;
+  }
+
+  .experience-globe {
+    --size: clamp(12rem, 62vw, 18rem);
+  }
+
+  .experience-globe-glow--emerald {
+    width: min(100%, 21rem);
+    height: min(100%, 21rem);
+  }
+}
+
+
+@media (max-width: 480px) {
+  .experience-section::before {
+    background-size: 48px 48px;
+  }
+
+  .experience-globe {
+    --size: min(16rem, 82vw);
+    width: 100%;
+  }
+
+  .experience-globe-plus {
+    margin-bottom: 0.48rem;
+  }
+
+  .experience-globe-label {
+    gap: 0.4rem;
+  }
+
+  .experience-globe-label span:first-child,
+  .experience-globe-label span:last-child {
+    width: 0.8rem;
+  }
+
+  .experience-globe-label span:nth-child(2) {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+  }
+
+  .experience-globe-status {
+    bottom: 0.55rem;
+  }
+}
+
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .experience-globe-grid {
+    transform: none !important;
+  }
+
+  .experience-globe-status__indicator::before {
+    animation: none;
+  }
+}
+
+
+/* ==========================================================================
+   STATUS ANIMATION
+   ========================================================================== */
+
+@keyframes globe-status-ping {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+
+  70%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

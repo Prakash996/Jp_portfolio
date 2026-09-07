@@ -1,0 +1,528 @@
+/* =========================================================
+   ROOT
+   ========================================================= */
+
+.skills-coverflow-root {
+position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: transparent;
+
+  /* Reduced padding */
+  padding: 2rem 0;
+
+  outline: none;
+
+  touch-action: pan-y;
+  user-select: none;
+}
+
+
+/* =========================================================
+   AMBIENT LIGHT
+   ========================================================= */
+
+.skills-coverflow-ambient {
+  position: absolute;
+  pointer-events: none;
+
+  left: 50%;
+  top: 50%;
+
+  width: 70%;
+  height: 18rem;
+
+  transform:
+    translateX(-50%)
+    translateY(-50%);
+
+  border-radius: 9999px;
+
+  background: rgba(52, 211, 153, 0.06);
+
+  filter: blur(110px);
+}
+
+
+/* =========================================================
+   3D STAGE
+   ========================================================= */
+
+.skills-coverflow-stage {
+  position: relative;
+
+  width: 100%;
+  max-width: 72rem;
+  height: 400px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  transform-style: preserve-3d;
+
+  perspective: 1800px;
+  perspective-origin: 50% 50%;
+
+  isolation: isolate;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.skills-coverflow-card {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 225px;
+  height: 270px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  border: 0;
+  border-radius: 2rem;
+
+  outline: none;
+
+  background: transparent;
+
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+
+  will-change:
+    transform,
+    opacity,
+    filter;
+
+  transition:
+    transform 900ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    opacity 700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+    filter 700ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      );
+}
+
+.skills-coverflow-card:hover {
+  filter:
+    brightness(1.06)
+    saturate(1.05);
+}
+
+.skills-coverflow-card:focus-visible {
+  outline:
+    2px solid
+    rgba(255, 255, 255, 0.45);
+
+  outline-offset: 6px;
+}
+
+
+/* =========================================================
+   CARD GLOW
+   ========================================================= */
+
+.skills-card-glow {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 10rem;
+  height: 10rem;
+
+  transform:
+    translateX(-50%)
+    translateY(-50%);
+
+  border-radius: 9999px;
+
+  pointer-events: none;
+
+  filter: blur(55px);
+
+  transition:
+    opacity 700ms;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.skills-card-main {
+  position: relative;
+
+  z-index: 10;
+
+  display: flex;
+
+  width: 175px;
+  height: 175px;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 2rem;
+
+  transition:
+    all 700ms;
+}
+
+
+/* =========================================================
+   INNER BORDER
+   ========================================================= */
+
+.skills-card-inner-border {
+  position: absolute;
+
+  inset: 0.75rem;
+
+  pointer-events: none;
+
+  border-width: 1px;
+  border-style: solid;
+
+  border-radius: 1.65rem;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.skills-card-icon {
+  position: relative;
+
+  z-index: 10;
+
+  width: 6rem;
+  height: 6rem;
+
+  transition:
+    all 700ms;
+}
+
+
+/* =========================================================
+   REFLECTION
+   ========================================================= */
+
+.skills-card-reflection {
+  position: absolute;
+
+  left: 50%;
+  top: 175px;
+
+  width: 175px;
+  height: 6rem;
+
+  transform:
+    translateX(-50%)
+    scaleY(-1);
+
+  border-radius: 2rem;
+
+  opacity: 0.2;
+
+  pointer-events: none;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5),
+      transparent
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.skills-card-label {
+  margin-top: 1.75rem;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  line-height: 1;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.22em;
+
+  transition:
+    all 700ms;
+}
+
+
+/* =========================================================
+   ACTIVE CARD FLOAT
+   ========================================================= */
+
+.skills-coverflow-card[aria-current="true"] {
+  animation:
+    smoothFloat
+    5s
+    ease-in-out
+    infinite;
+}
+
+@keyframes smoothFloat {
+  0%,
+  100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: -3px;
+  }
+}
+
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
+
+.skills-coverflow-controls {
+  position: relative;
+
+  z-index: 200;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 2rem;
+
+  margin-top: 1rem;
+}
+
+
+/* =========================================================
+   NAVIGATION BUTTONS
+   ========================================================= */
+
+.skills-coverflow-nav {
+  display: flex;
+
+  width: 3rem;
+  height: 3rem;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 9999px;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  color:
+    rgba(255, 255, 255, 0.6);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    all 500ms
+    ease-out;
+}
+
+.skills-coverflow-nav:hover {
+  transform: scale(1.1);
+
+  border-color:
+    rgba(52, 211, 153, 0.4);
+
+  background:
+    rgba(52, 211, 153, 0.1);
+
+  color:
+    #6ee7b7;
+
+  box-shadow:
+    0 0 30px
+    rgba(52, 211, 153, 0.18);
+}
+
+.skills-coverflow-nav:active {
+  transform: scale(0.95);
+}
+
+.skills-coverflow-nav-icon {
+  transition:
+    transform 500ms
+    ease-out;
+}
+
+.skills-coverflow-nav:first-child:hover
+.skills-coverflow-nav-icon {
+  transform: translateX(-0.25rem);
+}
+
+.skills-coverflow-nav:last-child:hover
+.skills-coverflow-nav-icon {
+  transform: translateX(0.25rem);
+}
+
+
+/* =========================================================
+   DOTS
+   ========================================================= */
+
+.skills-coverflow-dots {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.5rem;
+}
+
+.skills-coverflow-dot {
+  height: 0.375rem;
+
+  padding: 0;
+
+  cursor: pointer;
+
+  border: 0;
+
+  border-radius: 9999px;
+
+  transition:
+    all 500ms;
+}
+
+.skills-coverflow-dot:hover {
+  transform:
+    scaleY(1.5);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .skills-coverflow-stage {
+    height: 350px;
+  }
+
+  .skills-coverflow-card {
+    width: 190px;
+    height: 235px;
+  }
+
+  .skills-card-main {
+    width: 145px;
+    height: 145px;
+  }
+
+  .skills-card-icon {
+    width: 78px;
+    height: 78px;
+  }
+
+  .skills-card-reflection {
+    width: 145px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+  .skills-coverflow-stage {
+    height: 325px;
+  }
+
+  .skills-coverflow-card {
+    width: 170px;
+    height: 215px;
+  }
+
+  .skills-card-main {
+    width: 130px;
+    height: 130px;
+  }
+
+  .skills-card-icon {
+    width: 68px;
+    height: 68px;
+  }
+
+  .skills-card-reflection {
+    width: 130px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-coverflow-card {
+    transition: none;
+  }
+
+  .skills-coverflow-card[aria-current="true"] {
+    animation: none;
+  }
+
+  .skills-card-glow,
+  .skills-card-main,
+  .skills-card-icon,
+  .skills-card-label,
+  .skills-coverflow-nav,
+  .skills-coverflow-dot {
+    transition: none;
+  }
+}

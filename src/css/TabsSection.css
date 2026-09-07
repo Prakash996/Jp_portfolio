@@ -1,0 +1,72 @@
+.tabs-section__container {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(52, 211, 153, 0.065), transparent 28%),
+    radial-gradient(circle at 90% 90%, rgba(20, 184, 166, 0.035), transparent 30%),
+    linear-gradient(135deg, #07100f 0%, #050b0a 45%, #020706 100%);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.tabs-section__container::before {
+  content: "";
+  position: absolute;
+  inset: 0 8% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.35), transparent);
+  pointer-events: none;
+}
+
+.tabs-section__skills-scroll,
+.tabs-section__category-scroll {
+  scrollbar-color: rgba(52, 211, 153, 0.22) transparent;
+  scrollbar-width: thin;
+}
+
+.tabs-section__skills-scroll {
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+}
+
+.tabs-section__skills-scroll::-webkit-scrollbar { width: 5px; }
+.tabs-section__category-scroll::-webkit-scrollbar { width: 3px; }
+.tabs-section__skills-scroll::-webkit-scrollbar-track,
+.tabs-section__category-scroll::-webkit-scrollbar-track { background: transparent; }
+.tabs-section__skills-scroll::-webkit-scrollbar-thumb,
+.tabs-section__category-scroll::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.22);
+  border-radius: 999px;
+}
+.tabs-section__skills-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.48);
+}
+
+.tabs-section__mobile-tabs {
+  scrollbar-width: none;
+}
+.tabs-section__mobile-tabs::-webkit-scrollbar { display: none; }
+
+.tabs-section__skill-icon {
+  width: 48px;
+  height: 48px;
+  color: #34d399;
+  transform: scale(1);
+  filter: drop-shadow(0 0 0 rgba(52, 211, 153, 0));
+  transition: transform 300ms ease, filter 300ms ease;
+}
+
+.tabs-section__skill-item {
+  isolation: isolate;
+}
+
+.tabs-section__skill-item:hover .tabs-section__skill-icon {
+  transform: scale(0.84);
+  filter: drop-shadow(0 0 5px var(--brand-color)) drop-shadow(0 0 12px var(--brand-color));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs-section__skills-scroll {
+    scroll-behavior: auto;
+  }
+}

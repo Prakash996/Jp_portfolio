@@ -135,11 +135,11 @@
 /* ================================================================
    EXPERIENCE CARD
    ================================================================ */
-
+/* 
 .experience-card {
   background: var(--background);
   border-color: var(--border);
-}
+} */
 
 .experience-card:hover {
   background: var(--background-hover);

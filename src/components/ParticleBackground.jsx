@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import '../css/ParticleBackground.css';
 
-const PARTICLE_COUNT = 80;
+const PARTICLE_COUNT = 250;
 const MOUSE_RADIUS = 231;
 
 function ParticleBackground({ children }) {

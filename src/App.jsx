@@ -4,7 +4,7 @@ import MainBody from './components/MainBody';
 
 function App() {
   return (
-    <main className="main">
+    <main className="app-shell">
       <Header />
       <ParticleBackground>
         <MainBody />

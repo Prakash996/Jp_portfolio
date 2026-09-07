@@ -1,0 +1,48 @@
+{
+  "name": "JP Prakash",
+  "title": "Frontend Developer",
+  "location": "Based in Vijayawada, AP, India.",
+  "description": "I am a Software Engineer focused on building responsive, highly available frontend architectures and desktop application platforms. Over the past 5+ years at HCLTech, I have driven 15+ major UI refactoring initiatives, optimized layout engines for complex IDE canvases, and tuned cross-platform desktop build runtimes. I specialize in resolving client-side DOM bottlenecks, streamlining cross-browser layout consistency, and automating CI/CD workflows to deliver stable, high-performance web applications.",
+  "stats": [
+    {
+      "label": "Years of Experience",
+      "value": "6+"
+    },
+    {
+      "label": "Frontend UI Refactors",
+      "value": "15+"
+    }
+  ],
+  "experiences": [
+  {
+    "id": "01",
+    "title": "Software Engineer II",
+    "company": "HCLTech (HCLSoftware)",
+    "period": "May 2021 — Present",
+    "description": "Spearheaded 15+ UI refactoring initiatives across the Volt Iris platform, modernizing workspace layout structures, dynamic dropdown components, and interactive modal dialogs. Optimized desktop packaging, resolved client-side DOM performance lags, and stabilized 2,500+ E2E automated test cases across CI/CD release pipelines.",
+    "tags": ["UI Refactoring", "E2E Testing", "CI/CD"],
+    "location": "India",
+    "current": true
+  },
+  {
+    "id": "02",
+    "title": "Software Engineer — Data Integration",
+    "company": "HCLTech",
+    "period": "May 2020 — May 2021",
+    "description": "Managed and optimized continuous data synchronization pipelines connecting semi-structured HCL Domino environments with relational SQL databases. Configured SAP Remote Function Calls (RFC) and background LotusScript agents to ensure data integrity and operational stability.",
+    "tags": ["Data Integration", "SAP RFC", "HCL Domino"],
+    "location": "India",
+    "current": false
+  },
+  {
+    "id": "03",
+    "title": "Web Development Intern",
+    "company": "Ficuslot Innovation Pvt. Ltd.",
+    "period": "June 2019 — Oct 2019",
+    "description": "Designed and implemented responsive, single-page UI layouts, interactive search components, and client-facing web forms using HTML5, CSS3, JavaScript, and Bootstrap. Resolved cross-browser visual defects using developer tools.",
+    "tags": ["HTML5 / CSS3", "JavaScript", "Bootstrap"],
+    "location": "India",
+    "current": false
+  }
+]
+}

@@ -248,7 +248,7 @@ export default function ProfileCard({ personDetails }) {
                 >
                   <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
 
-                  <span className="text-xs font-medium text-zinc-300">
+                  <span className="text-xs font-medium text-zinc-300 border-l border-zinc-600 pl-2">
                     Open to work
                   </span>
                 </button>
@@ -286,10 +286,7 @@ export default function ProfileCard({ personDetails }) {
 
                 <div className="grid w-full grid-cols-2 gap-3">
                   {/* Download CV */}
-                  <a
-                    href="/"
-                    className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-xs font-semibold text-white transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-800"
-                  >
+                  <a href="/" className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-xs font-semibold text-white transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-800">
                     <svg
                       viewBox="0 0 24 24"
                       className="h-4 w-4"
