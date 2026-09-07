@@ -62,7 +62,7 @@
 
 .tabs-section__skill-item:hover .tabs-section__skill-icon {
   transform: scale(0.84);
-  filter: drop-shadow(0 0 5px var(--brand-color)) drop-shadow(0 0 12px var(--brand-color));
+  filter: drop-shadow(0 0 50px var(--brand-color)) drop-shadow(0 0 100px var(--brand-color));
 }
 
 @media (prefers-reduced-motion: reduce) {

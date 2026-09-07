@@ -370,20 +370,18 @@ function SkillCard({ skill, index }) {
         group
         relative
         flex
-        min-h-[145px]
+        min-h-36.25
         cursor-pointer
         flex-col
         items-center
         justify-center
-        rounded-xl
         border
         border-transparent
         px-2
         py-4
+        rounded-4xl
         transition-all
         duration-300
-        hover:border-white/[0.04]
-        hover:bg-white/[0.015]
       "
       style={{
         "--brand-color": skill.color,
@@ -409,13 +407,13 @@ function SkillCard({ skill, index }) {
           rounded-full
           border
           border-emerald-400/50
-          bg-emerald-400/[0.045]
+          bg-emerald-400/4.5
           transition-all
           duration-300
           ease-out
           group-hover:scale-105
-          group-hover:border-[var(--brand-color)]
-          group-hover:bg-emerald-400/[0.08]
+          group-hover:border-(--brand-color)
+          group-hover:bg-emerald-400/8
           group-hover:shadow-[0_0_30px_rgba(52,211,153,0.08)]
         "
       >
@@ -887,13 +885,13 @@ export default function SkillGrid({
                 id="skills-empty-state"
                 className="
                   flex
-                  min-h-[180px]
+                  min-h-45
                   items-center
                   justify-center
                   rounded-xl
                   border
                   border-dashed
-                  border-white/[0.04]
+                  border-white/4
                   text-[10px]
                   uppercase
                   tracking-[0.15em]
