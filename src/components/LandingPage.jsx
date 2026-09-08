@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import personImage from "@/assets/images/person.png";
 import landingData from "@/data/LandingData.json";
-import "@/css/landing.css";
+import "@/css/Landing.css";
 
 const {
   personal,
