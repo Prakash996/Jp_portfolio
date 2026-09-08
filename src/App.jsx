@@ -3,6 +3,7 @@ import {
   lazy,
   Suspense,
   useCallback,
+  useEffect,
   useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,6 +59,42 @@ function App() {
     (state) => state.app,
   );
   const portfolioLoadRef = useRef(null);
+
+  useEffect(() => {
+    const sectionAliases = {
+      home: "home",
+    };
+    const requestedSection = window.location.hash.slice(1);
+    const sectionId = sectionAliases[requestedSection] ?? requestedSection;
+    const validSections = ["home", "skills", "experience"];
+
+    if (requestedSection && !validSections.includes(sectionId)) {
+      window.history.replaceState(null, "", "#home");
+    } else if (sectionId !== requestedSection) {
+      window.history.replaceState(null, "", `#${sectionId}`);
+    }
+
+    if (requestedSection && !hasEntered) {
+      dispatch(enterPortfolio());
+    }
+  }, [dispatch, hasEntered]);
+
+  useEffect(() => {
+    if (!hasEntered || !window.location.hash) {
+      return;
+    }
+
+    const target = document.getElementById(window.location.hash.slice(1));
+
+    if (target) {
+      window.requestAnimationFrame(() => {
+        target.scrollIntoView({
+          behavior: "auto",
+          block: "start",
+        });
+      });
+    }
+  }, [hasEntered, isPortfolioReady]);
 
   const handleLoaded = useCallback(async () => {
     try {

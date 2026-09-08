@@ -35,7 +35,7 @@ export default function Header() {
   const links = [
     {
       name: "Home",
-      href: "#portfolio",
+      href: "#home",
       icon: House,
       type: "section",
     },
