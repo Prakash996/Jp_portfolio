@@ -1,60 +1,86 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import personImage from "@/assets/images/person.png";
+import landingData from "@/data/LandingData.json";
+import "@/css/landing.css";
 
-const PERSONAL_DATA = {
-  name: "JP PRAKASH",
-  role: "FRONTEND DEVELOPER",
-  location: "VIJAYAWADA, INDIA",
-  eyebrow: "BOOT SEQUENCE",
-  title: "Ready to build.",
-  description:
-    "Frontend engineer, 6+ years. Let's ship something.",
+const {
+  personal,
+  loadingSteps,
+  starCount,
+  commonTextClassName,
+  loader,
+  spirals,
+  circleLabels,
+  particles,
+} = landingData;
+
+/* =========================================================
+   STAR FIELD
+========================================================= */
+
+const pseudoRandom = (value) => {
+  const result = Math.sin(value * 12.9898) * 43758.5453;
+  return result - Math.floor(result);
 };
 
-const LOADING_STEPS = [
-  "Profile",
-  "Stack",
-  "Experience",
-];
+const STAR_FIELD = Array.from({ length: starCount }, (_, index) => {
+  const seed = index + 1;
 
-const STAR_COUNT = 90;
+  return {
+    id: index,
+    left: `${pseudoRandom(seed) * 100}%`,
+    top: `${pseudoRandom(seed + 11) * 100}%`,
+    size: `${pseudoRandom(seed + 23) * 1.6 + 0.5}px`,
+    opacity: pseudoRandom(seed + 37) * 0.55 + 0.15,
+    delay: `${pseudoRandom(seed + 47) * 8}s`,
+    duration: `${pseudoRandom(seed + 59) * 5 + 5}s`,
+  };
+});
 
-const STAR_FIELD = Array.from(
-  { length: STAR_COUNT },
-  (_, index) => {
-    const seed = index + 1;
+/* =========================================================
+   CREATE SPIRAL PATH
+========================================================= */
 
-    const pseudoRandom = (value) => {
-      const result =
-        Math.sin(value * 12.9898) *
-        43758.5453;
+function createSpiralPath({
+  turns = 3.8,
+  startRadius = 47,
+  endRadius = 5,
+  points = 260,
+  rotation = -Math.PI / 2,
+}) {
+  const result = [];
 
-      return result - Math.floor(result);
-    };
+  for (let i = 0; i <= points; i += 1) {
+    const progress = i / points;
+    const angle = rotation + progress * Math.PI * 2 * turns;
+    const radius = startRadius + (endRadius - startRadius) * progress;
+    const x = 50 + Math.cos(angle) * radius;
+    const y = 50 + Math.sin(angle) * radius;
 
-    return {
-      id: index,
-      left: `${pseudoRandom(seed) * 100}%`,
-      top: `${pseudoRandom(seed + 11) * 100}%`,
-      size: `${
-        pseudoRandom(seed + 23) * 1.6 + 0.5
-      }px`,
-      opacity:
-        pseudoRandom(seed + 37) * 0.55 + 0.15,
-      delay: `${
-        pseudoRandom(seed + 47) * 8
-      }s`,
-      duration: `${
-        pseudoRandom(seed + 59) * 5 + 5
-      }s`,
-    };
+    result.push(
+      `${i === 0 ? "M" : "L"} ${x.toFixed(3)} ${y.toFixed(3)}`
+    );
   }
-);
+
+  return result.join(" ");
+}
+
+/* =========================================================
+   PREBUILD SPIRALS
+========================================================= */
+
+const spiralPaths = spirals.map((spiral) => ({
+  ...spiral,
+  path: createSpiralPath({
+    turns: spiral.turns,
+    startRadius: spiral.radius,
+    endRadius: spiral.end,
+  }),
+}));
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 export default function LandingPage({
   isReady = false,
@@ -64,104 +90,170 @@ export default function LandingPage({
   showEnter = true,
 }) {
   const [step, setStep] = useState(0);
-  const [progress, setProgress] = useState(8);
+  const [progress, setProgress] = useState(loader.initialProgress);
+  const [typedName, setTypedName] = useState("");
+  const completionNotified = useRef(false);
+  const progressRef = useRef(loader.initialProgress);
+  const progressBarRef = useRef(null);
+  const progressFillRef = useRef(null);
+  const animationFrameRef = useRef(null);
+  const typingFrameRef = useRef(null);
+  const enterTimeoutRef = useRef(null);
+  const mainRef = useRef(null);
+  const enterStartedRef = useRef(false);
 
-  const completionNotified =
-    useRef(false);
+  const completed =
+    isReady || progress >= loader.completedProgress;
 
-  const progressRef =
-    useRef(8);
+  const entering = isEntering;
 
-  const animationFrameRef =
-    useRef(null);
+  const glowDot = <span className="size-2.5 rounded-full bg-[#79f5c4] shadow-[0_0_9px_rgba(121,245,196,0.8)] animate-landing-pulse"/>
 
-  /*
-   * Smooth progress animation.
-   *
-   * The actual resource loading can finish
-   * quickly, but the visual progress remains
-   * intentionally slower.
-   */
+  /* =======================================================
+     START BUTTON
+  ======================================================= */
+
+  const handleCenterEnter = useCallback(() => {
+    if (
+      !completed ||
+      entering ||
+      enterStartedRef.current ||
+      !showEnter
+    ) {
+      return;
+    }
+
+    enterStartedRef.current = true;
+
+    /*
+     * Do NOT manipulate the title DOM here.
+     *
+     * The title is hidden directly from `entering`,
+     * which is derived from `isEntering`.
+     *
+     * This means that even if React repaints/remounts
+     * this component after launch, the title remains hidden
+     * as long as isEntering === true.
+     */
+
+    mainRef.current?.setAttribute(
+      "data-entering",
+      "true"
+    );
+
+    enterTimeoutRef.current = window.setTimeout(() => {
+      onEnter?.();
+    }, 900);
+  }, [completed, entering, showEnter, onEnter]);
+
+  /* =======================================================
+     CLEANUP
+  ======================================================= */
+
+  useEffect(() => {
+    return () => {
+      if (enterTimeoutRef.current) {
+        clearTimeout(enterTimeoutRef.current);
+      }
+
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
+
+  /* =======================================================
+     TYPEWRITER
+  ======================================================= */
+
+  useEffect(() => {
+    let cancelled = false;
+    const name = personal.name;
+    let index = 0;
+
+    const type = () => {
+      if (cancelled) {
+        return;
+      }
+
+      index += 1;
+      setTypedName(name.slice(0, index));
+
+      if (index < name.length) {
+        typingFrameRef.current = window.setTimeout(type, 85);
+      }
+    };
+
+    type();
+
+    return () => {
+      cancelled = true;
+
+      if (typingFrameRef.current) {
+        clearTimeout(typingFrameRef.current);
+      }
+    };
+  }, []);
+
+  /* =======================================================
+     SMOOTH PROGRESS
+  ======================================================= */
+
   const animateProgress = useCallback(
     (target, targetStep) => {
       setStep(targetStep);
 
-      const start =
-        progressRef.current;
+      const start = progressRef.current;
 
       if (target <= start) {
         return;
       }
 
       if (animationFrameRef.current) {
-        cancelAnimationFrame(
-          animationFrameRef.current
-        );
+        cancelAnimationFrame(animationFrameRef.current);
       }
 
-      /*
-       * Slower visual progress.
-       */
       const duration =
-        target === 100
-          ? 1200
-          : 900;
+        target === loader.completedProgress
+          ? loader.completedDuration
+          : loader.partialDuration;
 
-      const startTime =
-        performance.now();
+      const startTime = performance.now();
 
       const tick = (now) => {
-        const elapsed =
-          now - startTime;
-
-        const ratio = Math.min(
-          elapsed / duration,
-          1
+        const elapsed = now - startTime;
+        const ratio = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - ratio, 3);
+        const value = Math.round(
+          start + (target - start) * eased
         );
 
-        /*
-         * Smooth ease-out.
-         */
-        const eased =
-          1 -
-          Math.pow(
-            1 - ratio,
-            3
-          );
+        progressRef.current = value;
 
-        const value =
-          Math.round(
-            start +
-              (target - start) *
-                eased
-          );
+        progressFillRef.current?.style.setProperty(
+          "width",
+          `${value}%`
+        );
 
-        progressRef.current =
-          value;
-
-        setProgress(value);
+        progressBarRef.current?.setAttribute(
+          "aria-valuenow",
+          String(value)
+        );
 
         if (ratio < 1) {
           animationFrameRef.current =
-            requestAnimationFrame(
-              tick
-            );
-
+            requestAnimationFrame(tick);
           return;
         }
 
-        progressRef.current =
-          target;
-
+        progressRef.current = target;
         setProgress(target);
 
         if (
-          target === 100 &&
+          target === loader.completedProgress &&
           !completionNotified.current
         ) {
-          completionNotified.current =
-            true;
-
+          completionNotified.current = true;
           onLoaded?.();
         }
       };
@@ -172,34 +264,25 @@ export default function LandingPage({
     [onLoaded]
   );
 
-  /*
-   * Resource loading.
-   *
-   * A minimum duration prevents the
-   * loader from completing instantly
-   * when everything is cached.
-   */
+  /* =======================================================
+     RESOURCE LOADING
+  ======================================================= */
+
   useEffect(() => {
     let cancelled = false;
-
     let imageReady = false;
 
     let windowReady =
       document.readyState ===
       "complete";
 
-    /*
-     * Minimum time the loader remains
-     * active.
-     */
-    const MIN_LOADING_TIME = 3200;
-
     const loadingStartedAt =
       performance.now();
 
-    let minimumTimePassed = false;
-    let resourcesReady = false;
+    let minimumTimePassed =
+      false;
 
+    let resourcesReady = false;
     let minimumTimer = null;
 
     const finishIfReady = () => {
@@ -211,7 +294,10 @@ export default function LandingPage({
         resourcesReady &&
         minimumTimePassed
       ) {
-        animateProgress(100, 2);
+        animateProgress(
+          loader.completedProgress,
+          2
+        );
       }
     };
 
@@ -225,28 +311,28 @@ export default function LandingPage({
         windowReady
       ) {
         resourcesReady = true;
-
-        /*
-         * Keep the completed progress
-         * animation separate so it still
-         * feels smooth.
-         */
         finishIfReady();
       } else if (
         imageReady ||
         windowReady
       ) {
-        animateProgress(68, 1);
+        animateProgress(
+          loader.resourceProgress,
+          1
+        );
       } else {
-        animateProgress(28, 0);
+        animateProgress(
+          loader.partialProgress,
+          0
+        );
       }
     };
 
-    const handleWindowLoad = () => {
-      windowReady = true;
-
-      update();
-    };
+    const handleWindowLoad =
+      () => {
+        windowReady = true;
+        update();
+      };
 
     const image = new Image();
 
@@ -256,9 +342,7 @@ export default function LandingPage({
           await image.decode();
         }
       } catch {
-        /*
-         * Image is still usable.
-         */
+        // Image is still usable.
       }
 
       if (cancelled) {
@@ -266,7 +350,6 @@ export default function LandingPage({
       }
 
       imageReady = true;
-
       update();
     };
 
@@ -275,12 +358,7 @@ export default function LandingPage({
         return;
       }
 
-      /*
-       * Optional image should never
-       * block loading.
-       */
       imageReady = true;
-
       update();
     };
 
@@ -296,9 +374,6 @@ export default function LandingPage({
       );
     }
 
-    /*
-     * Enforce minimum loading duration.
-     */
     const elapsed =
       performance.now() -
       loadingStartedAt;
@@ -306,14 +381,13 @@ export default function LandingPage({
     const remaining =
       Math.max(
         0,
-        MIN_LOADING_TIME -
+        loader.minimumLoadingTime -
           elapsed
       );
 
     minimumTimer =
       window.setTimeout(() => {
         minimumTimePassed = true;
-
         finishIfReady();
       }, remaining);
 
@@ -343,2416 +417,915 @@ export default function LandingPage({
     };
   }, [animateProgress]);
 
-  /*
-   * Status text.
-   */
-  const statusText = isEntering
+  /* =======================================================
+     STATUS
+  ======================================================= */
+
+  const statusText = entering
     ? "Launching portfolio"
-    : isReady
-      ? "Workspace ready"
-      : LOADING_STEPS[step];
+    : completed
+      ? "Profile ready"
+      : loadingSteps[step];
 
-  /*
-   * Loader geometry.
-   */
-  const sweepDeg = Math.max(
-    8,
-    progress * 3.6
-  );
-
-  const ringGradient = `
-    conic-gradient(
-      from -90deg,
-      #79f5c4 0deg,
-      #14c98a ${Math.max(
-        0,
-        sweepDeg - 35
-      )}deg,
-      #59b9ff ${sweepDeg}deg,
-      rgba(255,255,255,0.045)
-        ${sweepDeg}deg 360deg
-    )
-  `;
-
-  const completed =
-    isReady || progress >= 100;
+  /* =======================================================
+     RENDER
+  ======================================================= */
 
   return (
-    <>
-      <main
-        className="landing-page"
-        aria-live="polite"
-        data-entering={isEntering}
-        data-ready={completed}
-      >
-        {/* =====================================================
-            BACKGROUND
-        ===================================================== */}
+    <main
+      ref={mainRef}
+      aria-live="polite"
+      data-ready={completed}
+      data-entering={entering}
+      className={[
+        "relative isolate flex min-h-screen min-h-[100svh]",
+        "flex-col overflow-hidden bg-[#020505] text-[#edf5f1]",
+        "transition-[background] duration-900 ease-out",
 
+        "bg-[radial-gradient(circle_at_50%_48%,rgba(20,201,138,0.075),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(87,169,255,0.035),transparent_38%)]",
+
+        entering &&
+          "bg-[radial-gradient(circle_at_50%_48%,rgba(20,201,138,0.16),transparent_30%)]",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {/* =====================================================
+          BACKGROUND
+      ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute inset-0
+          z-[-5]
+          overflow-hidden
+        "
+      >
+        {STAR_FIELD.map((star) => (
+          <span
+            key={star.id}
+            className="
+              absolute block
+              rounded-full
+              bg-[#d9fff0]
+              animate-landing-star-twinkle
+            "
+            style={{
+              left: star.left,
+              top: star.top,
+              width: star.size,
+              height: star.size,
+              opacity: star.opacity,
+              animationDelay:
+                star.delay,
+              animationDuration:
+                star.duration,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* =====================================================
+          GRID
+      ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute inset-0
+          z-[-4]
+          opacity-[0.22]
+
+          bg-[linear-gradient(rgba(121,245,196,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(121,245,196,0.018)_1px,transparent_1px)]
+
+          bg-size-[70px_70px]
+
+          mask-[radial-gradient(ellipse_at_center,black_0%,rgba(0,0,0,0.5)_45%,transparent_80%)]
+        "
+      />
+
+      {/* =====================================================
+          AMBIENT
+      ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          left-1/2
+          top-[48%]
+          z-[-3]
+
+          h-130
+          w-130
+
+          -translate-x-1/2
+          -translate-y-1/2
+
+          rounded-full
+
+          bg-[radial-gradient(circle,rgba(20,201,138,0.11),rgba(20,201,138,0.025)_42%,transparent_72%)]
+
+          blur-[20px]
+
+          animate-landing-ambient-pulse
+        "
+      />
+
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
+
+      <header
+        className="
+          absolute
+          left-5
+          right-5
+          top-4.5
+          z-5
+
+          flex
+          items-center
+          justify-between
+
+          min-[601px]:left-8
+          min-[601px]:right-8
+          min-[601px]:top-5.5
+        "
+      >
         <div
-          className="landing-page__space"
-          aria-hidden="true"
+          className="
+            flex
+            items-center
+            gap-2.25
+
+            text-[8px]
+            font-bold
+            tracking-[0.16em]
+            text-[#7d8c86]
+
+            min-[601px]:text-[12px]
+          "
         >
-          {STAR_FIELD.map((star) => (
-            <span
-              key={star.id}
-              className="landing-page__star"
-              style={{
-                left: star.left,
-                top: star.top,
-                width: star.size,
-                height: star.size,
-                opacity: star.opacity,
-                animationDelay:
-                  star.delay,
-                animationDuration:
-                  star.duration,
-              }}
-            />
-          ))}
+          <span
+            aria-hidden="true"
+            className="
+              grid
+              size-6
+              place-items-center
+              rounded-[7px]
+
+              border
+              border-[#79f5c4]/22
+
+              bg-[#14c98a]/[0.035]
+
+              font-mono
+              text-[8px]
+              text-[#79f5c4]
+            "
+          >
+            &lt;/&gt;
+          </span>
+
+          <span>
+            {personal.role}
+          </span>
         </div>
 
         <div
-          className="landing-page__grid"
-          aria-hidden="true"
-        />
+          className="
+            hidden
+            font-mono
+            text-[7px]
+            tracking-[0.12em]
+
+            min-[601px]:block
+          "
+        >
+          SYS://
+          {personal.location.replace(
+            /\s+/g,
+            "_"
+          )}
+        </div>
+      </header>
+
+      {/* =====================================================
+          MAIN
+      ===================================================== */}
+
+      <section
+        aria-label="Loading portfolio"
+        className="
+          flex
+          flex-1
+          flex-col
+          items-center
+          justify-center
+
+          px-5
+          py-9
+
+          text-center
+
+          min-[601px]:px-6
+        "
+      >
+        {/* ===================================================
+            TITLE
+
+            IMPORTANT:
+            The title is hidden using React state/props.
+
+            Therefore a repaint or remount cannot bring it
+            back while `isEntering` remains true.
+        =================================================== */}
 
         <div
-          className="landing-page__ambient"
-          aria-hidden="true"
-        />
+          data-title
+          aria-hidden={entering}
+          className={[
+            "relative z-2",
 
-        {/* =====================================================
-            HEADER
-        ===================================================== */}
+            "transition-[opacity,transform,filter]",
+            "duration-500",
+            "ease-out",
 
-        <header className="landing-page__header">
-          <div className="landing-page__brand">
-            <span
-              className="landing-page__brand-icon"
-              aria-hidden="true"
-            >
-              &lt;/&gt;
-            </span>
-
-            <span>
-              {PERSONAL_DATA.name}
-            </span>
-          </div>
-
-          <div className="landing-page__header-status">
-            SYS://
-            {PERSONAL_DATA.role.replace(
-              /\s+/g,
-              "_"
-            )}
-          </div>
-        </header>
-
-        {/* =====================================================
-            MAIN
-        ===================================================== */}
-
-        <section
-          className="landing-page__main"
-          aria-label="Loading portfolio"
+            /*
+             * HARD HIDE during launch.
+             *
+             * `hidden` removes the element from layout.
+             * This is intentional here because the user
+             * wants the title completely gone during launch.
+             */
+            entering &&
+              "hidden",
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
-          {/* ===================================================
-              INTRO
-          =================================================== */}
-
           <div
-            className="landing-page__intro"
-            data-transition={
-              completed
-                ? "ready"
-                : "loading"
+            className={
+              commonTextClassName
             }
           >
-            <div className="landing-page__eyebrow">
-              <span
-                className="landing-page__eyebrow-dot"
-                aria-hidden="true"
-              />
-
-              <span>
-                {PERSONAL_DATA.eyebrow}
-              </span>
-            </div>
-
-            <h1 className="landing-page__title">
-              {PERSONAL_DATA.title}
-            </h1>
-
-            <p className="landing-page__description">
-              {PERSONAL_DATA.description}
-            </p>
+            <span className="mx-1.5">
+              WELCOME TO
+            </span>
           </div>
 
-          {/* ===================================================
-              PROGRAMMER GALAXY LOADER
-          =================================================== */}
+          <h1
+            aria-label={`< ${personal.name} />`}
+            className="
+              flex
+              min-h-9.5
+              items-baseline
+              justify-center
+              whitespace-nowrap
+
+              font-mono
+              text-[21px]
+              font-semibold
+              leading-none
+              tracking-[-0.06em]
+
+              text-[#79f5c4]
+
+              animate-landing-symbol-glow
+
+              min-[381px]:min-h-10.5
+              min-[381px]:text-[clamp(18px,8.8vw,32px)]
+
+              min-[601px]:min-h-12
+              min-[601px]:text-[clamp(32px,6.8vw,48px)]
+            "
+          >
+            <span
+              aria-hidden="true"
+              className="
+                shrink-0
+                font-medium
+
+                text-shadow-[0_0_12px_rgba(121,245,196,0.45),0_0_30px_rgba(20,201,138,0.2)]
+              "
+            >
+              &lt;
+            </span>
+
+            <span className="font-semibold">
+              {typedName}
+            </span>
+
+            <span
+              aria-hidden="true"
+              className="
+                ml-px
+                inline-block
+                w-[0.52em]
+
+                font-normal
+                text-[#be9c5e]
+
+                animate-landing-cursor
+              "
+            >
+              _
+            </span>
+
+            <span
+              aria-hidden="true"
+              className="
+                ml-0.75
+                shrink-0
+                font-medium
+
+                text-shadow-[0_0_12px_rgba(121,245,196,0.45),0_0_30px_rgba(20,201,138,0.2)]
+              "
+            >
+              /&gt;
+            </span>
+          </h1>
+
+          <span
+            className={`
+              mx-auto
+              mt-4.25
+              max-w-135
+
+              leading-[1.6]
+
+              min-[381px]:text-[12px]
+
+              min-[601px]:mt-5
+              min-[601px]:leading-[1.7]
+
+              ${commonTextClassName}
+            `}
+          >
+            PORTFOLIO
+          </span>
+        </div>
+
+        {/* ===================================================
+            SPIRAL LOADER
+        =================================================== */}
+
+        <div
+          ref={progressBarRef}
+          role="progressbar"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`${statusText} — ${progress}%`}
+          className="
+            relative
+            mt-7
+
+            grid
+            aspect-square
+            place-items-center
+
+            w-[min(235px,64vw)]
+
+            min-[381px]:w-52.5
+
+            min-[601px]:mt-[clamp(30px,4vw,46px)]
+            min-[601px]:w-[clamp(250px,31vw,310px)]
+          "
+        >
+          {/* OUTER GLOW */}
+
+          <span
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-[-18%]
+
+              rounded-full
+
+              bg-[radial-gradient(circle,rgba(20,201,138,0.16),rgba(20,201,138,0.035)_48%,transparent_72%)]
+
+              blur-lg
+
+              animate-landing-glow
+            "
+          />
+
+          {/* =================================================
+              SPIRALS
+          ================================================= */}
 
           <div
-            className="landing-page__loader"
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-label={`${statusText} — ${progress}%`}
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+            "
           >
-            {/* Outer glow */}
+            <svg
+              viewBox="0 0 100 100"
+              className="
+                h-full
+                w-full
+                overflow-visible
+              "
+            >
+              <defs>
+                <filter
+                  id="spiralGlow"
+                  x="-80%"
+                  y="-80%"
+                  width="260%"
+                  height="260%"
+                >
+                  <feGaussianBlur
+                    stdDeviation="0.8"
+                    result="blur"
+                  />
 
-            <span
-              className="landing-page__loader-glow"
-              aria-hidden="true"
-            />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
 
-            {/* Outer orbit */}
+                <filter
+                  id="spiralStrongGlow"
+                  x="-100%"
+                  y="-100%"
+                  width="300%"
+                  height="300%"
+                >
+                  <feGaussianBlur
+                    stdDeviation="1.5"
+                    result="blur"
+                  />
 
-            <span
-              className="landing-page__orbit landing-page__orbit--outer"
-              aria-hidden="true"
-            />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
 
-            {/* Main progress galaxy */}
-
-            <span
-              className="landing-page__loader-ring"
-              style={{
-                background:
-                  ringGradient,
-              }}
-              aria-hidden="true"
-            />
-
-            {/* Inner orbit */}
-
-            <span
-              className="landing-page__orbit landing-page__orbit--inner"
-              aria-hidden="true"
-            />
-
-            {/* Orbiting particles */}
-
-            <span
-              className="landing-page__orbit-dot landing-page__orbit-dot--one"
-              aria-hidden="true"
-            />
-
-            <span
-              className="landing-page__orbit-dot landing-page__orbit-dot--two"
-              aria-hidden="true"
-            />
-
-            <span
-              className="landing-page__orbit-dot landing-page__orbit-dot--three"
-              aria-hidden="true"
-            />
-
-            {/* Orbit labels */}
-
-            <span className="landing-page__orbit-label landing-page__orbit-label--top">
-              DEV
-            </span>
-
-            <span className="landing-page__orbit-label landing-page__orbit-label--right">
-              UI
-            </span>
-
-            <span className="landing-page__orbit-label landing-page__orbit-label--bottom">
-              CODE
-            </span>
-
-            <span className="landing-page__orbit-label landing-page__orbit-label--left">
-              BUILD
-            </span>
-
-            {/* Center */}
-
-            <div className="landing-page__core">
-              <div className="landing-page__core-screen">
-                <span className="landing-page__terminal-line">
-                  <span className="landing-page__terminal-prompt">
-                    $
-                  </span>
-
-                  <span>
-                    {" "}
-                    ready
-                  </span>
-
-                  <span className="landing-page__terminal-cursor">
-                    _
-                  </span>
-                </span>
-              </div>
-
-              <span className="landing-page__core-status">
-                {completed
-                  ? "ONLINE"
-                  : "LOADING"}
-              </span>
-            </div>
-          </div>
-        </section>
-
-        {/* =====================================================
-            BOTTOM AREA
-        ===================================================== */}
-
-        <div className="landing-page__bottom">
-          {/* Progress */}
-
-          <div className="landing-page__progress">
-            <div className="landing-page__progress-track">
-              <span
-                className="landing-page__progress-fill"
-                data-opening={isEntering}
-                style={{
-                  width: `${progress}%`,
-                }}
+              <circle
+                cx="50"
+                cy="50"
+                r="47"
+                fill="none"
+                stroke="#79f5c4"
+                strokeWidth="0.22"
+                strokeOpacity="0.12"
+                strokeDasharray="0.7 3"
               />
-            </div>
 
-            <div className="landing-page__progress-meta">
-              <span className="landing-page__progress-status">
+              <circle
+                cx="50"
+                cy="50"
+                r="28"
+                fill="none"
+                stroke="#57a9ff"
+                strokeWidth="0.18"
+                strokeOpacity="0.1"
+                strokeDasharray="0.6 3"
+              />
+
+              {spiralPaths.map(
+                (spiral, index) => (
+                  <path
+                    key={spiral.id}
+                    d={spiral.path}
+                    fill="none"
+                    stroke={spiral.color}
+                    strokeWidth={spiral.width}
+                    strokeOpacity={
+                      spiral.opacity
+                    }
+                    strokeLinecap="round"
+                    strokeDasharray={
+                      spiral.dash
+                    }
+                    filter={
+                      index === 0
+                        ? "url(#spiralStrongGlow)"
+                        : "url(#spiralGlow)"
+                    }
+                    className="landing-flow-spiral"
+                    style={{
+                      animationDuration:
+                        `${spiral.duration}s`,
+                      animationDelay:
+                        spiral.delay,
+                    }}
+                  />
+                )
+              )}
+            </svg>
+
+            {/* PARTICLES */}
+
+            {particles.map(
+              (particle) => (
                 <span
-                  className="landing-page__progress-dot"
-                  aria-hidden="true"
+                  key={particle.id}
+                  className={[
+                    "absolute",
+                    "rounded-full",
+                    particle.position,
+                    particle.size,
+                    particle.className,
+                  ]
+                    .join(" ")}
+                  style={{
+                    backgroundColor:
+                      particle.color,
+
+                    boxShadow:
+                      particle.shadow
+                        .replace(
+                          "shadow-[",
+                          ""
+                        )
+                        .replace(
+                          "]",
+                          ""
+                        ),
+                  }}
                 />
-
-                {statusText}
-
-                {completed && (
-                  <span className="landing-page__progress-percent">
-                    — 100%
-                  </span>
-                )}
-              </span>
-            </div>
+              )
+            )}
           </div>
 
-          {/* ===================================================
-              CHECKLIST
-          =================================================== */}
+          {/* =================================================
+              LABELS
+          ================================================= */}
 
-          <div className="landing-page__steps">
-            {LOADING_STEPS.map(
-              (item, index) => {
-                const active =
-                  index <= step;
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-0
 
-                const finished =
-                  index < step ||
-                  completed;
+              font-mono
+              text-[5px]
+              tracking-[0.18em]
+              text-[#45534d]
+
+              min-[601px]:text-[6px]
+            "
+          >
+            {Object.entries(
+              circleLabels
+            ).map(
+              ([key, text]) => {
+                const positions = {
+                  dev: `
+                    absolute
+                    left-1/2
+                    top-0
+
+                    -translate-x-1/2
+                    -translate-y-1
+                  `,
+
+                  ui: `
+                    absolute
+                    right-0
+                    top-1/2
+
+                    translate-x-1
+                    -translate-y-1/2
+                  `,
+
+                  code: `
+                    absolute
+                    bottom-0
+                    left-1/2
+
+                    -translate-x-1/2
+                    translate-y-1
+                  `,
+
+                  build: `
+                    absolute
+                    left-0
+                    top-1/2
+
+                    -translate-x-1
+                    -translate-y-1/2
+                  `,
+                };
 
                 return (
-                  <div
-                    key={item}
-                    className={`landing-page__step ${
-                      active
-                        ? "landing-page__step--active"
-                        : ""
-                    }`}
+                  <span
+                    key={key}
+                    className={
+                      positions[key]
+                    }
                   >
-                    <span className="landing-page__step-number">
-                      {finished
-                        ? "✓"
-                        : String(
-                            index + 1
-                          ).padStart(
-                            2,
-                            "0"
-                          )}
-                    </span>
-
-                    <span>
-                      {item}
-                    </span>
-                  </div>
+                    {text}
+                  </span>
                 );
               }
             )}
           </div>
 
-          {/* ===================================================
-              CTA
-          =================================================== */}
+          {/* =================================================
+              CENTER BUTTON
+          ================================================= */}
 
-          {completed &&
-            !isEntering &&
-            showEnter && (
-              <button
-                type="button"
-                className="landing-page__enter"
-                onClick={onEnter}
+          <div
+            role={
+              completed &&
+              !entering &&
+              showEnter
+                ? "button"
+                : undefined
+            }
+            tabIndex={
+              completed &&
+              !entering &&
+              showEnter
+                ? 0
+                : undefined
+            }
+            aria-label={
+              completed &&
+              !entering &&
+              showEnter
+                ? "Start portfolio"
+                : undefined
+            }
+            aria-disabled={
+              !completed ||
+              entering ||
+              !showEnter
+            }
+            onClick={
+              handleCenterEnter
+            }
+            onKeyDown={(event) => {
+              if (
+                event.key ===
+                  "Enter" ||
+                event.key === " "
+              ) {
+                event.preventDefault();
+                handleCenterEnter();
+              }
+            }}
+            className={[
+              "relative z-10",
+
+              "flex aspect-square w-[56%]",
+              "flex-col items-center justify-center",
+
+              "overflow-hidden rounded-full",
+
+              "border border-[#79d9bb]",
+
+              "bg-[radial-gradient(circle_at_50%_45%,#07100c_0%,#020504_48%,#000_74%)]",
+
+              "font-mono text-[12px]",
+
+              "shadow-[0_0_0_8px_rgba(20,201,138,0.025),0_0_0_1px_rgba(0,0,0,0.8),inset_0_0_30px_rgba(0,0,0,0.95),0_0_40px_rgba(20,201,138,0.06)]",
+
+              "animate-landing-core",
+
+              "min-[601px]:text-[18px]",
+
+              completed &&
+                !entering &&
+                showEnter &&
+                "cursor-pointer",
+
+              completed &&
+                !entering &&
+                showEnter &&
+                "transition-[border-color,box-shadow,transform] duration-300 hover:border-[#79f5c4] hover:shadow-[0_0_0_8px_rgba(20,201,138,0.04),0_0_45px_rgba(20,201,138,0.18),inset_0_0_30px_rgba(0,0,0,0.95)]",
+
+              completed &&
+                !entering &&
+                showEnter &&
+                "active:scale-[0.98]",
+
+              completed &&
+                !entering &&
+                showEnter &&
+                "focus-visible:outline-2 focus-visible:outline-[#79f5c4]/70 focus-visible:outline-offset-4",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            <span
+              aria-hidden="true"
+              className="
+                absolute
+                inset-[13%]
+                rounded-full
+                border
+                border-[#79f5c4]
+                animate-landing-core-ring
+              "
+            />
+
+            <span
+              aria-hidden="true"
+              className="
+                absolute
+                h-px
+                w-[70%]
+
+                bg-linear-to-r
+                from-transparent
+                via-[#79f5c4]/10
+                to-transparent
+
+                animate-landing-core-scan
+              "
+            />
+
+            <div
+              className="
+                relative
+                z-2
+
+                flex
+                items-center
+
+                tracking-[0.03em]
+                text-[#74847c]
+              "
+            >
+              <span
+                className="
+                  mr-1
+                  text-[#79f5c4]
+                "
               >
+                $
+              </span>
+
+              {!completed &&
+                !entering && (
+                  <span>
+                    loading
+                  </span>
+                )}
+
+              {completed &&
+                !entering &&
+                showEnter && (
+                  <span>
+                    start
+                  </span>
+                )}
+
+              {entering && (
                 <span>
-                  $ enter_portfolio
+                  launching
                 </span>
+              )}
 
-                <span
-                  className="landing-page__enter-arrow"
-                  aria-hidden="true"
-                >
-                  →
-                </span>
-              </button>
-            )}
+              <span
+                aria-hidden="true"
+                className="
+                  ml-px
+                  text-[#79f5c4]
+                  animate-landing-cursor
+                "
+              >
+                _
+              </span>
+            </div>
+
+            <span
+              className="
+                relative
+                z-2
+                mt-2
+
+                text-[10px]
+                tracking-[0.24em]
+                text-[#8eac9f]
+              "
+            >
+              {entering
+                ? "LAUNCHING"
+                : completed
+                  ? "Click Here"
+                  : ""}
+            </span>
+          </div>
         </div>
-
-        {/* =====================================================
-            FOOTER
-        ===================================================== */}
-
-        <footer className="landing-page__footer">
-          <span>
-            {PERSONAL_DATA.role}
-          </span>
-
-          <span
-            className="landing-page__footer-line"
-            aria-hidden="true"
-          />
-
-          <span>
-            {PERSONAL_DATA.location}
-          </span>
-        </footer>
-      </main>
-
-      <style>{`
-        /* =====================================================
-           TOKENS
-        ===================================================== */
-
-        .landing-page {
-          --void: #020505;
-
-          --green-100: #b7ffe3;
-          --green-300: #79f5c4;
-          --green-500: #14c98a;
-          --green-700: #087956;
-          --green-900: #04291e;
-
-          --blue: #57a9ff;
-
-          --paper: #edf5f1;
-          --muted: #71817a;
-          --dim: #3c4944;
-
-          position: relative;
-
-          width: 100%;
-          min-height: 100vh;
-          min-height: 100svh;
-
-          overflow: hidden;
-          isolation: isolate;
-
-          display: flex;
-          flex-direction: column;
-
-          background:
-            radial-gradient(
-              circle at 50% 48%,
-              rgba(20, 201, 138, 0.075),
-              transparent 28%
-            ),
-            radial-gradient(
-              circle at 50% 100%,
-              rgba(87, 169, 255, 0.035),
-              transparent 38%
-            ),
-            var(--void);
-
-          color: var(--paper);
-
-          font-family:
-            Inter,
-            ui-sans-serif,
-            system-ui,
-            -apple-system,
-            BlinkMacSystemFont,
-            "Segoe UI",
-            sans-serif;
-
-          transition:
-            background 900ms ease;
-        }
-
-        .landing-page[data-entering="true"] {
-          background:
-            radial-gradient(
-              circle at 50% 48%,
-              rgba(20, 201, 138, 0.16),
-              transparent 30%
-            ),
-            #020505;
-        }
-
-
-        /* =====================================================
-           STAR FIELD
-        ===================================================== */
-
-        .landing-page__space {
-          position: absolute;
-          inset: 0;
-
-          z-index: -5;
-
-          pointer-events: none;
-
-          overflow: hidden;
-        }
-
-        .landing-page__star {
-          position: absolute;
-
-          display: block;
-
-          border-radius: 50%;
-
-          background: #d9fff0;
-
-          animation:
-            landing-star-twinkle
-            ease-in-out
-            infinite;
-        }
-
-
-        /* =====================================================
-           GRID
-        ===================================================== */
-
-        .landing-page__grid {
-          position: absolute;
-          inset: 0;
-
-          z-index: -4;
-
-          pointer-events: none;
-
-          opacity: 0.22;
-
-          background-image:
-            linear-gradient(
-              rgba(121, 245, 196, 0.018)
-              1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              90deg,
-              rgba(121, 245, 196, 0.018)
-              1px,
-              transparent 1px
-            );
-
-          background-size: 70px 70px;
-
-          mask-image:
-            radial-gradient(
-              ellipse at center,
-              black 0%,
-              rgba(0,0,0,0.5) 45%,
-              transparent 80%
-            );
-
-          -webkit-mask-image:
-            radial-gradient(
-              ellipse at center,
-              black 0%,
-              rgba(0,0,0,0.5) 45%,
-              transparent 80%
-            );
-        }
-
-
-        /* =====================================================
-           AMBIENT LIGHT
-        ===================================================== */
-
-        .landing-page__ambient {
-          position: absolute;
-
-          width: 520px;
-          height: 520px;
-
-          left: 50%;
-          top: 48%;
-
-          transform:
-            translate(-50%, -50%);
-
-          z-index: -3;
-
-          pointer-events: none;
-
-          border-radius: 50%;
-
-          background:
-            radial-gradient(
-              circle,
-              rgba(20, 201, 138, 0.11),
-              rgba(20, 201, 138, 0.025) 42%,
-              transparent 72%
-            );
-
-          filter: blur(20px);
-
-          animation:
-            landing-ambient-pulse
-            5s
-            ease-in-out
-            infinite;
-        }
-
-
-        /* =====================================================
-           HEADER
-        ===================================================== */
-
-        .landing-page__header {
-          position: absolute;
-
-          top: 22px;
-          left: 32px;
-          right: 32px;
-
-          display: flex;
-
-          align-items: center;
-          justify-content: space-between;
-
-          z-index: 5;
-        }
-
-        .landing-page__brand {
-          display: flex;
-
-          align-items: center;
-
-          gap: 9px;
-
-          color: #7d8c86;
-
-          font-size: 9px;
-          font-weight: 700;
-
-          letter-spacing: 0.16em;
-        }
-
-        .landing-page__brand-icon {
-          display: grid;
-          place-items: center;
-
-          width: 24px;
-          height: 24px;
-
-          border:
-            1px solid
-            rgba(121, 245, 196, 0.22);
-
-          border-radius: 7px;
-
-          background:
-            rgba(20, 201, 138, 0.035);
-
-          color: var(--green-300);
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 8px;
-
-          box-shadow:
-            inset 0 0 12px
-            rgba(20, 201, 138, 0.04);
-        }
-
-        .landing-page__header-status {
-          color: #34413c;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 7px;
-
-          letter-spacing: 0.12em;
-        }
-
-
-        /* =====================================================
-           MAIN
-        ===================================================== */
-
-        .landing-page__main {
-          flex: 1;
-
-          display: flex;
-
-          flex-direction: column;
-
-          align-items: center;
-          justify-content: center;
-
-          padding:
-            90px
-            24px
-            30px;
-
-          text-align: center;
-        }
-
-
-        /* =====================================================
-           INTRO
-        ===================================================== */
-
-        .landing-page__intro {
-          position: relative;
-
-          z-index: 2;
-
-          animation:
-            landing-fade-in
-            0.8s
-            ease
-            both;
-
-          transition:
-            opacity 700ms ease,
-            transform 700ms
-              cubic-bezier(
-                0.16,
-                1,
-                0.3,
-                1
-              ),
-            filter 700ms ease;
-        }
-
-        .landing-page__intro[data-transition="ready"] {
-          transform:
-            translateY(-3px);
-
-          filter:
-            drop-shadow(
-              0 0 25px
-              rgba(
-                121,
-                245,
-                196,
-                0.025
-              )
-            );
-        }
-
-        .landing-page__eyebrow {
-          display: flex;
-
-          align-items: center;
-          justify-content: center;
-
-          gap: 8px;
-
-          margin-bottom: 19px;
-
-          color: #65746e;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 8px;
-          font-weight: 600;
-
-          letter-spacing: 0.2em;
-        }
-
-        .landing-page__eyebrow-dot {
-          width: 4px;
-          height: 4px;
-
-          border-radius: 50%;
-
-          background:
-            var(--green-300);
-
-          box-shadow:
-            0 0 10px
-            rgba(
-              121,
-              245,
-              196,
-              0.8
-            );
-
-          animation:
-            landing-pulse
-            1.6s
-            ease-in-out
-            infinite;
-        }
-
-        .landing-page__title {
-          max-width: 720px;
-
-          margin: 0;
-
-          font-size:
-            clamp(
-              48px,
-              7vw,
-              82px
-            );
-
-          line-height: 0.96;
-
-          font-weight: 600;
-
-          letter-spacing:
-            -0.065em;
-        }
-
-        .landing-page__description {
-          max-width: 540px;
-
-          margin:
-            20px
-            auto
-            0;
-
-          color: #66746e;
-
-          font-size: 13px;
-
-          line-height: 1.7;
-
-          letter-spacing:
-            -0.01em;
-        }
-
-
-        /* =====================================================
-           LOADER
-        ===================================================== */
-
-        .landing-page__loader {
-          position: relative;
-
-          width:
-            clamp(
-              250px,
-              31vw,
-              310px
-            );
-
-          aspect-ratio: 1;
-
-          margin-top:
-            clamp(
-              30px,
-              4vw,
-              46px
-            );
-
-          display: grid;
-
-          place-items: center;
-
-          animation:
-            landing-loader-enter
-            1.2s
-            cubic-bezier(
-              0.16,
-              1,
-              0.3,
-              1
-            )
-            both;
-        }
-
-
-        /* =====================================================
-           LOADER GLOW
-        ===================================================== */
-
-        .landing-page__loader-glow {
-          position: absolute;
-
-          inset: -18%;
-
-          border-radius: 50%;
-
-          background:
-            radial-gradient(
-              circle,
-              rgba(
-                20,
-                201,
-                138,
-                0.13
-              ),
-              rgba(
-                20,
-                201,
-                138,
-                0.025
-              ) 52%,
-              transparent 72%
-            );
-
-          filter: blur(10px);
-
-          animation:
-            landing-glow
-            4s
-            ease-in-out
-            infinite;
-        }
-
-
-        /* =====================================================
-           ORBITS
-        ===================================================== */
-
-        .landing-page__orbit {
-          position: absolute;
-
-          border-radius: 50%;
-
-          pointer-events: none;
-        }
-
-        .landing-page__orbit--outer {
-          inset: 2%;
-
-          border:
-            1px dashed
-            rgba(
-              121,
-              245,
-              196,
-              0.09
-            );
-
-          animation:
-            landing-spin
-            30s
-            linear
-            infinite;
-        }
-
-        .landing-page__orbit--inner {
-          inset: 15%;
-
-          border:
-            1px dashed
-            rgba(
-              87,
-              169,
-              255,
-              0.1
-            );
-
-          animation:
-            landing-spin-reverse
-            22s
-            linear
-            infinite;
-        }
-
-
-        /* =====================================================
-           PROGRESS RING
-        ===================================================== */
-
-        .landing-page__loader-ring {
-          position: absolute;
-
-          inset: 6%;
-
-          border-radius: 50%;
-
-          -webkit-mask:
-            radial-gradient(
-              farthest-side,
-              transparent
-              calc(100% - 6px),
-              #000
-              calc(100% - 6px)
-            );
-
-          mask:
-            radial-gradient(
-              farthest-side,
-              transparent
-              calc(100% - 6px),
-              #000
-              calc(100% - 6px)
-            );
-
-          filter:
-            drop-shadow(
-              0 0 8px
-              rgba(
-                20,
-                201,
-                138,
-                0.35
-              )
-            );
-
-          transition:
-            background
-            0.7s
-            cubic-bezier(
-              0.22,
-              1,
-              0.36,
-              1
-            );
-
-          animation:
-            landing-spin-slow
-            18s
-            linear
-            infinite;
-        }
-
-        .landing-page[data-ready="true"]
-          .landing-page__loader-ring {
-          filter:
-            drop-shadow(
-              0 0 12px
-              rgba(
-                121,
-                245,
-                196,
-                0.5
-              )
-            );
-        }
-
-
-        /* =====================================================
-           ORBIT DOTS
-        ===================================================== */
-
-        .landing-page__orbit-dot {
-          position: absolute;
-
-          width: 5px;
-          height: 5px;
-
-          border-radius: 50%;
-
-          background:
-            var(--green-300);
-
-          box-shadow:
-            0 0 8px
-            rgba(
-              121,
-              245,
-              196,
-              0.9
-            );
-
-          z-index: 5;
-        }
-
-        .landing-page__orbit-dot--one {
-          top: 7%;
-          left: 50%;
-
-          animation:
-            landing-orbit-dot
-            7s
-            linear
-            infinite;
-        }
-
-        .landing-page__orbit-dot--two {
-          right: 9%;
-          bottom: 28%;
-
-          width: 3px;
-          height: 3px;
-
-          background:
-            var(--blue);
-
-          box-shadow:
-            0 0 8px
-            rgba(
-              87,
-              169,
-              255,
-              0.8
-            );
-
-          animation:
-            landing-orbit-dot
-            9s
-            linear
-            infinite
-            reverse;
-        }
-
-        .landing-page__orbit-dot--three {
-          left: 17%;
-          bottom: 19%;
-
-          width: 3px;
-          height: 3px;
-
-          animation:
-            landing-orbit-dot
-            11s
-            linear
-            infinite;
-        }
-
-
-        /* =====================================================
-           ORBIT LABELS
-        ===================================================== */
-
-        .landing-page__orbit-label {
-          position: absolute;
-
-          color: #45534d;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 6px;
-
-          letter-spacing: 0.18em;
-        }
-
-        .landing-page__orbit-label--top {
-          top: 0;
-          left: 50%;
-
-          transform:
-            translateX(-50%);
-        }
-
-        .landing-page__orbit-label--right {
-          right: 0;
-          top: 50%;
-
-          transform:
-            translateY(-50%);
-        }
-
-        .landing-page__orbit-label--bottom {
-          bottom: 0;
-          left: 50%;
-
-          transform:
-            translateX(-50%);
-        }
-
-        .landing-page__orbit-label--left {
-          left: 0;
-          top: 50%;
-
-          transform:
-            translateY(-50%);
-        }
-
-
-        /* =====================================================
-           CORE
-        ===================================================== */
-
-        .landing-page__core {
-          position: relative;
-
-          width: 56%;
-          aspect-ratio: 1;
-
-          display: flex;
-
-          flex-direction: column;
-
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background:
-            radial-gradient(
-              circle at 50% 45%,
-              #07100c 0%,
-              #020504 48%,
-              #000 74%
-            );
-
-          border:
-            1px solid
-            rgba(
-              121,
-              245,
-              196,
-              0.12
-            );
-
-          box-shadow:
-            0 0 0 8px
-            rgba(
-              20,
-              201,
-              138,
-              0.025
-            ),
-
-            0 0 0 1px
-            rgba(0, 0, 0, 0.8),
-
-            inset 0 0 30px
-            rgba(0, 0, 0, 0.95),
-
-            0 0 40px
-            rgba(
-              20,
-              201,
-              138,
-              0.06
-            );
-
-          z-index: 3;
-
-          overflow: hidden;
-        }
-
-        .landing-page__core::before {
-          content: "";
-
-          position: absolute;
-
-          inset: 13%;
-
-          border-radius: 50%;
-
-          border:
-            1px solid
-            rgba(
-              121,
-              245,
-              196,
-              0.045
-            );
-        }
-
-        .landing-page__core::after {
-          content: "";
-
-          position: absolute;
-
-          width: 70%;
-          height: 1px;
-
-          background:
-            linear-gradient(
-              90deg,
-              transparent,
-              rgba(
-                121,
-                245,
-                196,
-                0.1
-              ),
-              transparent
-            );
-        }
-
-
-        /* =====================================================
-           TERMINAL
-        ===================================================== */
-
-        .landing-page__core-screen {
-          position: relative;
-
-          z-index: 2;
-
-          display: flex;
-
-          align-items: center;
-
-          color: #74847c;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            Menlo,
-            monospace;
-
-          font-size: 9px;
-
-          letter-spacing: 0.03em;
-        }
-
-        .landing-page__terminal-prompt {
-          color:
-            var(--green-300);
-
-          margin-right: 4px;
-        }
-
-        .landing-page__terminal-cursor {
-          margin-left: 1px;
-
-          color:
-            var(--green-300);
-
-          animation:
-            landing-cursor
-            1s
-            steps(1)
-            infinite;
-        }
-
-        .landing-page__core-status {
-          position: relative;
-
-          z-index: 2;
-
-          margin-top: 8px;
-
-          color: #34443d;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 5px;
-
-          letter-spacing: 0.24em;
-        }
-
-
-        /* =====================================================
-           BOTTOM
-        ===================================================== */
-
-        .landing-page__bottom {
-          width:
-            min(
-              520px,
-              calc(100% - 40px)
-            );
-
-          margin:
-            0 auto;
-
-          display: flex;
-
-          flex-direction: column;
-
-          align-items: center;
-
-          gap: 18px;
-
-          padding:
-            0 0 54px;
-        }
-
-
-        /* =====================================================
-           PROGRESS
-        ===================================================== */
-
-        .landing-page__progress {
-          width: 100%;
-        }
-
-        .landing-page__progress-track {
-          position: relative;
-
-          width: 100%;
-          height: 3px;
-
-          overflow: hidden;
-
-          border-radius: 999px;
-
-          background:
-            rgba(
-              255,
-              255,
-              255,
-              0.07
-            );
-        }
-
-        .landing-page__progress-fill {
-          position: absolute;
-
-          left: 0;
-          top: 0;
-
-          display: block;
-
-          width: 0;
-          height: 100%;
-
-          border-radius: inherit;
-
-          background:
-            linear-gradient(
-              90deg,
-              var(--green-700),
-              var(--green-500) 55%,
-              var(--green-300)
-            );
-
-          box-shadow:
-            0 0 12px
-            rgba(
-              20,
-              201,
-              138,
-              0.55
-            );
-
-          transition:
-            width
-            0.2s
-            linear;
-        }
-
-        .landing-page__progress-fill[data-opening="true"] {
-          animation:
-            landing-shimmer
-            1.1s
-            ease-in-out
-            infinite;
-        }
-
-        .landing-page__progress-meta {
-          display: flex;
-
-          align-items: center;
-          justify-content: flex-start;
-
-          margin-top: 11px;
-
-          color: #64736c;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 9px;
-        }
-
-        .landing-page__progress-status {
-          display: flex;
-
-          align-items: center;
-
-          gap: 8px;
-
-          transition:
-            color 400ms ease,
-            transform 400ms ease;
-        }
-
-        .landing-page[data-ready="true"]
-          .landing-page__progress-status {
-          color:
-            var(--green-300);
-
-          transform:
-            translateX(2px);
-        }
-
-        .landing-page__progress-percent {
-          color:
-            var(--green-300);
-        }
-
-        .landing-page__progress-dot {
-          width: 5px;
-          height: 5px;
-
-          border-radius: 50%;
-
-          background:
-            var(--green-300);
-
-          box-shadow:
-            0 0 9px
-            rgba(
-              121,
-              245,
-              196,
-              0.8
-            );
-
-          animation:
-            landing-pulse
-            1.5s
-            ease-in-out
-            infinite;
-        }
-
-
-        /* =====================================================
-           STEPS
-        ===================================================== */
-
-        .landing-page__steps {
-          width: 100%;
-
-          display: grid;
-
-          grid-template-columns:
-            repeat(3, 1fr);
-
-          gap: 10px;
-        }
-
-        .landing-page__step {
-          min-width: 0;
-
-          display: flex;
-
-          align-items: center;
-
-          justify-content: center;
-
-          gap: 7px;
-
-          color: #39443f;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 7px;
-
-          white-space: nowrap;
-
-          transition:
-            color
-            0.3s
-            ease;
-        }
-
-        .landing-page__step--active {
-          color: #74857d;
-        }
-
-        .landing-page__step-number {
-          flex:
-            0 0 16px;
-
-          width: 16px;
-          height: 16px;
-
-          display: grid;
-
-          place-items: center;
-
-          border:
-            1px solid
-            rgba(
-              255,
-              255,
-              255,
-              0.07
-            );
-
-          border-radius: 5px;
-
-          color: #4a5751;
-
-          font-size: 6px;
-
-          transition:
-            all
-            0.3s
-            ease;
-        }
-
-        .landing-page__step--active
-          .landing-page__step-number {
-          border-color:
-            rgba(
-              121,
-              245,
-              196,
-              0.24
-            );
-
-          background:
-            rgba(
-              20,
-              201,
-              138,
-              0.05
-            );
-
-          color:
-            var(--green-300);
-        }
-
-
-        /* =====================================================
-           ENTER BUTTON
-        ===================================================== */
-
-        .landing-page__enter {
-          width: 100%;
-          height: 52px;
-
-          padding:
-            0 9px 0 20px;
-
-          display: flex;
-
-          align-items: center;
-          justify-content: space-between;
-
-          border:
-            1px solid
-            rgba(
-              121,
-              245,
-              196,
-              0.22
-            );
-
-          border-radius: 12px;
-
-          background:
-            linear-gradient(
-              135deg,
-              rgba(
-                20,
-                201,
-                138,
-                0.09
-              ),
-              rgba(
-                20,
-                201,
-                138,
-                0.025
-              )
-            );
-
-          color: #dce9e3;
-
-          font: inherit;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 10px;
-          font-weight: 600;
-
-          letter-spacing: 0.08em;
-
-          cursor: pointer;
-
-          /*
-           * The button has one CSS animation
-           * for its entrance and one delayed
-           * CSS animation for the attention blink.
-           *
-           * No React state or timeout is needed.
-           */
-          animation:
-            landing-fade-in
-            0.5s
-            ease
-            both,
-            landing-enter-blink
-            1.2s
-            ease-in-out
-            0.5s
-            both;
-
-          transition:
-            transform
-            0.25s
-            ease,
-            border-color
-            0.25s
-            ease,
-            background
-            0.25s
-            ease,
-            box-shadow
-            0.25s
-            ease;
-        }
-
-        .landing-page__enter:hover {
-          transform:
-            translateY(-2px);
-
-          border-color:
-            rgba(
-              121,
-              245,
-              196,
-              0.45
-            );
-
-          background:
-            linear-gradient(
-              135deg,
-              rgba(
-                20,
-                201,
-                138,
-                0.15
-              ),
-              rgba(
-                20,
-                201,
-                138,
-                0.04
-              )
-            );
-
-          box-shadow:
-            0 12px 35px
-            rgba(0, 0, 0, 0.3),
-
-            0 0 25px
-            rgba(
-              20,
-              201,
-              138,
-              0.08
-            );
-        }
-
-        .landing-page__enter:active {
-          transform:
-            translateY(0);
-        }
-
-        .landing-page__enter:focus-visible {
-          outline:
-            2px solid
-            rgba(
-              121,
-              245,
-              196,
-              0.7
-            );
-
-          outline-offset: 3px;
-        }
-
-        .landing-page__enter-arrow {
-          width: 34px;
-          height: 34px;
-
-          display: grid;
-
-          place-items: center;
-
-          border-radius: 9px;
-
-          background:
-            rgba(
-              255,
-              255,
-              255,
-              0.06
-            );
-
-          color:
-            var(--green-300);
-
-          font-size: 15px;
-
-          transition:
-            transform
-            0.25s
-            ease;
-        }
-
-        .landing-page__enter:hover
-          .landing-page__enter-arrow {
-          transform:
-            translateX(4px);
-        }
-
-
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-
-        .landing-page__footer {
-          position: absolute;
-
-          left: 32px;
-          right: 32px;
-          bottom: 22px;
-
-          z-index: 5;
-
-          display: flex;
-
-          align-items: center;
-
-          gap: 12px;
-
-          color: #35413c;
-
-          font-family:
-            "JetBrains Mono",
-            ui-monospace,
-            monospace;
-
-          font-size: 7px;
-
-          letter-spacing: 0.12em;
-        }
-
-        .landing-page__footer-line {
-          width: 35px;
-          height: 1px;
-
-          background:
-            rgba(
-              255,
-              255,
-              255,
-              0.06
-            );
-        }
-
-
-        /* =====================================================
-           ENTERING STATE
-        ===================================================== */
-
-        .landing-page[data-entering="true"]
-          .landing-page__loader {
-          animation:
-            landing-loader-consume
-            900ms
-            ease-in
-            forwards;
-        }
-
-        .landing-page[data-entering="true"]
-          .landing-page__intro {
-          animation:
-            landing-fade-out
-            500ms
-            ease
-            forwards;
-        }
-
-        .landing-page[data-entering="true"]
-          .landing-page__bottom {
-          opacity: 0;
-
-          transition:
-            opacity
-            0.3s
-            ease;
-        }
-
-
-        /* =====================================================
-           ANIMATIONS
-        ===================================================== */
-
-        @keyframes landing-fade-in {
-          from {
-            opacity: 0;
-
-            transform:
-              translateY(12px);
-          }
-
-          to {
-            opacity: 1;
-
-            transform:
-              translateY(0);
-          }
-        }
-
-        @keyframes landing-fade-out {
-          to {
-            opacity: 0;
-
-            transform:
-              translateY(-8px)
-              scale(0.98);
-
-            filter: blur(4px);
-          }
-        }
-
-        @keyframes landing-loader-enter {
-          from {
-            opacity: 0;
-
-            transform:
-              scale(0.72);
-          }
-
-          to {
-            opacity: 1;
-
-            transform:
-              scale(1);
-          }
-        }
-
-        @keyframes landing-loader-consume {
-          0% {
-            opacity: 1;
-
-            transform:
-              scale(1);
-
-            filter:
-              blur(0);
-          }
-
-          45% {
-            opacity: 1;
-
-            transform:
-              scale(1.08);
-
-            filter:
-              blur(0);
-          }
-
-          100% {
-            opacity: 0;
-
-            transform:
-              scale(1.75);
-
-            filter:
-              blur(10px);
-          }
-        }
-
-        /*
-         * One-time CTA attention animation.
-         *
-         * The 0.5s delay gives the normal
-         * fade-in time to finish first.
-         *
-         * Then the button pulses twice and
-         * remains in its normal state.
-         */
-        @keyframes landing-enter-blink {
-          0% {
-            transform:
-              scale(1);
-
-            border-color:
-              rgba(
-                121,
-                245,
-                196,
-                0.22
-              );
-
-            box-shadow:
-              0 0 0
-              rgba(
-                20,
-                201,
-                138,
-                0
-              );
-          }
-
-          18% {
-            transform:
-              scale(1.025);
-
-            border-color:
-              rgba(
-                121,
-                245,
-                196,
-                0.8
-              );
-
-            box-shadow:
-              0 0 30px
-              rgba(
-                20,
-                201,
-                138,
-                0.3
-              );
-          }
-
-          36% {
-            transform:
-              scale(1);
-
-            border-color:
-              rgba(
-                121,
-                245,
-                196,
-                0.22
-              );
-
-            box-shadow:
-              0 0 0
-              rgba(
-                20,
-                201,
-                138,
-                0
-              );
-          }
-
-          54% {
-            transform:
-              scale(1.025);
-
-            border-color:
-              rgba(
-                121,
-                245,
-                196,
-                0.8
-              );
-
-            box-shadow:
-              0 0 30px
-              rgba(
-                20,
-                201,
-                138,
-                0.3
-              );
-          }
-
-          72% {
-            transform:
-              scale(1);
-
-            border-color:
-              rgba(
-                121,
-                245,
-                196,
-                0.22
-              );
-
-            box-shadow:
-              0 0 0
-              rgba(
-                20,
-                201,
-                138,
-                0
-              );
-          }
-
-          100% {
-            transform:
-              scale(1);
-
-            border-color:
-              rgba(
-                121,
-                245,
-                196,
-                0.22
-              );
-
-            box-shadow:
-              0 0 0
-              rgba(
-                20,
-                201,
-                138,
-                0
-              );
-          }
-        }
-
-        @keyframes landing-star-twinkle {
-          0%,
-          100% {
-            transform:
-              scale(0.8);
-
-            filter:
-              brightness(0.7);
-          }
-
-          50% {
-            transform:
-              scale(1.25);
-
-            filter:
-              brightness(1.7);
-          }
-        }
-
-        @keyframes landing-ambient-pulse {
-          0%,
-          100% {
-            opacity: 0.65;
-
-            transform:
-              translate(-50%, -50%)
-              scale(0.95);
-          }
-
-          50% {
-            opacity: 1;
-
-            transform:
-              translate(-50%, -50%)
-              scale(1.08);
-          }
-        }
-
-        @keyframes landing-glow {
-          0%,
-          100% {
-            opacity: 0.55;
-
-            transform:
-              scale(0.94);
-          }
-
-          50% {
-            opacity: 1;
-
-            transform:
-              scale(1.06);
-          }
-        }
-
-        @keyframes landing-spin {
-          from {
-            transform:
-              rotate(0deg);
-          }
-
-          to {
-            transform:
-              rotate(360deg);
-          }
-        }
-
-        @keyframes landing-spin-reverse {
-          from {
-            transform:
-              rotate(360deg);
-          }
-
-          to {
-            transform:
-              rotate(0deg);
-          }
-        }
-
-        @keyframes landing-spin-slow {
-          from {
-            transform:
-              rotate(0deg);
-          }
-
-          to {
-            transform:
-              rotate(360deg);
-          }
-        }
-
-        @keyframes landing-orbit-dot {
-          from {
-            transform:
-              rotate(0deg)
-              translateX(4px)
-              rotate(0deg);
-          }
-
-          to {
-            transform:
-              rotate(360deg)
-              translateX(4px)
-              rotate(-360deg);
-          }
-        }
-
-        @keyframes landing-pulse {
-          0%,
-          100% {
-            opacity: 1;
-
-            transform:
-              scale(1);
-          }
-
-          50% {
-            opacity: 0.4;
-
-            transform:
-              scale(0.7);
-          }
-        }
-
-        @keyframes landing-cursor {
-          0%,
-          45% {
-            opacity: 1;
-          }
-
-          46%,
-          100% {
-            opacity: 0;
-          }
-        }
-
-        @keyframes landing-shimmer {
-          0%,
-          100% {
-            filter:
-              brightness(1);
-          }
-
-          50% {
-            filter:
-              brightness(1.45);
-          }
-        }
-
-
-        /* =====================================================
-           TABLET
-        ===================================================== */
-
-        @media (max-width: 800px) {
-          .landing-page__header {
-            left: 24px;
-            right: 24px;
-          }
-
-          .landing-page__title {
-            font-size:
-              clamp(
-                44px,
-                8vw,
-                64px
-              );
-          }
-
-          .landing-page__loader {
-            width:
-              clamp(
-                230px,
-                42vw,
-                290px
-              );
-          }
-
-          .landing-page__bottom {
-            width:
-              min(
-                480px,
-                calc(100% - 40px)
-              );
-          }
-        }
-
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
-
-        @media (max-width: 600px) {
-          .landing-page__header {
-            top: 18px;
-
-            left: 20px;
-            right: 20px;
-          }
-
-          .landing-page__brand {
-            font-size: 8px;
-          }
-
-          .landing-page__header-status {
-            display: none;
-          }
-
-          .landing-page__main {
-            padding:
-              76px
-              20px
-              20px;
-          }
-
-          .landing-page__eyebrow {
-            margin-bottom: 16px;
-
-            font-size: 7px;
-          }
-
-          .landing-page__title {
-            font-size:
-              clamp(
-                40px,
-                12vw,
-                56px
-              );
-
-            line-height: 0.98;
-          }
-
-          .landing-page__description {
-            margin-top: 17px;
-
-            font-size: 12px;
-
-            line-height: 1.6;
-          }
-
-          .landing-page__loader {
-            width:
-              min(
-                235px,
-                64vw
-              );
-
-            margin-top: 28px;
-          }
-
-          .landing-page__bottom {
-            width:
-              calc(100% - 40px);
-
-            padding-bottom: 50px;
-
-            gap: 15px;
-          }
-
-          .landing-page__steps {
-            grid-template-columns:
-              repeat(3, 1fr);
-
-            gap: 6px;
-          }
-
-          .landing-page__step {
-            justify-content: center;
-
-            font-size: 7px;
-          }
-
-          .landing-page__step-number {
-            flex-basis: 15px;
-
-            width: 15px;
-            height: 15px;
-          }
-
-          .landing-page__enter {
-            height: 50px;
-          }
-
-          .landing-page__footer {
-            left: 20px;
-            right: 20px;
-            bottom: 17px;
-
-            font-size: 6px;
-          }
-        }
-
-
-        /* =====================================================
-           SMALL MOBILE
-        ===================================================== */
-
-        @media (max-width: 380px) {
-          .landing-page__title {
-            font-size: 36px;
-          }
-
-          .landing-page__description {
-            font-size: 11px;
-          }
-
-          .landing-page__loader {
-            width: 210px;
-          }
-
-          .landing-page__orbit-label {
-            font-size: 5px;
-          }
-
-          .landing-page__core-screen {
-            font-size: 8px;
-          }
-
-          .landing-page__steps {
-            gap: 3px;
-          }
-
-          .landing-page__step {
-            font-size: 6px;
-            gap: 4px;
-          }
-        }
-
-
-        /* =====================================================
-           REDUCED MOTION
-        ===================================================== */
-
-        @media (prefers-reduced-motion: reduce) {
-          .landing-page *,
-          .landing-page *::before,
-          .landing-page *::after {
-            animation:
-              none !important;
-
-            transition:
-              none !important;
-          }
-        }
-      `}</style>
-    </>
+      </section>
+
+      {/* =====================================================
+          BOTTOM
+      ===================================================== */}
+
+      <div
+        className="
+          mx-auto
+          flex
+          w-[calc(100%-40px)]
+
+          flex-col
+          items-center
+
+          gap-3.75
+          pb-12.5
+
+          min-[601px]:w-[min(520px,calc(100%-40px))]
+          min-[601px]:gap-4.5
+          min-[601px]:pb-13.5
+        "
+      >
+        <div className="w-full">
+          <div
+            className="
+              relative
+              h-0.75
+              w-full
+              overflow-hidden
+              rounded-full
+              bg-white/[0.07]
+            "
+          >
+            <span
+              ref={progressFillRef}
+              style={{
+                width: `${progress}%`,
+              }}
+              className="
+                absolute
+                left-0
+                top-0
+
+                block
+                h-full
+
+                rounded-full
+
+                bg-linear-to-r
+                from-[#087956]
+                via-[#14c98a]
+                to-[#79f5c4]
+
+                shadow-[0_0_12px_rgba(20,201,138,0.55)]
+
+                transition-[width]
+                duration-200
+                linear
+
+                animate-landing-shimmer
+              "
+            />
+          </div>
+
+          <div
+            className="
+              mt-3
+
+              flex
+              items-center
+              justify-start
+
+              font-mono
+              text-[9px]
+              text-[#64736c]
+            "
+          >
+            <span
+              className="
+                flex
+                items-center
+                gap-2
+                text-2xl
+              "
+            >
+              {glowDot}
+
+              {statusText}
+
+              {completed && (
+                <span className="text-[#79f5c4]">
+                  {" "}
+                  — 100%
+                </span>
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

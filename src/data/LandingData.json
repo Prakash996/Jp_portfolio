@@ -1,0 +1,137 @@
+{
+  "personal": {
+    "name": "JP PRAKASH",
+    "role": "FRONTEND DEVELOPER",
+    "location": "VIJAYAWADA, INDIA"
+  },
+  "loadingSteps": [
+    "Starting",
+    "Loading",
+    "almost completed"
+  ],
+  "starCount": 90,
+  "commonTextClassName": "mb-4 flex items-center justify-center gap-2 font-mono text-[7px] font-semibold tracking-[0.2em] text-[#65746e] min-[601px]:mb-4.75 min-[601px]:text-[16px]",
+  "loader": {
+    "minimumLoadingTime": 3200,
+    "initialProgress": 8,
+    "partialProgress": 28,
+    "resourceProgress": 68,
+    "completedProgress": 100,
+    "partialDuration": 900,
+    "completedDuration": 1200
+  },
+  "spirals": [
+    {
+      "id": 1,
+      "radius": 47,
+      "end": 5,
+      "turns": 4.1,
+      "color": "#79f5c4",
+      "opacity": 0.75,
+      "width": 0.72,
+      "duration": 5.5,
+      "delay": "0s",
+      "dash": "4 12"
+    },
+    {
+      "id": 2,
+      "radius": 44,
+      "end": 4,
+      "turns": 3.85,
+      "color": "#14c98a",
+      "opacity": 0.42,
+      "width": 0.5,
+      "duration": 7,
+      "delay": "-2s",
+      "dash": "2 15"
+    },
+    {
+      "id": 3,
+      "radius": 41,
+      "end": 5,
+      "turns": 3.65,
+      "color": "#57a9ff",
+      "opacity": 0.52,
+      "width": 0.58,
+      "duration": 6.4,
+      "delay": "-4s",
+      "dash": "3 17"
+    },
+    {
+      "id": 4,
+      "radius": 38,
+      "end": 4,
+      "turns": 3.45,
+      "color": "#79f5c4",
+      "opacity": 0.3,
+      "width": 0.45,
+      "duration": 8.2,
+      "delay": "-1s",
+      "dash": "1.5 13"
+    },
+    {
+      "id": 5,
+      "radius": 34,
+      "end": 4,
+      "turns": 3.25,
+      "color": "#14c98a",
+      "opacity": 0.28,
+      "width": 0.4,
+      "duration": 9,
+      "delay": "-5s",
+      "dash": "2 19"
+    },
+    {
+      "id": 6,
+      "radius": 30,
+      "end": 3,
+      "turns": 3.05,
+      "color": "#57a9ff",
+      "opacity": 0.25,
+      "width": 0.38,
+      "duration": 7.8,
+      "delay": "-3s",
+      "dash": "1 14"
+    }
+  ],
+  "circleLabels": {
+    "dev": "DEV",
+    "ui": "UI",
+    "code": "CODE",
+    "build": "BUILD"
+  },
+  "particles": [
+    {
+      "id": 1,
+      "className": "animate-spiral-particle-forward",
+      "position": "left-1/2 top-[2%]",
+      "size": "size-1.5",
+      "color": "#79f5c4",
+      "shadow": "shadow-[0_0_8px_rgba(121,245,196,1),0_0_22px_rgba(20,201,138,0.8)]"
+    },
+    {
+      "id": 2,
+      "className": "animate-spiral-particle-forward-2",
+      "position": "left-[17%] top-[30%]",
+      "size": "size-1",
+      "color": "#57a9ff",
+      "shadow": "shadow-[0_0_8px_rgba(87,169,255,1),0_0_18px_rgba(87,169,255,0.55)]"
+    },
+    {
+      "id": 3,
+      "className": "animate-spiral-particle-forward-3",
+      "position": "bottom-[16%] right-[19%]",
+      "size": "size-[3px]",
+      "color": "#79f5c4",
+      "shadow": "shadow-[0_0_7px_rgba(121,245,196,1)]"
+    },
+    {
+      "id": 4,
+      "className": "animate-spiral-particle-forward-4",
+      "position": "right-[11%] top-[52%]",
+      "size": "size-[2px]",
+      "color": "#57a9ff",
+      "shadow": "shadow-[0_0_7px_rgba(87,169,255,1)]"
+    }
+  ]
+}

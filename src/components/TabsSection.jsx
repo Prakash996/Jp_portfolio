@@ -1,19 +1,79 @@
 import { useState } from "react";
-import { Icon, addCollection } from "@iconify/react";
-
-import simpleIcons from "@iconify-json/simple-icons/icons.json";
-import mdiIcons from "@iconify-json/mdi/icons.json";
-
+import {
+  CircleHelp,
+  Code2,
+  Compass,
+  Database,
+  Globe2,
+  Layers3,
+  LayoutGrid,
+  TestTube,
+  Wrench,
+} from "lucide-react";
 import { FaVial } from "react-icons/fa";
+import {
+  SiAngular,
+  SiBootstrap,
+  SiCss,
+  SiEclipseide,
+  SiElectron,
+  SiExpress,
+  SiGit,
+  SiGithub,
+  SiHcl,
+  SiHtml5,
+  SiJenkins,
+  SiJira,
+  SiJavascript,
+  SiJquery,
+  SiMocha,
+  SiMysql,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPython,
+  SiReact,
+  SiRedux,
+  SiSelenium,
+  SiSqlite,
+} from "react-icons/si";
 
 import "@/css/TabsSection.css";
 
-/* =========================================================
-   LOCAL ICON COLLECTIONS
-========================================================= */
-
-addCollection(simpleIcons);
-addCollection(mdiIcons);
+const ICONS = {
+  "simple-icons:javascript": SiJavascript,
+  "simple-icons:react": SiReact,
+  "simple-icons:nextdotjs": SiNextdotjs,
+  "simple-icons:nodedotjs": SiNodedotjs,
+  "simple-icons:html5": SiHtml5,
+  "simple-icons:css3": SiCss,
+  "simple-icons:bootstrap": SiBootstrap,
+  "simple-icons:jquery": SiJquery,
+  "simple-icons:angular": SiAngular,
+  "simple-icons:redux": SiRedux,
+  "simple-icons:express": SiExpress,
+  "simple-icons:electron": SiElectron,
+  "simple-icons:hcl": SiHcl,
+  "simple-icons:python": SiPython,
+  "simple-icons:selenium": SiSelenium,
+  "simple-icons:mocha": SiMocha,
+  "simple-icons:git": SiGit,
+  "simple-icons:github": SiGithub,
+  "simple-icons:jenkins": SiJenkins,
+  "simple-icons:jira": SiJira,
+  "simple-icons:eclipseide": SiEclipseide,
+  "simple-icons:mysql": SiMysql,
+  "simple-icons:sqlite": SiSqlite,
+  "mdi:compass-outline": Compass,
+  "mdi:code-braces": Code2,
+  "mdi:view-grid-outline": LayoutGrid,
+  "mdi:code-tags": Code2,
+  "mdi:web": Globe2,
+  "mdi:layers-outline": Layers3,
+  "mdi:test-tube": TestTube,
+  "mdi:tools": Wrench,
+  "mdi:database-outline": Database,
+  "mdi:help-circle-outline": CircleHelp,
+};
 
 /* =========================================================
    SKILLS DATA
@@ -272,6 +332,8 @@ const TABS = [
 ========================================================= */
 
 function FallbackIcon({ color = "#34D399" }) {
+  const IconComponent = ICONS["mdi:help-circle-outline"];
+
   return (
     <div
       id="skill-fallback-icon"
@@ -290,9 +352,8 @@ function FallbackIcon({ color = "#34D399" }) {
         backgroundColor: `${color}0D`,
       }}
     >
-      <Icon
+      <IconComponent
         id="skill-fallback-icon-symbol"
-        icon="mdi:help-circle-outline"
         width={30}
         height={30}
         aria-label="Unknown skill icon"
@@ -330,12 +391,13 @@ function SkillIcon({ skill }) {
     return <FallbackIcon color={skill?.color} />;
   }
 
+  const IconComponent = ICONS[skill.icon] ?? CircleHelp;
+
   return (
-    <Icon
+    <IconComponent
       id={`skill-icon-${skill.name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")}`}
-      icon={skill.icon}
       width={48}
       height={48}
       aria-label={`${skill.name} logo`}
@@ -515,6 +577,8 @@ function SkillTab({
   count,
   onClick,
 }) {
+  const IconComponent = ICONS[tab.icon] ?? CircleHelp;
+
   return (
     <button
       id={`skill-tab-${tab.id}`}
@@ -558,11 +622,9 @@ function SkillTab({
         }
       `}
     >
-      <Icon
+      <IconComponent
         id={`skill-tab-icon-${tab.id}`}
-        icon={tab.icon}
-        width={14}
-        height={14}
+        size={14}
         className="shrink-0"
       />
 

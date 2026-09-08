@@ -5,7 +5,7 @@ export default function ProfileSection({
   stats,
 }) {
   return (
-    <div className="flex h-full flex-col lg:col-span-4">
+    <div id="#home" className="flex h-full flex-col lg:col-span-4">
       <ProfileCard
         personDetails={personDetails}
         stats={stats}
