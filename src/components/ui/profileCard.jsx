@@ -101,7 +101,7 @@ export default function ProfileCard({ personDetails }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 700);
 
     return () => clearTimeout(timer);
   }, []);
@@ -201,25 +201,29 @@ export default function ProfileCard({ personDetails }) {
               }`}
             >
               {isLoading ? (
-                <div className="flex w-full flex-col items-center animate-pulse">
-                  <div className="mb-6 aspect-square w-full rounded-2xl bg-zinc-800" />
+                <div
+                  role="status"
+                  aria-label="Loading profile card"
+                  className="flex w-full flex-col items-center animate-pulse"
+                >
+                  <div className="mb-6 aspect-square w-full rounded-2xl bg-[#1d1d1f]" />
 
-                  <div className="mb-6 h-7 w-28 rounded-full bg-zinc-800" />
+                  <div className="mb-6 h-7 w-28 rounded-full bg-[#1d1d1f]" />
 
-                  <div className="mb-6 h-9 w-3/4 rounded bg-zinc-800" />
+                  <div className="mb-6 h-9 w-3/4 rounded bg-[#1d1d1f]" />
 
                   <div className="mb-8 flex gap-3">
                     {[1, 2, 3].map((item) => (
                       <div
                         key={item}
-                        className="h-10 w-10 rounded-xl bg-zinc-800"
+                        className="h-10 w-10 rounded-xl bg-[#1d1d1f]"
                       />
                     ))}
                   </div>
 
                   <div className="grid w-full grid-cols-2 gap-3">
-                    <div className="h-10 rounded-xl bg-zinc-800" />
-                    <div className="h-10 rounded-xl bg-zinc-800" />
+                    <div className="h-10 rounded-xl bg-[#1d1d1f]" />
+                    <div className="h-10 rounded-xl bg-[#1d1d1f]" />
                   </div>
                 </div>
               ) : (

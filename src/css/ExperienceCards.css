@@ -51,13 +51,16 @@
    TIMELINE BASE
    ================================================================ */
 
+/*
+ * IMPORTANT:
+ * Keep this as a solid color.
+ *
+ * A gradient to transparent makes a 1px timeline look black/
+ * invisible against a dark background.
+ */
+
 .timeline-base {
-  background: linear-gradient(
-    to bottom,
-    var(--faint),
-    var(--border),
-    transparent
-  );
+  background: rgba(255, 255, 255, 0.18) !important;
 }
 
 
@@ -65,18 +68,37 @@
    TIMELINE HIGHLIGHT
    ================================================================ */
 
+/*
+ * Clean, bright tracking line.
+ *
+ * No gradient.
+ * No excessive blur.
+ * The line itself is responsible for visibility.
+ */
+
 .timeline-highlight {
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--emerald),
-    transparent
-  );
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.55);
+  background: var(--emerald) !important;
+
+  box-shadow:
+    0 0 4px rgba(52, 211, 153, 0.9),
+    0 0 10px rgba(16, 185, 129, 0.45);
+
+  border-radius: 999px;
 }
 
+
+/*
+ * Mobile tracker
+ */
+
 .timeline-highlight--mobile {
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.55);
+  background: var(--emerald) !important;
+
+  box-shadow:
+    0 0 4px rgba(52, 211, 153, 0.9),
+    0 0 9px rgba(16, 185, 129, 0.45);
+
+  border-radius: 999px;
 }
 
 
@@ -85,27 +107,40 @@
    ================================================================ */
 
 .timeline-connector {
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.25);
+  height: 1px;
+
+  box-shadow:
+    0 0 5px rgba(16, 185, 129, 0.2);
 }
+
+
+/* LEFT */
 
 .timeline-connector--left {
   left: calc(50% - 32px);
-  transform-origin: right;
+
+  transform-origin: right center;
+
   background: linear-gradient(
     to left,
-    rgba(52, 211, 153, 0.8),
-    rgba(16, 185, 129, 0.5),
+    rgba(52, 211, 153, 0.75),
+    rgba(16, 185, 129, 0.35),
     transparent
   );
 }
 
+
+/* RIGHT */
+
 .timeline-connector--right {
   left: 50%;
-  transform-origin: left;
+
+  transform-origin: left center;
+
   background: linear-gradient(
     to right,
-    rgba(52, 211, 153, 0.8),
-    rgba(16, 185, 129, 0.5),
+    rgba(52, 211, 153, 0.75),
+    rgba(16, 185, 129, 0.35),
     transparent
   );
 }
@@ -135,11 +170,6 @@
 /* ================================================================
    EXPERIENCE CARD
    ================================================================ */
-/* 
-.experience-card {
-  background: var(--background);
-  border-color: var(--border);
-} */
 
 .experience-card:hover {
   background: var(--background-hover);
@@ -195,14 +225,12 @@
    SHARED HOVER COLOR
    ================================================================ */
 
+.experience-card:hover .experience-icon {
+  color: var(--amber);
+}
 
-.experience-card:hover {
-    & .experience-icon {
-        color: var(--amber);
-    }
-    & .experience-text {
-        color: var(--emerald-500);
-    }
+.experience-card:hover .experience-text {
+  color: var(--emerald-500);
 }
 
 

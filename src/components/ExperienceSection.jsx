@@ -15,9 +15,9 @@ import {
   FiCalendar,
   FiMapPin,
 } from "react-icons/fi";
-
 import "@/css/ExperienceCards.css";
 import { experiences } from "@/data/personDetails.json";
+import TextReveal from "./ui/TextReveal";
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -36,23 +36,25 @@ export default function ExperienceSection() {
 
   const smoothMouseY = useSpring(mouseY, SPRING);
 
-  const handleMouseMove = useCallback((event) => {
-    const element = timelineRef.current;
+  const handleMouseMove = useCallback(
+    (event) => {
+      const element = timelineRef.current;
 
-    if (!element) return;
+      if (!element) return;
 
-    const rect = element.getBoundingClientRect();
+      const rect = element.getBoundingClientRect();
 
-    mouseY.set(
-      Math.max(
-        0,
-        Math.min(
-          rect.height,
-          event.clientY - rect.top
+      const y = event.clientY - rect.top;
+
+      mouseY.set(
+        Math.max(
+          0,
+          Math.min(rect.height, y)
         )
-      )
-    );
-  }, [mouseY]);
+      );
+    },
+    [mouseY]
+  );
 
   const handleMouseEnter = useCallback(() => {
     setIsTimelineHovered(true);
@@ -62,8 +64,11 @@ export default function ExperienceSection() {
     setIsTimelineHovered(false);
   }, []);
 
-  return (    
-    <div id="experience" className="mx-auto max-w-6xl">
+  return (
+    <section
+      id="experience"
+      className="experience-section mx-auto max-w-6xl"
+    >
       <ExperienceHeader />
 
       <div
@@ -71,7 +76,12 @@ export default function ExperienceSection() {
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="experience-timeline relative mb-20!"
+        className="
+          experience-timeline
+          relative
+          isolate
+          mb-20!
+        "
       >
         <TimelineBase />
 
@@ -80,7 +90,7 @@ export default function ExperienceSection() {
           visible={isTimelineHovered}
         />
 
-        <div className="space-y-16 md:space-y-24">
+        <div className="relative z-10 space-y-16 md:space-y-24">
           {experiences.map((experience, index) => (
             <ExperienceItem
               key={`${experience.id}-${experience.company}-${experience.period}`}
@@ -90,10 +100,9 @@ export default function ExperienceSection() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
-
 
 /* ==========================================================================
    HEADER
@@ -127,7 +136,15 @@ function ExperienceHeader() {
           aria-hidden="true"
         />
 
-        <span className="experience-label text-xs font-medium uppercase tracking-[0.2em]">
+        <span
+          className="
+            experience-label
+            text-xs
+            font-medium
+            uppercase
+            tracking-[0.2em]
+          "
+        >
           Experience
         </span>
       </div>
@@ -135,27 +152,45 @@ function ExperienceHeader() {
       <div className="mt-3 flex items-center gap-3">
         <h2
           id="experience-heading"
-          className="experience-title text-2xl font-semibold tracking-tight sm:text-3xl"
+          className="
+            experience-title
+            text-2xl
+            font-semibold
+            tracking-tight
+            sm:text-3xl
+          "
         >
           Professional Journey
         </h2>
 
         <span
-          className="experience-count font-mono text-[10px] tracking-widest"
+          className="
+            experience-count
+            font-mono
+            text-[10px]
+            tracking-widest
+          "
           aria-label={`${experiences.length} experiences`}
         >
           / {String(experiences.length).padStart(2, "0")}
         </span>
       </div>
 
-      <p className="experience-description mt-3 max-w-2xl text-sm leading-6">
+      <p
+        className="
+          experience-description
+          mt-3
+          max-w-2xl
+          text-sm
+          leading-6
+        "
+      >
         A timeline of my professional experience, engineering
         responsibilities, and career growth.
       </p>
     </motion.header>
   );
 }
-
 
 /* ==========================================================================
    TIMELINE BASE
@@ -164,28 +199,38 @@ function ExperienceHeader() {
 function TimelineBase() {
   return (
     <>
-      <div
-        aria-hidden="true"
-        className="
-          timeline-base
-          absolute
-          inset-y-0
-          left-1/2
-          hidden
-          w-px
-          -translate-x-1/2
-          md:block
-        "
-      />
+      {/* Desktop */}
 
       <div
         aria-hidden="true"
         className="
           timeline-base
+          pointer-events-none
+          absolute
+          inset-y-0
+          left-1/2
+          z-0
+          hidden
+          w-[2px]
+          -translate-x-1/2
+          bg-zinc-700
+          md:block
+        "
+      />
+
+      {/* Mobile */}
+
+      <div
+        aria-hidden="true"
+        className="
+          timeline-base
+          pointer-events-none
           absolute
           inset-y-0
           left-4.25
-          w-px
+          z-0
+          w-[2px]
+          bg-zinc-700
           md:hidden
         "
       />
@@ -193,38 +238,43 @@ function TimelineBase() {
   );
 }
 
-
 /* ==========================================================================
-   TIMELINE HIGHLIGHT
+   TIMELINE HIGHLIGHT / MOUSE BEAM
    ========================================================================== */
 
 function TimelineHighlight({ mouseY, visible }) {
   return (
     <>
+      {/* ------------------------------------------------------------------
+         DESKTOP GLOW
+         ------------------------------------------------------------------ */}
+
       <motion.div
         aria-hidden="true"
         style={{
           top: mouseY,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{
-          opacity: {
-            duration: 0.2,
-          },
+          opacity: visible ? 0.35 : 0,
         }}
         className="
-          timeline-highlight
+          pointer-events-none
           absolute
           left-1/2
-          z-20
+          z-[40]
           hidden
-          h-24
-          w-px
+          h-28
+          w-5
           -translate-x-1/2
           -translate-y-1/2
+          rounded-full
+          bg-emerald-400
+          blur-lg
           md:block
         "
       />
+
+      {/* ------------------------------------------------------------------
+         DESKTOP BEAM
+         ------------------------------------------------------------------ */}
 
       <motion.div
         aria-hidden="true"
@@ -232,28 +282,77 @@ function TimelineHighlight({ mouseY, visible }) {
           top: mouseY,
           opacity: visible ? 1 : 0,
         }}
-        transition={{
-          opacity: {
-            duration: 0.2,
-          },
-        }}
         className="
-          timeline-highlight
-          timeline-highlight--mobile
+          pointer-events-none
           absolute
-          left-4.25
-          z-20
-          h-20
-          w-px
+          left-1/2
+          z-[50]
+          hidden
+          h-24
+          w-[2px]
           -translate-x-1/2
           -translate-y-1/2
+          rounded-full
+          bg-emerald-300
+          shadow-[0_0_8px_rgba(52,211,153,0.9)]
+          md:block
+        "
+      />
+
+      {/* ------------------------------------------------------------------
+         MOBILE GLOW
+         ------------------------------------------------------------------ */}
+
+      <motion.div
+        aria-hidden="true"
+        style={{
+          top: mouseY,
+          opacity: visible ? 0.35 : 0,
+        }}
+        className="
+          pointer-events-none
+          absolute
+          left-4.25
+          z-[40]
+          h-24
+          w-5
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-emerald-400
+          blur-lg
+          md:hidden
+        "
+      />
+
+      {/* ------------------------------------------------------------------
+         MOBILE BEAM
+         ------------------------------------------------------------------ */}
+
+      <motion.div
+        aria-hidden="true"
+        style={{
+          top: mouseY,
+          opacity: visible ? 1 : 0,
+        }}
+        className="
+          pointer-events-none
+          absolute
+          left-4.25
+          z-[50]
+          h-20
+          w-[2px]
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-emerald-300
+          shadow-[0_0_8px_rgba(52,211,153,0.9)]
           md:hidden
         "
       />
     </>
   );
 }
-
 
 /* ==========================================================================
    EXPERIENCE ITEM
@@ -283,7 +382,9 @@ function ExperienceItem({ experience, index }) {
         md:items-start
       "
     >
-      {/* LEFT */}
+      {/* ------------------------------------------------------------------
+         LEFT
+         ------------------------------------------------------------------ */}
 
       {isLeft ? (
         <div className="md:col-start-1 md:row-start-1">
@@ -306,7 +407,9 @@ function ExperienceItem({ experience, index }) {
         />
       )}
 
-      {/* NODE */}
+      {/* ------------------------------------------------------------------
+         NODE
+         ------------------------------------------------------------------ */}
 
       <div
         className="
@@ -314,7 +417,7 @@ function ExperienceItem({ experience, index }) {
           absolute
           left-4.25
           top-7
-          z-30
+          z-[60]
           -translate-x-1/2
 
           md:static
@@ -336,7 +439,9 @@ function ExperienceItem({ experience, index }) {
         />
       </div>
 
-      {/* RIGHT */}
+      {/* ------------------------------------------------------------------
+         RIGHT
+         ------------------------------------------------------------------ */}
 
       {!isLeft ? (
         <div className="md:col-start-3 md:row-start-1">
@@ -359,6 +464,10 @@ function ExperienceItem({ experience, index }) {
         />
       )}
 
+      {/* ------------------------------------------------------------------
+         CONNECTOR
+         ------------------------------------------------------------------ */}
+
       <TimelineConnector
         id={`${itemId}-connector`}
         side={isLeft ? "left" : "right"}
@@ -368,12 +477,15 @@ function ExperienceItem({ experience, index }) {
   );
 }
 
-
 /* ==========================================================================
    CONNECTOR
    ========================================================================== */
 
-function TimelineConnector({ id, side, active }) {
+function TimelineConnector({
+  id,
+  side,
+  active,
+}) {
   return (
     <motion.div
       id={id}
@@ -399,9 +511,10 @@ function TimelineConnector({ id, side, active }) {
       className={`
         timeline-connector
         timeline-connector--${side}
+        pointer-events-none
         absolute
         top-12
-        z-10
+        z-20
         hidden
         h-px
         w-8
@@ -411,12 +524,15 @@ function TimelineConnector({ id, side, active }) {
   );
 }
 
-
 /* ==========================================================================
    NODE
    ========================================================================== */
 
-function TimelineNode({ id, active, number }) {
+function TimelineNode({
+  id,
+  active,
+  number,
+}) {
   return (
     <div
       id={id}
@@ -430,11 +546,13 @@ function TimelineNode({ id, active, number }) {
         justify-center
       "
     >
+      {/* Node glow */}
+
       <motion.div
         aria-hidden="true"
         initial={false}
         animate={{
-          opacity: active ? 0.45 : 0,
+          opacity: active ? 0.35 : 0,
           scale: active ? 1 : 0.65,
         }}
         transition={{
@@ -446,9 +564,12 @@ function TimelineNode({ id, active, number }) {
           absolute
           inset-1
           rounded-full
+          bg-emerald-400
           blur-md
         "
       />
+
+      {/* Node ring */}
 
       <motion.div
         initial={false}
@@ -459,7 +580,7 @@ function TimelineNode({ id, active, number }) {
 
           backgroundColor: active
             ? "rgba(16,185,129,0.06)"
-            : "rgba(9,11,10,0.9)",
+            : "rgba(9,11,10,0.95)",
 
           boxShadow: active
             ? "0 0 20px rgba(52,211,153,0.12)"
@@ -481,6 +602,8 @@ function TimelineNode({ id, active, number }) {
           border
         "
       >
+        {/* Dot */}
+
         <motion.span
           initial={false}
           animate={{
@@ -524,7 +647,6 @@ function TimelineNode({ id, active, number }) {
   );
 }
 
-
 /* ==========================================================================
    EXPERIENCE CARD
    ========================================================================== */
@@ -547,11 +669,6 @@ function ExperienceCard({
     ],
   });
 
-  /*
-   * Keep the range subtle.
-   * Large movement makes the timeline feel unstable.
-   */
-
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 0.75, 1],
@@ -570,13 +687,6 @@ function ExperienceCard({
     [12, 0, -12]
   );
 
-  /*
-   * Don't animate CSS blur on the card.
-   *
-   * It is visually attractive but expensive and can
-   * produce text shimmer during scrolling.
-   */
-
   const glowOpacity = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 0.75, 1],
@@ -593,11 +703,17 @@ function ExperienceCard({
     <motion.div
       initial={{
         opacity: 0,
-        x: direction === "left" ? -32 : 32,
+        x: direction === "left"
+          ? -32
+          : 32,
       }}
       animate={{
         opacity: active ? 1 : 0,
-        x: active ? 0 : direction === "left" ? -32 : 32,
+        x: active
+          ? 0
+          : direction === "left"
+            ? -32
+            : 32,
       }}
       transition={{
         duration: 0.55,
@@ -614,255 +730,261 @@ function ExperienceCard({
           y,
         }}
         className="
-        experience-card
-        group
-        relative
-        ml-12
-        overflow-hidden
-        rounded-3xl
-        border
-        border-emerald-400/20
-        bg-[#080b0a]
-        px-6
-        py-7
-        shadow-[0_20px_70px_rgba(0,0,0,0.45)]
-        transition-[border-color,box-shadow]
-        duration-500
-        hover:border-emerald-400/40
-        hover:shadow-[0_25px_90px_rgba(16,185,129,0.12)]
-        sm:px-7
-        md:ml-0
-        md:min-h-87.5
-        md:px-8
-        md:py-8
-      "
+          experience-card
+          group
+          relative
+          ml-12
+          overflow-hidden
+          rounded-3xl
+          border
+          border-emerald-400/20
+          bg-[#080b0a]
+          px-6
+          py-7
+          shadow-[0_20px_70px_rgba(0,0,0,0.45)]
+          transition-[border-color,box-shadow]
+          duration-500
+          hover:border-emerald-400/40
+          hover:shadow-[0_25px_90px_rgba(16,185,129,0.12)]
+          sm:px-7
+          md:ml-0
+          md:min-h-87.5
+          md:px-8
+          md:py-8
+        "
       >
         {/* Border */}
 
         <motion.div
-        aria-hidden="true"
-        style={{
-          opacity: borderOpacity,
-        }}
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          rounded-3xl
-          border
-          border-emerald-400
-        "
+          aria-hidden="true"
+          style={{
+            opacity: borderOpacity,
+          }}
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            rounded-3xl
+            border
+            border-emerald-400
+          "
         />
 
-      {/* Glow */}
+        {/* Glow */}
 
         <motion.div
-        aria-hidden="true"
-        style={{
-          opacity: glowOpacity,
-        }}
-        className="
-          pointer-events-none
-          absolute
-          -right-24
-          -top-24
-          h-56
-          w-56
-          rounded-full
-          bg-emerald-400/15
-          blur-[80px]
-        "
+          aria-hidden="true"
+          style={{
+            opacity: glowOpacity,
+          }}
+          className="
+            pointer-events-none
+            absolute
+            -right-24
+            -top-24
+            h-56
+            w-56
+            rounded-full
+            bg-emerald-400/15
+            blur-[80px]
+          "
         />
 
-      {/* Background */}
+        {/* Background */}
 
         <motion.div
-        aria-hidden="true"
-        style={{
-          opacity: glowOpacity,
-        }}
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          bg-[radial-gradient(circle_at_12%_0%,rgba(16,185,129,0.18),transparent_35%),radial-gradient(circle_at_100%_100%,rgba(5,150,105,0.1),transparent_45%)]
-        "
+          aria-hidden="true"
+          style={{
+            opacity: glowOpacity,
+          }}
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            bg-[radial-gradient(circle_at_12%_0%,rgba(16,185,129,0.18),transparent_35%),radial-gradient(circle_at_100%_100%,rgba(5,150,105,0.1),transparent_45%)]
+          "
         />
 
-      {/* Noise */}
-
-        <div
-        aria-hidden="true"
-        className="
-          pointer-events-none
-          absolute
-          inset-0
-          opacity-[0.025]
-          bg-[radial-gradient(#fff_0.6px,transparent_0.6px)]
-          bg-size-[5px_5px]
-        "
-      />
-
-      {/* Background number */}
-
-      <div
-        aria-hidden="true"
-        className="
-          pointer-events-none
-          absolute
-          -right-3
-          -top-8
-          select-none
-          text-[145px]
-          font-black
-          leading-none
-          tracking-[-0.12em]
-          text-emerald-400/5.5
-          transition-colors
-          duration-500
-          group-hover:text-emerald-400/[0.09]
-          md:text-[175px]
-        "
-      >
-        {String(experience.id).padStart(2, "0")}
-        </div>
-
-      {/* Top accent */}
-
-      <motion.div
-        aria-hidden="true"
-        style={{
-          opacity: glowOpacity,
-        }}
-        className="
-          absolute
-          inset-x-0
-          top-0
-          h-px
-          bg-gradient-to-r
-          from-transparent
-          via-emerald-400/70
-          to-transparent
-        "
-      />
-
-        <div className="relative z-10">
-        <CardHeader
-          id={id}
-          experience={experience}
-        />
+        {/* Noise */}
 
         <div
           aria-hidden="true"
           className="
-            my-6
+            pointer-events-none
+            absolute
+            inset-0
+            opacity-[0.025]
+            bg-[radial-gradient(#fff_0.6px,transparent_0.6px)]
+            bg-size-[5px_5px]
+          "
+        />
+
+        {/* Background number */}
+
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            -right-3
+            -top-8
+            select-none
+            text-[145px]
+            font-black
+            leading-none
+            tracking-[-0.12em]
+            text-emerald-400/5.5
+            transition-colors
+            duration-500
+            group-hover:text-emerald-400/[0.09]
+            md:text-[175px]
+          "
+        >
+          {String(experience.id).padStart(2, "0")}
+        </div>
+
+        {/* Top accent */}
+
+        <motion.div
+          aria-hidden="true"
+          style={{
+            opacity: glowOpacity,
+          }}
+          className="
+            pointer-events-none
+            absolute
+            inset-x-0
+            top-0
             h-px
             bg-gradient-to-r
-            from-emerald-400/20
-            via-white/[0.07]
+            from-transparent
+            via-emerald-400/70
             to-transparent
           "
         />
 
-        <p
-          className="
-            max-w-2xl
-            text-sm
-            leading-7
-            text-white/50
-            transition-colors
-            duration-300
-            group-hover:text-white/65
-          "
-        >
-          {experience.description}
-        </p>
+        {/* Content */}
 
-        {experience.tags?.length > 0 && (
-          <div className="mt-6 flex flex-wrap gap-2">
-            {experience.tags.map((tag) => (
-              <span
-                key={tag}
-                className="
-                  rounded-full
-                  border
-                  border-emerald-400/10
-                  bg-emerald-400/[0.035]
-                  px-3
-                  py-1.5
-                  font-mono
-                  text-[9px]
-                  font-medium
-                  uppercase
-                  tracking-[0.08em]
-                  text-emerald-300/70
-                  transition-all
-                  duration-300
-                  hover:border-emerald-400/30
-                  hover:bg-emerald-400/[0.08]
-                  hover:text-emerald-300
-                "
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="relative z-10">
+          <CardHeader
+            id={id}
+            experience={experience}
+          />
 
-        <CardFooter experience={experience} />
+          <div
+            aria-hidden="true"
+            className="
+              my-6
+              h-px
+              bg-gradient-to-r
+              from-emerald-400/20
+              via-white/[0.07]
+              to-transparent
+            "
+          />
+
+          <TextReveal
+            text={experience.description}
+          />
+
+          {experience.tags?.length > 0 && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {experience.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="
+                    rounded-full
+                    border
+                    border-emerald-400/10
+                    bg-emerald-400/[0.035]
+                    px-3
+                    py-1.5
+                    font-mono
+                    text-[9px]
+                    font-medium
+                    uppercase
+                    tracking-[0.08em]
+                    text-emerald-300/70
+                    transition-all
+                    duration-300
+                    hover:border-emerald-400/30
+                    hover:bg-emerald-400/[0.08]
+                    hover:text-emerald-300
+                  "
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <CardFooter
+            experience={experience}
+          />
         </div>
 
-      {/* Bottom accent */}
+        {/* Bottom accent */}
 
         <motion.div
-        aria-hidden="true"
-        style={{
-          opacity: glowOpacity,
-        }}
-        className="
-          pointer-events-none
-          absolute
-          bottom-0
-          left-0
-          h-px
-          w-full
-          bg-gradient-to-r
-          from-transparent
-          via-emerald-400/80
-          to-transparent
-        "
+          aria-hidden="true"
+          style={{
+            opacity: glowOpacity,
+          }}
+          className="
+            pointer-events-none
+            absolute
+            bottom-0
+            left-0
+            h-px
+            w-full
+            bg-gradient-to-r
+            from-transparent
+            via-emerald-400/80
+            to-transparent
+          "
         />
 
         <motion.div
-        aria-hidden="true"
-        style={{
-          opacity: glowOpacity,
-        }}
-        className="
-          pointer-events-none
-          absolute
-          -bottom-24
-          -left-24
-          h-48
-          w-48
-          rounded-full
-          bg-emerald-500/10
-          blur-[70px]
-        "
+          aria-hidden="true"
+          style={{
+            opacity: glowOpacity,
+          }}
+          className="
+            pointer-events-none
+            absolute
+            -bottom-24
+            -left-24
+            h-48
+            w-48
+            rounded-full
+            bg-emerald-500/10
+            blur-[70px]
+          "
         />
       </motion.article>
     </motion.div>
   );
 }
 
-
 /* ==========================================================================
    CARD HEADER
    ========================================================================== */
 
-function CardHeader({ id, experience }) {
+function CardHeader({
+  id,
+  experience,
+}) {
   return (
-    <header className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+    <header
+      className="
+        flex
+        flex-col
+        gap-5
+        sm:flex-row
+        sm:items-start
+        sm:justify-between
+      "
+    >
       <div className="min-w-0">
         <span
           className="
@@ -976,7 +1098,6 @@ function CardHeader({ id, experience }) {
     </header>
   );
 }
-
 
 /* ==========================================================================
    CARD FOOTER
