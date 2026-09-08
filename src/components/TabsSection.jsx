@@ -709,7 +709,7 @@ export default function SkillGrid({
 
   return (
     <section
-      id="skills"
+      id="skills-tabs"
       className="
         tabs-section
         relative

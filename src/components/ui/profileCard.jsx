@@ -6,11 +6,12 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-
+import ActionModal from "./ActionModal";
 import personImage from "@/assets/images/person.png";
 
 export default function ProfileCard({ personDetails }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedSocial, setSelectedSocial] = useState(null);
 
   const cardRef = useRef(null);
 
@@ -125,7 +126,13 @@ export default function ProfileCard({ personDetails }) {
         >
           <rect x="3" y="3" width="18" height="18" rx="5" />
           <circle cx="12" cy="12" r="4" />
-          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          <circle
+            cx="17.5"
+            cy="6.5"
+            r="1"
+            fill="currentColor"
+            stroke="none"
+          />
         </svg>
       ),
     },
@@ -158,188 +165,148 @@ export default function ProfileCard({ personDetails }) {
   ];
 
   return (
-    <div className="lg:col-span-4">
-      {/* Perspective container */}
-      <div
-        className="w-full"
-        style={{
-          perspective: "1200px",
-        }}
-      >
-        <motion.div
-          ref={cardRef}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
+    <>
+      <div className="lg:col-span-4">
+        <div
+          className="w-full"
           style={{
-            rotateX,
-            rotateY,
-            translateX,
-            translateY,
-            transformStyle: "preserve-3d",
+            perspective: "1200px",
           }}
-          initial={{
-            scale: 1,
-          }}
-          whileHover={{
-            scale: 1.025,
-            transition: {
-              duration: 0.2,
-            },
-          }}
-          className="relative"
         >
-          {/* ------------------------------------------------ */}
-          {/* Main Profile Card                                */}
-          {/* ------------------------------------------------ */}
-
-          <aside
-            className={`relative flex h-fit w-full flex-col items-center overflow-hidden rounded-3xl border border-zinc-800 bg-[#111111] p-6 text-center shadow-[0_30px_80px_rgba(0,0,0,0.35)] ${
-              isLoading ? "pointer-events-none" : ""
-            }`}
+          <motion.div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+              rotateX,
+              rotateY,
+              translateX,
+              translateY,
+              transformStyle: "preserve-3d",
+            }}
+            initial={{
+              scale: 1,
+            }}
+            whileHover={{
+              scale: 1.025,
+              transition: {
+                duration: 0.2,
+              },
+            }}
+            className="relative"
           >
-            {isLoading ? (
-              /* ------------------------------------------------ */
-              /* Loading State                                    */
-              /* ------------------------------------------------ */
+            <aside
+              className={`relative flex h-fit w-full flex-col items-center overflow-hidden rounded-3xl border border-zinc-800 bg-[#111111] p-6 text-center shadow-[0_30px_80px_rgba(0,0,0,0.35)] ${
+                isLoading ? "pointer-events-none" : ""
+              }`}
+            >
+              {isLoading ? (
+                <div className="flex w-full flex-col items-center animate-pulse">
+                  <div className="mb-6 aspect-square w-full rounded-2xl bg-zinc-800" />
 
-              <div className="flex w-full flex-col items-center animate-pulse">
-                <div className="mb-6 aspect-square w-full rounded-2xl bg-zinc-800" />
+                  <div className="mb-6 h-7 w-28 rounded-full bg-zinc-800" />
 
-                <div className="mb-6 h-7 w-28 rounded-full bg-zinc-800" />
+                  <div className="mb-6 h-9 w-3/4 rounded bg-zinc-800" />
 
-                <div className="mb-6 h-9 w-3/4 rounded bg-zinc-800" />
+                  <div className="mb-8 flex gap-3">
+                    {[1, 2, 3].map((item) => (
+                      <div
+                        key={item}
+                        className="h-10 w-10 rounded-xl bg-zinc-800"
+                      />
+                    ))}
+                  </div>
 
-                <div className="mb-8 flex gap-3">
-                  {[1, 2, 3].map((item) => (
-                    <div
-                      key={item}
-                      className="h-10 w-10 rounded-xl bg-zinc-800"
+                  <div className="grid w-full grid-cols-2 gap-3">
+                    <div className="h-10 rounded-xl bg-zinc-800" />
+                    <div className="h-10 rounded-xl bg-zinc-800" />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="relative mb-6 aspect-square w-full overflow-hidden rounded-2xl bg-black">
+                    <img
+                      src={personImage}
+                      alt={personDetails.name}
+                      className="h-full w-full object-cover"
                     />
-                  ))}
-                </div>
+                  </div>
 
-                <div className="grid w-full grid-cols-2 gap-3">
-                  <div className="h-10 rounded-xl bg-zinc-800" />
-                  <div className="h-10 rounded-xl bg-zinc-800" />
-                </div>
-              </div>
-            ) : (
-              <>
-                {/* ------------------------------------------------ */}
-                {/* Profile Image                                    */}
-                {/* ------------------------------------------------ */}
-
-                <div className="relative mb-6 aspect-square w-full overflow-hidden rounded-2xl bg-black">
-                  <img
-                    src={personImage}
-                    alt={personDetails.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-
-                {/* ------------------------------------------------ */}
-                {/* Availability                                     */}
-                {/* ------------------------------------------------ */}
-
-                <button
-                  id="availabilityStatus"
-                  type="button"
-                  className="mb-4 inline-flex items-center gap-2 rounded-full border border-zinc-600 bg-zinc-900 px-3 py-1.5 transition-all hover:border-emerald-500"
-                >
-                  <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
-
-                  <span className="text-xs font-medium text-zinc-300 border-l border-zinc-600 pl-2">
-                    Open to work
-                  </span>
-                </button>
-
-                {/* ------------------------------------------------ */}
-                {/* Signature                                        */}
-                {/* ------------------------------------------------ */}
-
-                <h2 className="my-4 select-none text-3xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.7)]">
-                  {`< ${personDetails.name} />`}
-                </h2>
-
-                {/* ------------------------------------------------ */}
-                {/* Social Links                                    */}
-                {/* ------------------------------------------------ */}
-
-                <div className="mb-6 flex items-center justify-center gap-3">
-                  {socialLinks.map((social) => (
-                    <a
-                      key={social.name}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.name}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:bg-zinc-800 hover:text-white"
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
-                </div>
-
-                {/* ------------------------------------------------ */}
-                {/* Buttons                                          */}
-                {/* ------------------------------------------------ */}
-
-                <div className="grid w-full grid-cols-2 gap-3">
-                  {/* Download CV */}
-                  <a href="/" className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-xs font-semibold text-white transition-all duration-200 hover:border-zinc-700 hover:bg-zinc-800">
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M12 3v12" />
-                      <path d="m7 10 5 5 5-5" />
-                      <path d="M5 21h14" />
-                    </svg>
-
-                    <span>Download CV</span>
-                  </a>
-
-                  {/* Contact Me */}
-                  <a
-                    href="/"
-                    className="flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-xs font-semibold text-black transition-all duration-200 hover:bg-emerald-400"
+                  <button
+                    id="availabilityStatus"
+                    type="button"
+                    className="mb-4 inline-flex items-center gap-2 rounded-full border border-zinc-600 bg-zinc-900 px-3 py-1.5 transition-all hover:border-emerald-500"
                   >
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="m22 2-7 20-4-9-9-4Z" />
-                      <path d="M22 2 11 13" />
-                    </svg>
+                    <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
 
-                    <span>Contact Me</span>
-                  </a>
-                </div>
-              </>
-            )}
+                    <span className="border-l border-zinc-600 pl-2 text-xs font-medium text-zinc-300">
+                      Open to work
+                    </span>
+                  </button>
 
-            {/* -------------------------------------------------- */}
-            {/* Comet Glare                                       */}
-            {/* -------------------------------------------------- */}
+                  <h2 className="my-4 select-none text-3xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.7)]">
+                    {`< ${personDetails.name} />`}
+                  </h2>
 
-            {!isLoading && (
-              <motion.div
-                className="pointer-events-none absolute inset-0 z-50 rounded-3xl mix-blend-overlay"
-                style={{
-                  background: glareBackground,
-                  opacity: 0.45,
-                }}
-              />
-            )}
-          </aside>
-        </motion.div>
+                  {/* ------------------------------------------------ */}
+                  {/* Social Links                                    */}
+                  {/* ------------------------------------------------ */}
+
+                  <div className="mb-6 flex items-center justify-center gap-3">
+                    {socialLinks.map((social) => (
+                      <button
+                        key={social.name}
+                        type="button"
+                        onClick={() => setSelectedSocial(social)}
+                        aria-label={social.name}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:bg-zinc-800 hover:text-white"
+                      >
+                        {social.icon}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {!isLoading && (
+                <motion.div
+                  className="pointer-events-none absolute inset-0 z-50 rounded-3xl mix-blend-overlay"
+                  style={{
+                    background: glareBackground,
+                    opacity: 0.45,
+                  }}
+                />
+              )}
+            </aside>
+          </motion.div>
+        </div>
       </div>
-    </div>
+
+      {/* ---------------------------------------------------------- */}
+      {/* Social Coming Soon Modal                                   */}
+      {/* ---------------------------------------------------------- */}
+
+      <ActionModal
+        id="socialComingSoonModal"
+        open={Boolean(selectedSocial)}
+        onClose={() => setSelectedSocial(null)}
+        title={`${selectedSocial?.name ?? "Social"} Coming Soon`}
+        description="This social profile isn't available yet."
+        showConfirmButton
+        confirmText="Got it"
+        onConfirm={() => setSelectedSocial(null)}
+      >
+        <div className="grid grid-cols-[4rem_1fr] items-center gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 [&_svg]:h-10 [&_svg]:w-10">
+            {selectedSocial?.icon}
+          </div>
+
+          <p className="text-left text-sm leading-6 text-white/60">
+            My {selectedSocial?.name ?? "social"} profile is currently being
+            prepared. Check back soon!
+          </p>
+        </div>
+      </ActionModal>
+    </>
   );
 }

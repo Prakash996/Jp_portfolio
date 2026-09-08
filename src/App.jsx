@@ -88,27 +88,22 @@ function App() {
   if (!hasEntered) {
     return (
       <div>
-        <LandingPage
-        isReady={isPortfolioReady}
-        isEntering={isEntering}
-        onLoaded={handleLoaded}
-        onEnter={handleEnter}
-        />
-        <ActionModal
-          id="portfolio-load-error"
-          open={loadError}
-          onClose={handleRetry}
-          title="Unable to load portfolio"
-          description="The portfolio response was rejected or interrupted. Return to loading and try again."
-        >
-          <button
-            type="button"
-            onClick={handleRetry}
-            className="w-full rounded-xl bg-emerald-400 px-5 py-3 text-sm font-semibold text-black transition hover:bg-emerald-300"
+        <LandingPage isReady={isPortfolioReady} isEntering={isEntering} onLoaded={handleLoaded} onEnter={handleEnter}/>
+          <ActionModal
+            id="portfolio-load-error"
+            open={loadError}
+            onClose={() => loadError(false)}
+            title="Unable to load portfolio"
+            description=""
+            showConfirmButton
+            confirmText="Retry loading"
+            onConfirm={handleRetry}
           >
-            Retry loading
-          </button>
-        </ActionModal>
+            <p className="text-sm leading-6 text-white/60">
+              We couldn't load the portfolio data. Please try again.
+            </p>
+          </ActionModal>
+
       </div>
     );
   }

@@ -43,8 +43,9 @@
 
 @media (min-width: 1280px) {
   .skills-section__header {
-    grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.7fr);
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.85fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
   }
 }
 

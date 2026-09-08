@@ -1,357 +1,231 @@
 const Footer = () => {
-  const exploreLinks = ["Home", "About", "Projects", "Contact"];
+  const exploreLinks = [
+    { name: "Home", href: "#home" },
+    { name: "About", href: "#about" },
+    { name: "Projects", href: "#projects" },
+    { name: "Resume", href: "#resume" },
+    { name: "Contact", href: "#contact" },
+  ];
 
   return (
-    <footer className="relative isolate w-full overflow-hidden bg-[#020908] text-white">
+    <footer
+      className="
+        relative isolate w-full overflow-hidden
+        bg-[#020908] text-white
+      "
+    >
+      {/* Top accent */}
+      <div className="absolute inset-x-0 top-0 h-px bg-emerald-500/60" />
 
-      {/* =========================================================
-          TOP BORDER
-      ========================================================= */}
-      <div className="absolute left-0 right-0 top-0 z-30 h-px bg-[#10B981]/70 shadow-[0_0_14px_rgba(16,185,129,0.5)]" />
-
-      {/* =========================================================
-          BACKGROUND DOT GRID
-      ========================================================= */}
+      {/* Subtle dot grid */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.10]"
+        className="pointer-events-none absolute inset-0 opacity-[0.055]"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(16,185,129,0.38) 1px, transparent 1px)",
-          backgroundSize: "7px 7px",
+            "radial-gradient(circle, rgba(16,185,129,0.8) 1px, transparent 1px)",
+          backgroundSize: "18px 18px",
         }}
       />
 
-      {/* =========================================================
-          CENTER GLOW
-      ========================================================= */}
+      {/* Soft emerald glow */}
       <div
         className="
-          pointer-events-none
-          absolute
-          left-1/2
-          top-1/2
-          z-0
-          h-[350px]
-          w-[75vw]
-          max-w-[900px]
-          -translate-x-1/2
-          -translate-y-1/2
+          pointer-events-none absolute
+          left-1/2 top-1/2
+          h-[320px] w-[600px]
+          -translate-x-1/2 -translate-y-1/2
           rounded-full
-          bg-[#10B981]/[0.025]
+          bg-emerald-500/[0.035]
           blur-[120px]
         "
       />
 
-      {/* =========================================================
-          DECORATIVE TECH LINES
-      ========================================================= */}
-      <div className="pointer-events-none absolute left-[-10%] top-[65%] z-0 h-px w-[45%] rotate-[25deg] bg-gradient-to-r from-transparent via-[#10B981]/10 to-[#10B981]/30" />
+      {/* Decorative glow dots */}
+      <span className="absolute left-[8%] top-[25%] h-1 w-1 rounded-full bg-emerald-400/60 shadow-[0_0_10px_#10B981]" />
+      <span className="absolute right-[10%] top-[30%] h-1 w-1 rounded-full bg-emerald-400/50" />
+      <span className="absolute right-[20%] bottom-[20%] h-1 w-1 rounded-full bg-emerald-400/40" />
 
-      <div className="pointer-events-none absolute right-[-10%] top-[58%] z-0 h-px w-[45%] rotate-[-32deg] bg-gradient-to-l from-transparent via-[#10B981]/10 to-[#10B981]/30" />
-
-      <div className="pointer-events-none absolute bottom-[8%] left-[10%] z-0 h-px w-[35%] rotate-[-20deg] bg-gradient-to-r from-transparent via-[#10B981]/10 to-transparent" />
-
-      {/* =========================================================
-          DECORATIVE DOTS
-      ========================================================= */}
-      <span className="absolute left-[7%] top-[20%] z-0 h-1 w-1 rounded-full bg-[#10B981]/70 shadow-[0_0_8px_#10B981]" />
-
-      <span className="absolute left-[17%] bottom-[20%] z-0 h-1 w-1 rounded-full bg-[#34D399]/50" />
-
-      <span className="absolute right-[12%] top-[18%] z-0 h-1 w-1 rounded-full bg-[#10B981]/60 shadow-[0_0_8px_#10B981]" />
-
-      <span className="absolute right-[22%] bottom-[23%] z-0 h-1 w-1 rounded-full bg-[#34D399]/50" />
-
-      <span className="absolute right-[7%] bottom-[12%] z-0 h-1 w-1 rounded-full bg-[#10B981]/40" />
-
-      {/* =========================================================
-          TECH NODE
-      ========================================================= */}
-      <div className="pointer-events-none absolute right-[18%] top-[48%] z-0 hidden md:block">
-        <div className="absolute -inset-3 rounded-full border border-[#10B981]/15" />
-        <div className="absolute -inset-1.5 rounded-full border border-[#10B981]/25" />
-
-        <div className="h-2 w-2 rounded-full bg-[#10B981] shadow-[0_0_15px_#10B981]" />
-      </div>
-
-      {/* =========================================================
-          RESPONSIVE THANK YOU
-          
-          Mobile:
-          Thank
-          You
-
-          sm+:
-          Thank You
-      ========================================================= */}
+      {/* Large background text */}
       <div
         className="
-          pointer-events-none
-          absolute
-          inset-0
-          z-[1]
-          flex
-          items-center
-          justify-center
+          pointer-events-none absolute inset-0
+          flex items-center justify-center
           overflow-hidden
-          px-4
         "
       >
-        <h2
+        <span
           className="
-            select-none
-            text-center
-            font-black
-            uppercase
-            leading-[0.8]
-            tracking-[-0.08em]
-            text-[#10B981]/[0.045]
-
-            text-[clamp(4rem,20vw,15rem)]
+            select-none whitespace-nowrap
+            text-[clamp(5rem,17vw,14rem)]
+            font-black uppercase
+            leading-none tracking-[-0.09em]
+            text-emerald-500/[0.035]
           "
         >
-          <span className="block sm:inline">
-            Thank
-          </span>
-
-          <span className="block sm:ml-[0.2em] sm:inline">
-            You
-          </span>
-        </h2>
+          Thank You
+        </span>
       </div>
 
-      {/* =========================================================
-          MAIN FOOTER CONTENT
-      ========================================================= */}
+      {/* Main content */}
       <div
         className="
-          relative
-          z-10
-          mx-auto
-          max-w-6xl
-          px-6
-          pb-8
-          pt-20
-          sm:px-8
-          sm:pb-10
-          sm:pt-24
+          relative z-10 mx-auto max-w-6xl
+          px-5 py-14
+          sm:px-8 sm:py-16
+          lg:px-10 lg:py-20
         "
       >
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-10">
 
-        {/* =======================================================
-            FOOTER GRID
-        ======================================================= */}
-        <div className="grid grid-cols-1 gap-12 sm:gap-14 md:grid-cols-2 lg:grid-cols-4">
-
-          {/* =====================================================
-              BRAND
-          ===================================================== */}
+          {/* Brand */}
           <div className="lg:col-span-2">
-
-            {/* Label */}
-            <div className="mb-5 flex items-center gap-3">
-              <span className="font-mono text-[10px] font-bold tracking-[0.3em] text-[#10B981]">
+            <div className="mb-4 flex items-center gap-2">
+              <span className="font-mono text-xs text-emerald-500">
                 //
               </span>
 
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-[#10B981]">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-emerald-500">
                 Let's Connect
               </span>
             </div>
 
-            {/* Brand */}
-            <h3 className="text-2xl font-bold tracking-tight text-[#F0FDF4] sm:text-3xl">
-              YourBrand
-              <span className="text-[#10B981]">.</span>
+            <h3 className="text-2xl font-bold tracking-tight text-emerald-50 sm:text-3xl">
+              <span className="text-emerald-500">.</span>
             </h3>
 
-            {/* Description */}
-            <p className="mt-5 max-w-[460px] text-sm leading-7 text-[#7C8985]">
-              Creating meaningful digital experiences with thoughtful design,
-              modern technology, and a little bit of creativity.
+            <p className="mt-4 max-w-md text-sm leading-6 text-zinc-500">
+              Frontend developer focus on building clean, responsive and user-friendly web application.
             </p>
 
             {/* Availability */}
-            <div className="mt-7 flex items-center gap-3">
-
+            <div className="mt-6 inline-flex items-center gap-2.5">
               <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#10B981]/40" />
-
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#10B981]" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/40" />
+                <span className="relative h-2 w-2 rounded-full bg-emerald-500" />
               </span>
 
-              <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#64756F]">
-                Available for opportunities
+              <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
+                Open to opportunities
               </span>
-
             </div>
           </div>
 
-          {/* =====================================================
-              EXPLORE
-          ===================================================== */}
+          {/* Explore */}
           <div>
-
-            <h4 className="mb-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#10B981]">
+            <h4 className="mb-5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-500">
               Explore
             </h4>
 
-            <ul className="space-y-4">
-              {exploreLinks.map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="
-                      inline-block
-                      text-sm
-                      text-[#7C8985]
-                      transition-all
-                      duration-200
-                      hover:translate-x-1
-                      hover:text-[#10B981]
-                    "
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
+            <nav>
+              <ul className="space-y-3">
+                {exploreLinks.map((item) => (
+                  <li key={item.name}>
+                    <span
+                      className="
+                        group inline-flex items-center gap-2
+                        text-sm text-zinc-500
+                        transition-all duration-200
+                        hover:text-emerald-400
+                      "
+                    >
+                      <span
+                        className="
+                          h-px w-0
+                          bg-emerald-500
+                          transition-all duration-200
+                          group-hover:w-3
+                        "
+                      />
+                      {item.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
-          {/* =====================================================
-              GET IN TOUCH
-          ===================================================== */}
+          {/* Contact */}
           <div>
-
-            <h4 className="mb-6 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#10B981]">
+            <h4 className="mb-5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-500">
               Get In Touch
             </h4>
 
-            <div className="space-y-2 text-sm text-[#7C8985]">
-
+            <div className="space-y-3">
               <a
-                href="mailto:hello@yourbrand.com"
-                className="block transition-colors hover:text-[#10B981]"
+                href="mailto:jakkula28@gmail.com"
+                className="
+                  block break-all text-sm text-zinc-500
+                  transition-colors
+                  hover:text-emerald-400
+                "
               >
-                hello@yourbrand.com
+                jakkula28@gmail.com
               </a>
 
               <a
-                href="tel:+919876543210"
-                className="block transition-colors hover:text-[#10B981]"
+                href="tel:+917676833684"
+                className="
+                  block text-sm text-zinc-500
+                  transition-colors
+                  hover:text-emerald-400
+                "
               >
                 +91 98765 43210
               </a>
-
             </div>
 
-            {/* Social Links */}
-            <div className="mt-6 flex flex-wrap gap-5">
-
-              <a
-                href="#"
-                className="
-                  font-mono
-                  text-[9px]
-                  uppercase
-                  tracking-wider
-                  text-[#64756F]
-                  transition-colors
-                  hover:text-[#10B981]
-                "
-              >
-                Instagram
-              </a>
-
-              <a
-                href="#"
-                className="
-                  font-mono
-                  text-[9px]
-                  uppercase
-                  tracking-wider
-                  text-[#64756F]
-                  transition-colors
-                  hover:text-[#10B981]
-                "
-              >
-                LinkedIn
-              </a>
-
-              <a
-                href="#"
-                className="
-                  font-mono
-                  text-[9px]
-                  uppercase
-                  tracking-wider
-                  text-[#64756F]
-                  transition-colors
-                  hover:text-[#10B981]
-                "
-              >
-                GitHub
-              </a>
-
+            {/* Socials */}
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+              {["GitHub", "LinkedIn", "Instagram"].map((social) => (
+                <span
+                  key={social}
+                  className="
+                    font-mono text-[9px]
+                    uppercase tracking-[0.12em]
+                    text-zinc-600
+                    transition-colors
+                    hover:text-emerald-400
+                  "
+                >
+                  {social}
+                </span>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* =======================================================
-            DIVIDER
-        ======================================================= */}
-        <div className="relative z-10 mt-14 border-t border-[#10B981]/10 sm:mt-16" />
+        {/* Divider */}
+        <div className="mt-12 h-px bg-emerald-500/10 sm:mt-14" />
 
-        {/* =======================================================
-            BOTTOM BAR
-        ======================================================= */}
+        {/* Bottom */}
         <div
           className="
-            relative
-            z-10
-            flex
-            flex-col
-            gap-4
-            pt-6
-            font-mono
-            text-[9px]
-            uppercase
-            tracking-[0.12em]
-            text-[#53615D]
-            sm:text-[10px]
-            md:flex-row
-            md:items-center
-            md:justify-between
+            flex flex-col gap-4
+            pt-5
+            font-mono text-[9px]
+            uppercase tracking-[0.1em]
+            text-zinc-700
+            sm:flex-row sm:items-center sm:justify-between
           "
         >
-          <p>
-            © 2026 YourBrand. All rights reserved.
-          </p>
+          <p>© 2026. All rights reserved.</p>
 
-          <div className="flex gap-6">
-            <a
-              href="#"
-              className="transition-colors hover:text-[#10B981]"
-            >
-              Privacy
-            </a>
-
-            <a
-              href="#"
-              className="transition-colors hover:text-[#10B981]"
-            >
-              Terms
-            </a>
+          <div className="flex gap-5">
+              Built with <span className="text-emerald-500">React, Tailwind</span>
           </div>
         </div>
       </div>
 
-      {/* =========================================================
-          BOTTOM EMERALD LINE
-      ========================================================= */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 h-px bg-gradient-to-r from-transparent via-[#10B981]/40 to-transparent" />
-
+      {/* Bottom accent */}
+      <div
+        className="
+          absolute bottom-0 left-0 right-0 h-px
+          bg-linear-to-r
+          from-transparent
+          via-emerald-500/40
+          to-transparent
+        "
+      />
     </footer>
   );
 };

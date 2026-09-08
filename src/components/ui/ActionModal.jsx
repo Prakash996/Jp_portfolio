@@ -12,8 +12,24 @@ export default function ActionModal({
   title,
   description,
   children,
+
+  // Header
+  showCloseButton = true,
+
+  // Footer buttons
+  showCancelButton = false,
+  showConfirmButton = false,
+
+  cancelText = "Cancel",
+  confirmText = "Confirm",
+
+  onCancel,
+  onConfirm,
 }) {
+  // ------------------------------------------------------------
   // Prevent background page scrolling
+  // ------------------------------------------------------------
+
   useEffect(() => {
     if (!open) return;
 
@@ -26,10 +42,15 @@ export default function ActionModal({
     };
   }, [open]);
 
+  // ------------------------------------------------------------
   // Don't render portal during SSR
+  // ------------------------------------------------------------
+
   if (typeof document === "undefined") {
     return null;
   }
+
+  const hasActions = showCancelButton || showConfirmButton;
 
   return createPortal(
     <AnimatePresence>
@@ -44,7 +65,10 @@ export default function ActionModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Full-page backdrop */}
+          {/* -------------------------------------------------- */}
+          {/* Backdrop                                            */}
+          {/* -------------------------------------------------- */}
+
           <motion.div
             className="absolute inset-0 bg-black/75 backdrop-blur-md"
             onClick={onClose}
@@ -53,7 +77,10 @@ export default function ActionModal({
             exit={{ opacity: 0 }}
           />
 
-          {/* Modal */}
+          {/* -------------------------------------------------- */}
+          {/* Modal                                               */}
+          {/* -------------------------------------------------- */}
+
           <motion.div
             className="
               relative z-10
@@ -84,7 +111,10 @@ export default function ActionModal({
               ease: "easeOut",
             }}
           >
-            {/* Emerald glow */}
+            {/* ------------------------------------------------ */}
+            {/* Emerald Glow                                      */}
+            {/* ------------------------------------------------ */}
+
             <div
               className="
                 pointer-events-none
@@ -99,9 +129,12 @@ export default function ActionModal({
               "
             />
 
-            {/* Header */}
+            {/* ------------------------------------------------ */}
+            {/* Header                                            */}
+            {/* ------------------------------------------------ */}
+
             <div className="relative flex items-start justify-between border-b border-white/10 p-6">
-              <div className="pr-8">
+              <div className={showCloseButton ? "pr-8" : ""}>
                 <h2
                   id={`${id}-title`}
                   className="text-xl font-semibold text-white"
@@ -116,28 +149,88 @@ export default function ActionModal({
                 )}
               </div>
 
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close modal"
-                className="
-                  shrink-0
-                  rounded-full
-                  p-2
-                  text-white/40
-                  transition
-                  hover:bg-white/5
-                  hover:text-white
-                "
-              >
-                <X size={18} />
-              </button>
+              {showCloseButton && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close modal"
+                  className="
+                    shrink-0
+                    rounded-full
+                    p-2
+                    text-white/40
+                    transition
+                    hover:bg-white/5
+                    hover:text-white
+                  "
+                >
+                  <X size={18} />
+                </button>
+              )}
             </div>
 
-            {/* Content */}
+            {/* ------------------------------------------------ */}
+            {/* Content                                           */}
+            {/* ------------------------------------------------ */}
+
             <div className="relative p-6">
               {children}
             </div>
+
+            {/* ------------------------------------------------ */}
+            {/* Footer                                            */}
+            {/* ------------------------------------------------ */}
+
+            {hasActions && (
+              <div
+                className="
+                  relative
+                  flex
+                  items-center
+                  justify-center
+                  gap-3
+                  border-t
+                  border-white/10
+                  bg-white/2
+                  p-4
+                "
+              >
+                {/* Cancel Button */}
+                {showCancelButton && (
+                  <button
+                    type="button"
+                    onClick={onCancel ?? onClose}
+                    className="
+                      flex-1
+                      rounded-xl
+                      border border-zinc-800
+                      bg-zinc-900
+                      px-5
+                      py-2.5
+                      text-sm
+                      font-semibold
+                      text-white
+                      transition
+                      hover:border-zinc-700
+                      hover:bg-zinc-800
+                    "
+                  >
+                    {cancelText}
+                  </button>
+                )}
+
+                {/* Confirm Button */}
+                {showConfirmButton && (
+                  <button
+                    type="button"
+                    onClick={onConfirm}
+                    className="flex-1 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-emerald-400"
+                  >
+                    {confirmText}
+                  </button>
+                )}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

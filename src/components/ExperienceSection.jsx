@@ -63,7 +63,7 @@ export default function ExperienceSection() {
   }, []);
 
   return (    
-    <div className="mx-auto max-w-6xl">
+    <div id="experience" className="mx-auto max-w-6xl">
       <ExperienceHeader />
 
       <div
