@@ -4,10 +4,16 @@ import {
   Suspense,
   useCallback,
   useRef,
-  useState,
 } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import LandingPage from "./components/LandingPage";
 import ActionModal from "./components/ui/ActionModal";
+import {
+  enterPortfolio,
+  portfolioLoaded,
+  portfolioLoadFailed,
+  resetPortfolio,
+} from "./store/appSlice";
 
 const loadPortfolio = () => import("./components/PortfolioContent");
 const PortfolioContent = lazy(loadPortfolio);
@@ -47,10 +53,10 @@ class PortfolioErrorBoundary extends Component {
 }
 
 function App() {
-  const [loadError, setLoadError] = useState(false);
-  const [isPortfolioReady, setIsPortfolioReady] = useState(false);
-  const [hasEntered, setHasEntered] = useState(false);
-  const [isEntering, setIsEntering] = useState(false);
+  const dispatch = useDispatch();
+  const { hasEntered, isEntering, isPortfolioReady, loadError } = useSelector(
+    (state) => state.app,
+  );
   const portfolioLoadRef = useRef(null);
 
   const handleLoaded = useCallback(async () => {
@@ -60,28 +66,24 @@ function App() {
       }
 
       await portfolioLoadRef.current;
-      setIsPortfolioReady(true);
+      dispatch(portfolioLoaded());
     } catch {
-      setLoadError(true);
-      setHasEntered(false);
-      setIsEntering(false);
+      dispatch(portfolioLoadFailed());
     }
-  }, []);
+  }, [dispatch]);
 
   const handleEnter = useCallback(() => {
-    setIsEntering(true);
-    setHasEntered(true);
-  }, []);
+    dispatch(enterPortfolio());
+  }, [dispatch]);
 
   const handleError = useCallback(() => {
-    setLoadError(true);
-    setHasEntered(false);
-    setIsEntering(false);
-  }, []);
+    dispatch(portfolioLoadFailed());
+  }, [dispatch]);
 
   const handleRetry = useCallback(() => {
+    dispatch(resetPortfolio());
     window.location.reload();
-  }, []);
+  }, [dispatch]);
 
   if (!hasEntered) {
     return (

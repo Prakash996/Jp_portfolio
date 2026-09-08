@@ -69,13 +69,18 @@ export default function LandingPage({
   const completionNotified =
     useRef(false);
 
-  const progressRef = useRef(8);
+  const progressRef =
+    useRef(8);
 
   const animationFrameRef =
     useRef(null);
 
   /*
    * Smooth progress animation.
+   *
+   * The actual resource loading can finish
+   * quickly, but the visual progress remains
+   * intentionally slower.
    */
   const animateProgress = useCallback(
     (target, targetStep) => {
@@ -84,7 +89,9 @@ export default function LandingPage({
       const start =
         progressRef.current;
 
-      if (target <= start) return;
+      if (target <= start) {
+        return;
+      }
 
       if (animationFrameRef.current) {
         cancelAnimationFrame(
@@ -92,10 +99,13 @@ export default function LandingPage({
         );
       }
 
+      /*
+       * Slower visual progress.
+       */
       const duration =
         target === 100
-          ? 450
-          : 350;
+          ? 1200
+          : 900;
 
       const startTime =
         performance.now();
@@ -119,11 +129,12 @@ export default function LandingPage({
             3
           );
 
-        const value = Math.round(
-          start +
-            (target - start) *
-              eased
-        );
+        const value =
+          Math.round(
+            start +
+              (target - start) *
+                eased
+          );
 
         progressRef.current =
           value;
@@ -163,6 +174,10 @@ export default function LandingPage({
 
   /*
    * Resource loading.
+   *
+   * A minimum duration prevents the
+   * loader from completing instantly
+   * when everything is cached.
    */
   useEffect(() => {
     let cancelled = false;
@@ -173,14 +188,50 @@ export default function LandingPage({
       document.readyState ===
       "complete";
 
+    /*
+     * Minimum time the loader remains
+     * active.
+     */
+    const MIN_LOADING_TIME = 3200;
+
+    const loadingStartedAt =
+      performance.now();
+
+    let minimumTimePassed = false;
+    let resourcesReady = false;
+
+    let minimumTimer = null;
+
+    const finishIfReady = () => {
+      if (cancelled) {
+        return;
+      }
+
+      if (
+        resourcesReady &&
+        minimumTimePassed
+      ) {
+        animateProgress(100, 2);
+      }
+    };
+
     const update = () => {
-      if (cancelled) return;
+      if (cancelled) {
+        return;
+      }
 
       if (
         imageReady &&
         windowReady
       ) {
-        animateProgress(100, 2);
+        resourcesReady = true;
+
+        /*
+         * Keep the completed progress
+         * animation separate so it still
+         * feels smooth.
+         */
+        finishIfReady();
       } else if (
         imageReady ||
         windowReady
@@ -210,7 +261,9 @@ export default function LandingPage({
          */
       }
 
-      if (cancelled) return;
+      if (cancelled) {
+        return;
+      }
 
       imageReady = true;
 
@@ -218,7 +271,9 @@ export default function LandingPage({
     };
 
     image.onerror = () => {
-      if (cancelled) return;
+      if (cancelled) {
+        return;
+      }
 
       /*
        * Optional image should never
@@ -241,6 +296,27 @@ export default function LandingPage({
       );
     }
 
+    /*
+     * Enforce minimum loading duration.
+     */
+    const elapsed =
+      performance.now() -
+      loadingStartedAt;
+
+    const remaining =
+      Math.max(
+        0,
+        MIN_LOADING_TIME -
+          elapsed
+      );
+
+    minimumTimer =
+      window.setTimeout(() => {
+        minimumTimePassed = true;
+
+        finishIfReady();
+      }, remaining);
+
     update();
 
     return () => {
@@ -251,6 +327,12 @@ export default function LandingPage({
       ) {
         cancelAnimationFrame(
           animationFrameRef.current
+        );
+      }
+
+      if (minimumTimer) {
+        clearTimeout(
+          minimumTimer
         );
       }
 
@@ -1896,10 +1978,22 @@ export default function LandingPage({
 
           cursor: pointer;
 
+          /*
+           * The button has one CSS animation
+           * for its entrance and one delayed
+           * CSS animation for the attention blink.
+           *
+           * No React state or timeout is needed.
+           */
           animation:
             landing-fade-in
             0.5s
             ease
+            both,
+            landing-enter-blink
+            1.2s
+            ease-in-out
+            0.5s
             both;
 
           transition:
@@ -2168,6 +2262,149 @@ export default function LandingPage({
 
             filter:
               blur(10px);
+          }
+        }
+
+        /*
+         * One-time CTA attention animation.
+         *
+         * The 0.5s delay gives the normal
+         * fade-in time to finish first.
+         *
+         * Then the button pulses twice and
+         * remains in its normal state.
+         */
+        @keyframes landing-enter-blink {
+          0% {
+            transform:
+              scale(1);
+
+            border-color:
+              rgba(
+                121,
+                245,
+                196,
+                0.22
+              );
+
+            box-shadow:
+              0 0 0
+              rgba(
+                20,
+                201,
+                138,
+                0
+              );
+          }
+
+          18% {
+            transform:
+              scale(1.025);
+
+            border-color:
+              rgba(
+                121,
+                245,
+                196,
+                0.8
+              );
+
+            box-shadow:
+              0 0 30px
+              rgba(
+                20,
+                201,
+                138,
+                0.3
+              );
+          }
+
+          36% {
+            transform:
+              scale(1);
+
+            border-color:
+              rgba(
+                121,
+                245,
+                196,
+                0.22
+              );
+
+            box-shadow:
+              0 0 0
+              rgba(
+                20,
+                201,
+                138,
+                0
+              );
+          }
+
+          54% {
+            transform:
+              scale(1.025);
+
+            border-color:
+              rgba(
+                121,
+                245,
+                196,
+                0.8
+              );
+
+            box-shadow:
+              0 0 30px
+              rgba(
+                20,
+                201,
+                138,
+                0.3
+              );
+          }
+
+          72% {
+            transform:
+              scale(1);
+
+            border-color:
+              rgba(
+                121,
+                245,
+                196,
+                0.22
+              );
+
+            box-shadow:
+              0 0 0
+              rgba(
+                20,
+                201,
+                138,
+                0
+              );
+          }
+
+          100% {
+            transform:
+              scale(1);
+
+            border-color:
+              rgba(
+                121,
+                245,
+                196,
+                0.22
+              );
+
+            box-shadow:
+              0 0 0
+              rgba(
+                20,
+                201,
+                138,
+                0
+              );
           }
         }
 

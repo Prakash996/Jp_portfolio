@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { House, FolderKanban, Sparkles, Mail, FileText } from "lucide-react";
+import { setActiveSection } from "@/store/appSlice";
 
 export default function Header() {
+  const dispatch = useDispatch();
   const [showDock, setShowDock] = useState(false);
-  const [activeLink, setActiveLink] = useState("Home");
+  const activeLink = useSelector((state) => state.app.activeSection);
 
   const links = [
     { name: "Home", href: "#home", icon: House },
@@ -28,7 +31,7 @@ export default function Header() {
   }, []);
 
   const handleNavigation = (name) => {
-    setActiveLink(name);
+    dispatch(setActiveSection(name));
   };
 
   return (
