@@ -438,7 +438,7 @@ export default function LandingPage({
       data-ready={completed}
       data-entering={entering}
       className={[
-        "relative isolate flex min-h-screen min-h-[100svh]",
+        "relative isolate flex min-h-screen",
         "flex-col overflow-hidden bg-[#020505] text-[#edf5f1]",
         "transition-[background] duration-900 ease-out",
 
@@ -793,8 +793,6 @@ export default function LandingPage({
             w-[min(235px,64vw)]
 
             min-[381px]:w-52.5
-
-            min-[601px]:mt-[clamp(30px,4vw,46px)]
             min-[601px]:w-[clamp(250px,31vw,310px)]
           "
         >
