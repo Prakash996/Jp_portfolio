@@ -784,14 +784,10 @@ export default function LandingPage({
           aria-label={`${statusText} — ${progress}%`}
           className="
             relative
-            mt-6
-            md:mt-4
             grid
             aspect-square
             place-items-center
-
             w-[min(235px,64vw)]
-
             min-[381px]:w-52.5
             min-[601px]:w-[clamp(250px,31vw,310px)]
           "
