@@ -774,7 +774,6 @@ export default function LandingPage({
         {/* ===================================================
             SPIRAL LOADER
         =================================================== */}
-
         <div
           ref={progressBarRef}
           role="progressbar"
@@ -785,11 +784,13 @@ export default function LandingPage({
           className="
             relative
             grid
-            aspect-square
             place-items-center
             w-[min(235px,64vw)]
+            h-[min(200px,55vw)]
             min-[381px]:w-52.5
+            min-[381px]:h-52.5
             min-[601px]:w-[clamp(250px,31vw,310px)]
+            min-[601px]:h-[clamp(250px,31vw,310px)]
           "
         >
           {/* OUTER GLOW */}
