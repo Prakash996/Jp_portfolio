@@ -252,10 +252,10 @@ export default function IntroSection({ personDetails }) {
             aria-hidden="true"
             className="
               absolute
-              -left-[3px]
+              -left-0.75
               top-0
               h-16
-              w-[5px]
+              w-1.25
               rounded-full
               bg-emerald-400/40
               blur-sm

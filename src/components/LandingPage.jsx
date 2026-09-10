@@ -630,7 +630,7 @@ export default function LandingPage({
 
           px-5
           py-9
-
+          md:py-4
           text-center
 
           min-[601px]:px-6
@@ -784,8 +784,8 @@ export default function LandingPage({
           aria-label={`${statusText} — ${progress}%`}
           className="
             relative
-            mt-7
-
+            mt-6
+            md:mt-4
             grid
             aspect-square
             place-items-center

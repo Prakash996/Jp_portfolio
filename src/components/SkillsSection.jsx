@@ -258,6 +258,7 @@ function SkillsSection() {
               border-t
               border-emerald-400/6
               px-5
+              my-10
               text-[8px]
               uppercase
               tracking-[0.25em]

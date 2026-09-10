@@ -1298,9 +1298,9 @@ export function LayerCompositionDemo() {
           absolute
           inset-0
           opacity-[0.07]
-          [background-image:linear-gradient(rgba(52,211,153,.22)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.22)_1px,transparent_1px)]
-          [background-size:44px_44px]
-          [mask-image:radial-gradient(circle_at_center,black_0%,black_35%,transparent_74%)]
+          bg-[linear-gradient(rgba(52,211,153,.22)_1px,transparent_1px),linear-gradient(90deg,rgba(52,211,153,.22)_1px,transparent_1px)]
+          bg-size-[44px_44px]
+          mask-[radial-gradient(circle_at_center,black_0%,black_35%,transparent_74%)]
         "
       />
 
@@ -1334,9 +1334,9 @@ export function LayerCompositionDemo() {
           z-10
           mx-auto
           grid
-          min-h-[680px]
+          min-h-170
           w-full
-          max-w-[1180px]
+          max-w-295
           grid-cols-1
           items-center
           gap-8
@@ -1355,7 +1355,7 @@ export function LayerCompositionDemo() {
             relative
             z-20
             flex
-            max-w-[500px]
+            max-w-125
             flex-col
             justify-center
             md:pb-2
@@ -1379,8 +1379,8 @@ export function LayerCompositionDemo() {
           >
             <span
               className="
-                h-[5px]
-                w-[5px]
+                h-1.25
+                w-1.25
                 rounded-full
                 bg-emerald-400
                 shadow-[0_0_9px_rgba(52,211,153,.9)]
@@ -1394,7 +1394,7 @@ export function LayerCompositionDemo() {
 
           <h1
             className="
-              max-w-[520px]
+              max-w-130
               font-mono
               text-[42px]
               font-bold
@@ -1416,39 +1416,51 @@ export function LayerCompositionDemo() {
             >
               modern
               <br />
-              technology.
-            </span>
+              technology
+            </span>.
           </h1>
 
           {/* DESCRIPTION */}
-
-          <p
+          <span
+            aria-hidden="true"
             className="
-              mt-5
-              max-w-[440px]
-              font-mono
-              text-[10px]
-              leading-[1.7]
-              tracking-[0.015em]
-              text-emerald-50/45
+              absolute
+              -left-px
+              top-0
+              h-full
+              w-px
+              bg-linear-to-b
+              from-emerald-400
+              via-emerald-400/30
+              to-transparent
             "
-          >
-            A curated stack of
-            technologies I use to
-            build scalable
-            interfaces, desktop
-            applications, and
-            high-performance
-            frontend experiences.
-          </p>
-
+          />
+            <p
+              className="
+                mt-5
+                max-w-110
+                font-mono
+                text-[10px]
+                leading-[1.7]
+                tracking-[0.015em]
+                text-emerald-50/45
+              "
+            >
+              A curated stack of
+              technologies I use to
+              build scalable
+              interfaces, desktop
+              applications, and
+              high-performance
+              frontend experiences.
+            </p>
           {/* STATS */}
 
           <div
             className="
               mt-8
               grid
-              max-w-[420px]
+              max-w-105
               grid-cols-3
               gap-2
             "

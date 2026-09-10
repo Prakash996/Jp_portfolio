@@ -1,3 +1,5 @@
+import {mobile} from '@/data/personDetails.json'
+
 const Footer = () => {
   const exploreLinks = [
     { name: "Home", href: "#home" },
@@ -32,7 +34,7 @@ const Footer = () => {
         className="
           pointer-events-none absolute
           left-1/2 top-1/2
-          h-[320px] w-[600px]
+          h-80 w-150
           -translate-x-1/2 -translate-y-1/2
           rounded-full
           bg-emerald-500/[0.035]
@@ -89,10 +91,6 @@ const Footer = () => {
               </span>
             </div>
 
-            <h3 className="text-2xl font-bold tracking-tight text-emerald-50 sm:text-3xl">
-              <span className="text-emerald-500">.</span>
-            </h3>
-
             <p className="mt-4 max-w-md text-sm leading-6 text-zinc-500">
               Frontend developer focus on building clean, responsive and user-friendly web application.
             </p>
@@ -104,7 +102,7 @@ const Footer = () => {
                 <span className="relative h-2 w-2 rounded-full bg-emerald-500" />
               </span>
 
-              <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-600">
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600">
                 Open to opportunities
               </span>
             </div>
@@ -163,14 +161,14 @@ const Footer = () => {
               </a>
 
               <a
-                href="tel:+917676833684"
+                href={`tel: ${mobile}`}
                 className="
                   block text-sm text-zinc-500
                   transition-colors
                   hover:text-emerald-400
                 "
               >
-                +91 98765 43210
+                {mobile}
               </a>
             </div>
 

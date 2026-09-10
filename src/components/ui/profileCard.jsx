@@ -1,18 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "motion/react";
-import ActionModal from "./ActionModal";
+import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "motion/react";
 import personImage from "@/assets/images/person.png";
 
 export default function ProfileCard({ personDetails }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedSocial, setSelectedSocial] = useState(null);
-
   const cardRef = useRef(null);
 
   /*
@@ -114,8 +105,36 @@ export default function ProfileCard({ personDetails }) {
 
   const socialLinks = [
     {
+      name: "LinkedIn",
+      href: "https://www.linkedin.com/in/jp-prakash996/",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          className="h-4 w-4"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.95v5.66H9.34V8.98h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.3ZM5.32 7.42a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM3.54 20.45H7.1V8.98H3.54v11.47ZM22.22 0H1.78C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.78 24h20.44c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z" />
+        </svg>
+      ),
+    },
+    {
+      name: "GitHub",
+      href: "https://github.com/Prakash996/Jp_portfolio",
+      icon: (
+        <svg
+          viewBox="0 0 24 24"
+          className="h-4 w-4"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d="M12 .3a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.83 1.23 1.83 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.4 11.4 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57A12 12 0 0 0 12 .3Z" />
+        </svg>
+      ),
+    },
+    {
       name: "Instagram",
-      href: "https://instagram.com/",
+      href: "https://www.instagram.com/prakash_jakkula/",
       icon: (
         <svg
           viewBox="0 0 24 24"
@@ -133,32 +152,6 @@ export default function ProfileCard({ personDetails }) {
             fill="currentColor"
             stroke="none"
           />
-        </svg>
-      ),
-    },
-    {
-      name: "Twitter",
-      href: "https://twitter.com/",
-      icon: (
-        <svg
-          viewBox="0 0 24 24"
-          className="h-4 w-4"
-          fill="currentColor"
-        >
-          <path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.39L6.48 22H3.37l7.24-8.27L2.8 2h6.4l4.42 5.84L18.9 2Zm-1.1 17.9h1.73L8.26 4h-1.8L17.8 19.9Z" />
-        </svg>
-      ),
-    },
-    {
-      name: "YouTube",
-      href: "https://youtube.com/",
-      icon: (
-        <svg
-          viewBox="0 0 24 24"
-          className="h-4 w-4"
-          fill="currentColor"
-        >
-          <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.9V8.1l6.5 3.9-6.5 3.9Z" />
         </svg>
       ),
     },
@@ -258,15 +251,17 @@ export default function ProfileCard({ personDetails }) {
 
                   <div className="mb-6 flex items-center justify-center gap-3">
                     {socialLinks.map((social) => (
-                      <button
+                      <a
                         key={social.name}
                         type="button"
-                        onClick={() => setSelectedSocial(social)}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         aria-label={social.name}
                         className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition-all duration-200 hover:-translate-y-1 hover:border-zinc-600 hover:bg-zinc-800 hover:text-white"
                       >
                         {social.icon}
-                      </button>
+                      </a>
                     ))}
                   </div>
                 </>
@@ -285,32 +280,6 @@ export default function ProfileCard({ personDetails }) {
           </motion.div>
         </div>
       </div>
-
-      {/* ---------------------------------------------------------- */}
-      {/* Social Coming Soon Modal                                   */}
-      {/* ---------------------------------------------------------- */}
-
-      <ActionModal
-        id="socialComingSoonModal"
-        open={Boolean(selectedSocial)}
-        onClose={() => setSelectedSocial(null)}
-        title={`${selectedSocial?.name ?? "Social"} Coming Soon`}
-        description="This social profile isn't available yet."
-        showConfirmButton
-        confirmText="Got it"
-        onConfirm={() => setSelectedSocial(null)}
-      >
-        <div className="grid grid-cols-[4rem_1fr] items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 [&_svg]:h-10 [&_svg]:w-10">
-            {selectedSocial?.icon}
-          </div>
-
-          <p className="text-left text-sm leading-6 text-white/60">
-            My {selectedSocial?.name ?? "social"} profile is currently being
-            prepared. Check back soon!
-          </p>
-        </div>
-      </ActionModal>
     </>
   );
 }

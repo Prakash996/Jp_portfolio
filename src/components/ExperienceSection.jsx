@@ -1163,7 +1163,7 @@ function CardFooter({ experience }) {
             rounded-full
             border
             border-white/10
-            bg-white/[0.025]
+            bg-white/2.5
             transition-all
             duration-300
             group-hover:border-emerald-400/30
