@@ -28,19 +28,19 @@ const DEFAULT_COLOR = "#34D399";
 
 const DEFAULT_LAYERS = [
   {
-    title: "CODE",
+    title: "UI/UX",
     color: "#34D399",
   },
   {
-    title: "DEV",
+    title: "BUILD",
     color: "#10B981",
   },
   {
-    title: "BUILD",
+    title: "DEV",
     color: "#059669",
   },
   {
-    title: "UI",
+    title: "CODE",
     color: "#6EE7B7",
   },
 ];
