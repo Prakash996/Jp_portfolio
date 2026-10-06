@@ -1135,55 +1135,6 @@ function CardFooter({ experience }) {
           {experience.location}
         </span>
       </div>
-
-      <div className="flex items-center gap-2">
-        <span
-          className="
-            hidden
-            font-mono
-            text-[9px]
-            uppercase
-            tracking-[0.15em]
-            text-white/20
-            transition-colors
-            group-hover:text-emerald-400/50
-            sm:block
-          "
-        >
-          Explore
-        </span>
-
-        <div
-          className="
-            flex
-            h-7
-            w-7
-            items-center
-            justify-center
-            rounded-full
-            border
-            border-white/10
-            bg-white/2.5
-            transition-all
-            duration-300
-            group-hover:border-emerald-400/30
-            group-hover:bg-emerald-400/10
-          "
-        >
-          <FiArrowUpRight
-            size={13}
-            className="
-              text-white/40
-              transition-all
-              duration-300
-              group-hover:-translate-y-0.5
-              group-hover:translate-x-0.5
-              group-hover:text-emerald-300
-            "
-            aria-hidden="true"
-          />
-        </div>
-      </div>
     </footer>
   );
 }

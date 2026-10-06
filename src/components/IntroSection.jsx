@@ -340,43 +340,6 @@ export default function IntroSection({ personDetails }) {
             Building digital experiences
           </div>
         </motion.div>
-
-        {/* ================================================== */}
-        {/* Scroll Hint                                         */}
-        {/* ================================================== */}
-
-        <motion.div
-          className="
-            mt-10
-            flex
-            items-center
-            gap-2
-            text-[10px]
-            uppercase
-            tracking-[0.2em]
-            text-white/20
-          "
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-          }}
-          transition={{
-            duration: 0.6,
-            delay: 0.8,
-          }}
-        >
-          <span>
-            Explore
-          </span>
-
-          <ArrowDownRight
-            size={14}
-            strokeWidth={1.5}
-            className="text-emerald-400/50"
-          />
-        </motion.div>
       </div>
     </section>
   );
