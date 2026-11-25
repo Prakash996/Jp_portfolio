@@ -1,801 +1,368 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  CircleHelp,
-  Code2,
-  Compass,
-  Database,
+  ArrowUpRight,
+  FolderKanban,
+  GitBranch,
   Globe2,
-  Layers3,
   LayoutGrid,
-  TestTube,
-  Wrench,
+  Play,
 } from "lucide-react";
-import { FaVial } from "react-icons/fa";
-import {
-  SiAngular,
-  SiBootstrap,
-  SiCss,
-  SiEclipseide,
-  SiElectron,
-  SiExpress,
-  SiGit,
-  SiGithub,
-  SiHcl,
-  SiHtml5,
-  SiFigma,
-  SiFirebase,
-  SiJenkins,
-  SiJira,
-  SiJavascript,
-  SiJquery,
-  SiMocha,
-  SiMongodb,
-  SiMysql,
-  SiNextdotjs,
-  SiNodedotjs,
-  SiPython,
-  SiReact,
-  SiRedux,
-  SiSelenium,
-  SiSqlite,
-  SiTailwindcss,
-  SiTypescript,
-} from "react-icons/si";
 
 import "@/css/TabsSection.css";
-import skillsData from "@/data/skills.json";
 
-const ICONS = {
-  "simple-icons:javascript": SiJavascript,
-  "simple-icons:react": SiReact,
-  "simple-icons:nextdotjs": SiNextdotjs,
-  "simple-icons:nodedotjs": SiNodedotjs,
-  "simple-icons:html5": SiHtml5,
-  "simple-icons:css3": SiCss,
-  "simple-icons:bootstrap": SiBootstrap,
-  "simple-icons:jquery": SiJquery,
-  "simple-icons:angular": SiAngular,
-  "simple-icons:redux": SiRedux,
-  "simple-icons:express": SiExpress,
-  "simple-icons:electron": SiElectron,
-  "simple-icons:hcl": SiHcl,
-  "simple-icons:python": SiPython,
-  "simple-icons:selenium": SiSelenium,
-  "simple-icons:mocha": SiMocha,
-  "simple-icons:git": SiGit,
-  "simple-icons:github": SiGithub,
-  "simple-icons:jenkins": SiJenkins,
-  "simple-icons:jira": SiJira,
-  "simple-icons:eclipseide": SiEclipseide,
-  "simple-icons:mysql": SiMysql,
-  "simple-icons:sqlite": SiSqlite,
-  "simple-icons:tailwindcss": SiTailwindcss,
-  "simple-icons:typescript": SiTypescript,
-  "simple-icons:figma": SiFigma,
-  "simple-icons:firebase": SiFirebase,
-  "simple-icons:mongodb": SiMongodb,
-  "mdi:compass-outline": Compass,
-  "mdi:code-braces": Code2,
-  "mdi:view-grid-outline": LayoutGrid,
-  "mdi:code-tags": Code2,
-  "mdi:web": Globe2,
-  "mdi:layers-outline": Layers3,
-  "mdi:test-tube": TestTube,
-  "mdi:tools": Wrench,
-  "mdi:database-outline": Database,
-  "mdi:help-circle-outline": CircleHelp,
-};
-
-/* =========================================================
-   SKILL TABS
-========================================================= */
+/* =========================================
+   CONFIG
+========================================= */
 
 const TABS = [
-  {
-    id: "all",
-    label: "All",
-    icon: "mdi:view-grid-outline",
-  },
-  {
-    id: "core",
-    label: "Core",
-    icon: "mdi:code-tags",
-  },
-  {
-    id: "frontend",
-    label: "Frontend",
-    icon: "mdi:web",
-  },
-  {
-    id: "frameworks",
-    label: "Frameworks",
-    icon: "mdi:layers-outline",
-  },
-  {
-    id: "testing",
-    label: "Testing",
-    icon: "mdi:test-tube",
-  },
-  {
-    id: "tools",
-    label: "Tools",
-    icon: "mdi:tools",
-  },
-  {
-    id: "database",
-    label: "Database",
-    icon: "mdi:database-outline",
-  },
+  { id: "all", label: "All", icon: LayoutGrid },
+  { id: "web", label: "Web", icon: Globe2 },
+  { id: "github", label: "GitHub", icon: GitBranch },
+  { id: "media", label: "Media", icon: Play },
 ];
 
-/* =========================================================
-   FALLBACK ICON
-========================================================= */
+const TYPE_ICONS = Object.fromEntries(TABS.map((t) => [t.id, t.icon]));
 
-function FallbackIcon({ color = "#34D399" }) {
-  const IconComponent = ICONS["mdi:help-circle-outline"];
+/* =========================================
+   DUMMY DATA
+   Pass `data={[]}` (or nothing valid) to see the empty state.
+   `image` is optional and overrides the auto-generated preview.
+========================================= */
+const DUMMY_PROJECTS = []
+/*
+const DUMMY_PROJECTS = [
+  {
+    id: 1,
+    title: "React Documentation",
+    description: "Official React docs, a good reference for hooks and patterns.",
+    url: "https://react.dev",
+    tags: ["React", "Docs"],
+  },
+  {
+    id: 2,
+    title: "Tailwind CSS",
+    description: "Utility-first CSS framework used across my UI work.",
+    url: "https://tailwindcss.com",
+    tags: ["CSS", "Tailwind"],
+  },
+  {
+    id: 3,
+    title: "Next.js Source",
+    description: "Reading the Next.js repository to learn frontend architecture.",
+    url: "https://github.com/vercel/next.js",
+    tags: ["Next.js", "Open Source"],
+  },
+  {
+    id: 4,
+    title: "React Repository",
+    description: "The core React library source code.",
+    url: "https://github.com/facebook/react",
+    tags: ["React", "JavaScript"],
+  },
+  {
+    id: 5,
+    title: "Introduction to React",
+    description: "Video tutorial covering React fundamentals.",
+    url: "https://www.youtube.com/watch?v=SqcY0GlETPk",
+    tags: ["React", "Tutorial"],
+  },
+  {
+    id: 6,
+    title: "JavaScript Full Course",
+    description: "A complete JavaScript learning video.",
+    url: "https://youtu.be/PkZNo7MFNFg",
+    tags: ["JavaScript"],
+  },
+  {
+    // Edge case: no URL, no description, no tags
+    id: 7,
+    title: "Coming soon",
+  },
+];
+*/
+/* =========================================
+   URL HELPERS
+========================================= */
 
+function parseUrl(value) {
+  if (typeof value !== "string" || !value.trim()) return null;
+
+  try {
+    const url = new URL(value.trim());
+    return ["http:", "https:"].includes(url.protocol) ? url : null;
+  } catch {
+    return null;
+  }
+}
+
+function getYouTubeId(url) {
+  const host = url.hostname.replace(/^www\./, "");
+  const parts = url.pathname.split("/").filter(Boolean);
+  let id = null;
+
+  if (host === "youtu.be") {
+    id = parts[0];
+  } else if (
+    ["youtube.com", "m.youtube.com", "youtube-nocookie.com"].includes(host)
+  ) {
+    if (parts[0] === "watch") id = url.searchParams.get("v");
+    else if (["embed", "shorts", "live"].includes(parts[0])) id = parts[1];
+  }
+
+  return /^[\w-]{11}$/.test(id ?? "") ? id : null;
+}
+
+/** Works out the project type and an auto-generated preview image. */
+function getLinkInfo(url) {
+  if (!url) return { type: "web", thumbnail: null };
+
+  const youtubeId = getYouTubeId(url);
+  if (youtubeId) {
+    return {
+      type: "media",
+      thumbnail: `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`,
+    };
+  }
+
+  if (url.hostname.replace(/^www\./, "") === "github.com") {
+    const [owner, repo] = url.pathname.split("/").filter(Boolean);
+    return {
+      type: "github",
+      thumbnail: owner
+        ? `https://opengraph.githubassets.com/1/${owner}${repo ? `/${repo}` : ""}`
+        : null,
+    };
+  }
+
+  return {
+    type: "web",
+    thumbnail: `https://image.thum.io/get/width/800/crop/450/${url.href}`,
+  };
+}
+
+/* =========================================
+   DATA NORMALIZATION
+========================================= */
+
+function normalizeProject(raw, index) {
+  if (!raw || typeof raw.title !== "string" || !raw.title.trim()) return null;
+
+  const url = parseUrl(raw.url);
+  const { type, thumbnail } = getLinkInfo(url);
+
+  return {
+    id: raw.id ?? `${index}-${raw.title}`,
+    title: raw.title.trim(),
+    description:
+      typeof raw.description === "string" ? raw.description.trim() : "",
+    url: url?.href ?? null,
+    host: url ? url.hostname.replace(/^www\./, "") : null,
+    type,
+    thumbnail: parseUrl(raw.image)?.href ?? thumbnail,
+    tags: Array.isArray(raw.tags)
+      ? raw.tags.filter((t) => typeof t === "string" && t.trim())
+      : [],
+  };
+}
+
+/* =========================================
+   COMPONENTS
+========================================= */
+
+function EmptyState({ tab, noData }) {
   return (
-    <div
-      id="skill-fallback-icon"
-      className="
-        flex
-        h-12
-        w-12
-        items-center
-        justify-center
-        rounded-xl
-        border
-      "
-      style={{
-        color,
-        borderColor: `${color}66`,
-        backgroundColor: `${color}0D`,
-      }}
-    >
-      <IconComponent
-        id="skill-fallback-icon-symbol"
-        width={30}
-        height={30}
-        aria-label="Unknown skill icon"
-        role="img"
-      />
+    <div className="projects-empty">
+      <div className="projects-empty__icon">
+        <FolderKanban size={26} strokeWidth={1.8} />
+      </div>
+      <h3 className="projects-empty__title">
+        {noData ? "No projects yet" : `No ${tab.label} projects`}
+      </h3>
+      <p className="projects-empty__text">
+        {noData
+          ? "Projects you add will show up here."
+          : "Nothing in this category yet. Try another tab."}
+      </p>
     </div>
   );
 }
 
-/* =========================================================
-   SKILL ICON
-========================================================= */
-
-function SkillIcon({ skill }) {
-  /*
-   * TestNG uses react-icons instead of Iconify.
-   * This guarantees that the icon renders independently
-   * of the installed Iconify collection.
-   */
-
-  if (skill?.name === "TestNG") {
-    return (
-      <FaVial
-        id="skill-icon-testng"
-        size={48}
-        color={skill.color}
-        aria-label="TestNG logo"
-        role="img"
-        className="tabs-section__skill-icon"
-      />
-    );
-  }
-
-  if (!skill?.icon) {
-    return <FallbackIcon color={skill?.color} />;
-  }
-
-  const IconComponent = ICONS[skill.icon] ?? CircleHelp;
+function Preview({ project }) {
+  const [failed, setFailed] = useState(false);
+  const Icon = TYPE_ICONS[project.type];
+  const showImage = project.thumbnail && !failed;
 
   return (
-    <IconComponent
-      id={`skill-icon-${skill.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")}`}
-      width={48}
-      height={48}
-      aria-label={`${skill.name} logo`}
-      role="img"
-      className="tabs-section__skill-icon"
-      style={{
-        color: skill.color,
-        width: "48px",
-        height: "48px",
-      }}
-    />
-  );
-}
-
-/* =========================================================
-   SKILL CARD
-========================================================= */
-
-function SkillCard({ skill, index }) {
-  const duration = `${2.8 + ((index * 0.73) % 2.4)}s`;
-  const delay = `${(index * 0.43) % 2.5}s`;
-
-  const skillId = skill.name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-");
-
-  return (
-    <article
-      id={`skill-card-${skillId}`}
-      className="
-        tabs-section__skill-item
-        group
-        relative
-        flex
-        min-h-36.25
-        cursor-pointer
-        flex-col
-        items-center
-        justify-center
-        border
-        border-transparent
-        px-2
-        py-4
-        rounded-4xl
-        transition-all
-        duration-300
-      "
-      style={{
-        "--brand-color": skill.color,
-        "--duration": duration,
-        "--delay": delay,
-      }}
-    >
-      {/* ===================================================
-          ICON CIRCLE
-      =================================================== */}
-
-      <div
-        id={`skill-icon-circle-${skillId}`}
-        className="
-          relative
-          z-10
-          flex
-          h-20
-          w-20
-          shrink-0
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-emerald-400/50
-          bg-emerald-400/4.5
-          transition-all
-          duration-300
-          ease-out
-          group-hover:scale-105
-          group-hover:border-(--brand-color)
-          group-hover:bg-emerald-400/8
-          group-hover:shadow-[0_0_30px_rgba(52,211,153,0.08)]
-        "
-      >
-        {/* Brand glow */}
-
-        <div
-          id={`skill-glow-${skillId}`}
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            rounded-full
-            opacity-0
-            transition-opacity
-            duration-300
-            group-hover:opacity-100
-          "
-          style={{
-            background: `radial-gradient(
-              circle,
-              ${skill.color}18 0%,
-              transparent 70%
-            )`,
-          }}
+    <div className="projects-card__preview">
+      {showImage ? (
+        <img
+          src={project.thumbnail}
+          alt={`${project.title} preview`}
+          loading="lazy"
+          onError={() => setFailed(true)}
         />
-
-        {/* Skill icon */}
-
-        <div
-          id={`skill-icon-wrapper-${skillId}`}
-          className="
-            relative
-            z-10
-            flex
-            items-center
-            justify-center
-          "
-        >
-          <SkillIcon skill={skill} />
+      ) : (
+        <div className="projects-card__fallback">
+          <Icon size={30} strokeWidth={1.6} />
+          <span>{project.host ?? "No preview available"}</span>
         </div>
-      </div>
+      )}
 
-      {/* ===================================================
-          LABEL
-      =================================================== */}
+      <span className="projects-card__chip">
+        <Icon size={12} strokeWidth={2} />
+        {TABS.find((t) => t.id === project.type).label}
+      </span>
 
-      <div
-        id={`skill-label-${skillId}`}
-        className="mt-3 w-full px-1 text-center"
-      >
-        <span
-          id={`skill-name-${skillId}`}
-          className="
-            block
-            truncate
-            text-[10px]
-            font-semibold
-            text-slate-500
-            transition-colors
-            duration-300
-            group-hover:text-emerald-300
-          "
-          title={skill.name}
-        >
-          {skill.name}
+      {showImage && project.type === "media" && (
+        <span className="projects-card__play" aria-hidden="true">
+          <Play size={20} fill="currentColor" />
         </span>
+      )}
+    </div>
+  );
+}
+
+function ProjectCard({ project }) {
+  const body = (
+    <>
+      <Preview project={project} />
+
+      <div className="projects-card__body">
+        <div className="projects-card__head">
+          <h3 className="projects-card__title">{project.title}</h3>
+          {project.url && (
+            <span className="projects-card__arrow" aria-hidden="true">
+              <ArrowUpRight size={16} />
+            </span>
+          )}
+        </div>
+
+        <p className="projects-card__host">{project.host ?? "No link yet"}</p>
+
+        {project.description && (
+          <p className="projects-card__description">{project.description}</p>
+        )}
+
+        {project.tags.length > 0 && (
+          <ul className="projects-card__tags">
+            {project.tags.map((tag) => (
+              <li key={tag} className="projects-card__tag">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-
-      {/* ===================================================
-          BOTTOM INDICATOR
-      =================================================== */}
-
-      <span
-        id={`skill-indicator-${skillId}`}
-        className="
-          absolute
-          bottom-2
-          h-px
-          w-0
-          bg-(--brand-color)
-          opacity-0
-          transition-all
-          duration-300
-          group-hover:w-8
-          group-hover:opacity-60
-        "
-      />
-    </article>
+    </>
   );
-}
 
-/* =========================================================
-   SKILL TAB
-========================================================= */
-
-function SkillTab({
-  tab,
-  active,
-  count,
-  onClick,
-}) {
-  const IconComponent = ICONS[tab.icon] ?? CircleHelp;
-
-  return (
-    <button
-      id={`skill-tab-${tab.id}`}
-      type="button"
-      role="tab"
-      aria-selected={active}
-      onClick={onClick}
-      className={`
-        group
-        relative
-        flex
-        shrink-0
-        items-center
-        gap-1.5
-        rounded-lg
-        border
-        px-3
-        py-2
-        text-[9px]
-        font-semibold
-        uppercase
-        tracking-widest
-        transition-all
-        duration-300
-
-        ${
-          active
-            ? `
-              border-emerald-400/20
-              bg-emerald-400/[0.07]
-              text-emerald-300
-            `
-            : `
-              border-transparent
-              bg-transparent
-              text-slate-600
-              hover:border-white/4
-              hover:bg-white/2
-              hover:text-slate-400
-            `
-        }
-      `}
+  return project.url ? (
+    <a
+      className="projects-card"
+      href={project.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open ${project.title}`}
     >
-      <IconComponent
-        id={`skill-tab-icon-${tab.id}`}
-        size={14}
-        className="shrink-0"
-      />
-
-      <span id={`skill-tab-label-${tab.id}`} className="pt-0.5">
-        {tab.label}
-      </span>
-
-      <span
-        id={`skill-tab-count-${tab.id}`}
-        className={`
-          rounded-full
-          px-1.5
-          py-1.3
-          text-[8px]
-          ${
-            active ? "bg-emerald-600/30 text-emerald-300" : "bg-white/3 text-slate-700"
-          }
-        `}
-      >
-        {count}
-      </span>
-
-      {/* Active underline */}
-
-      <span
-        id={`skill-tab-underline-${tab.id}`}
-        className={`
-          absolute
-          -bottom-px
-          left-1/2
-          h-px
-          -translate-x-1/2
-          bg-emerald-400
-          transition-all
-          duration-300
-          ${
-            active
-              ? "w-8 opacity-80"
-              : "w-0 opacity-0"
-          }
-        `}
-      />
-    </button>
+      {body}
+    </a>
+  ) : (
+    <div className="projects-card">{body}</div>
   );
 }
 
-/* =========================================================
-   MAIN SKILL GRID
-========================================================= */
+/* =========================================
+   MAIN
+========================================= */
 
-export default function SkillGrid({
-  data = skillsData,
-}) {
+export default function TabsSection({ data = DUMMY_PROJECTS }) {
   const [activeTab, setActiveTab] = useState("all");
 
-  /* =======================================================
-     FILTER SKILLS
-  ======================================================= */
+  const projects = useMemo(
+    () =>
+      Array.isArray(data) ? data.map(normalizeProject).filter(Boolean) : [],
+    [data]
+  );
 
-  const filteredSkills =
+  const counts = useMemo(() => {
+    const result = { all: projects.length, web: 0, github: 0, media: 0 };
+    projects.forEach((p) => result[p.type]++);
+    return result;
+  }, [projects]);
+
+  const visible =
     activeTab === "all"
-      ? data
-      : data.filter(
-          (skill) =>
-            skill.category === activeTab
-        );
+      ? projects
+      : projects.filter((p) => p.type === activeTab);
 
-  /* =======================================================
-     GET TAB COUNT
-  ======================================================= */
+  const activeIndex = TABS.findIndex((t) => t.id === activeTab);
+  const currentTab = TABS[activeIndex];
 
-  const getTabCount = (tabId) => {
-    if (tabId === "all") {
-      return data.length;
-    }
+  const handleKeyDown = (event) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+    if (!step) return;
 
-    return data.filter(
-      (skill) =>
-        skill.category === tabId
-    ).length;
+    event.preventDefault();
+    const next = TABS[(activeIndex + step + TABS.length) % TABS.length];
+    setActiveTab(next.id);
+    document.getElementById(`project-tab-${next.id}`)?.focus();
   };
 
   return (
-    <section
-      id="skills-tabs"
-      className="
-        tabs-section
-        relative
-        w-full
-        mb-23
-      "
-    >
-      <div
-        id="skills-wrapper"
-        className="
-          mx-auto
-          w-full
-          max-w-7xl
-          px-4
-          sm:px-6
-          lg:px-8
-        "
-      >
-        {/* =================================================
-            MAIN GLASS CONTAINER
-        ================================================= */}
-
-        <div
-          id="skills-container"
-          className="
-            tabs-section__container
-            w-full
-            max-w-full
-            rounded-2xl
-          "
-        >
-          {/* =================================================
-              HEADER
-          ================================================= */}
-
-          <header
-            id="skills-header"
-            className="
-              flex
-              w-full
-              flex-col
-              gap-3
-              border-b
-              border-white/[0.035]
-              px-4
-              py-3
-              sm:flex-row
-              sm:items-center
-              sm:px-5
-            "
-          >
-            {/* =================================================
-                TITLE
-            ================================================= */}
-
-            <div
-              id="skills-title-wrapper"
-              className="
-                shrink-0
-                sm:w-26.25
-              "
-            >
-              <h2
-                id="skills-title"
-                className="
-                  text-xs
-                  font-semibold
-                  uppercase
-                  tracking-[0.18em]
-                  text-emerald-300
-                "
-              >
-                Skills
-              </h2>
-
-              <p
-                id="skills-subtitle"
-                className="
-                  mt-1
-                  text-[9px]
-                  text-slate-400
-                "
-              >
-                Technologies & tools
-              </p>
-            </div>
-
-            {/* =================================================
-                CATEGORY TABS
-            ================================================= */}
-
-            <nav
-              id="skills-tabs-navigation"
-              className="
-                min-w-0
-                flex-1
-              "
-              role="tablist"
-              aria-label="Skill categories"
-            >
-              <div
-                id="skills-tabs"
-                className="
-                  flex
-                  w-full
-                  flex-wrap
-                  items-center
-                  justify-center
-                  gap-1
-                "
-              >
-                {TABS.map((tab) => (
-                  <SkillTab
-                    key={tab.id}
-                    tab={tab}
-                    active={
-                      activeTab === tab.id
-                    }
-                    count={getTabCount(
-                      tab.id
-                    )}
-                    onClick={() =>
-                      setActiveTab(tab.id)
-                    }
-                  />
-                ))}
-              </div>
-            </nav>
-
-            {/* =================================================
-                DESKTOP COUNT
-            ================================================= */}
-
-            <div
-              id="skills-desktop-count-wrapper"
-              className="
-                hidden
-                shrink-0
-                sm:block
-                sm:w-18.75
-                sm:text-right
-              "
-            >
-              <span
-                id="skills-desktop-count"
-                className="
-                  rounded-full
-                  border
-                  border-emerald-400/10
-                  bg-emerald-400/4
-                  px-2.5
-                  py-1
-                  text-[9px]
-                  font-medium
-                  text-slate-500
-                "
-              >
-                {filteredSkills.length} skills
-              </span>
-            </div>
-          </header>
-
-          {/* =================================================
-              MOBILE COUNT
-          ================================================= */}
-
-          <div
-            id="skills-mobile-count-wrapper"
-            className="
-              flex
-              justify-end
-              px-4
-              pt-2
-              sm:hidden
-            "
-          >
-            <span
-              id="skills-mobile-count"
-              className="
-                rounded-full
-                border
-                border-emerald-400/10
-                bg-emerald-400/4
-                px-2.5
-                py-1
-                text-[8px]
-                font-medium
-                text-slate-400
-              "
-            >
-              {filteredSkills.length} skills
-            </span>
+    <section id="projects" className="projects-section mb-16 sm:mb-24">
+      <div className="projects-container">
+        <header className="projects-header">
+          <div>
+            <h2 className="projects-heading">Projects</h2>
+            <p className="projects-subheading">Selected work and creations</p>
           </div>
 
-          {/* =================================================
-              SKILLS CONTENT
-          ================================================= */}
-
           <div
-            id="skills-content"
-            className="
-              w-full
-              min-w-0
-              p-4
-              sm:p-5
-            "
-            role="tabpanel"
+            className="projects-tabs"
+            role="tablist"
+            aria-label="Project categories"
+            onKeyDown={handleKeyDown}
+            style={{ "--index": activeIndex }}
           >
-            {filteredSkills.length > 0 ? (
-              <div
-                id="skills-grid"
-                className="
-                  grid
-                  w-full
-                  grid-cols-2
-                  gap-3
-                  sm:grid-cols-3
-                  md:grid-cols-4
-                  lg:grid-cols-5
-                  xl:grid-cols-6
-                "
+            <span className="projects-tabs__indicator" aria-hidden="true" />
+            {TABS.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                id={`project-tab-${id}`}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === id}
+                aria-controls="projects-panel"
+                tabIndex={activeTab === id ? 0 : -1}
+                className={`projects-tab${activeTab === id ? " is-active" : ""}`}
+                onClick={() => setActiveTab(id)}
               >
-                {filteredSkills.map(
-                  (skill, index) => (
-                    <SkillCard
-                      key={`${skill.name}-${index}`}
-                      skill={skill}
-                      index={index}
-                    />
-                  )
-                )}
-              </div>
+                <Icon size={14} strokeWidth={1.8} />
+                <span>{label}</span>
+                <span className="projects-tab__count">{counts[id]}</span>
+              </button>
+            ))}
+          </div>
+        </header>
+
+        <div
+          id="projects-panel"
+          role="tabpanel"
+          aria-labelledby={`project-tab-${activeTab}`}
+          className="projects-panel"
+        >
+          <div key={activeTab} className="projects-fade">
+            {visible.length === 0 ? (
+              <EmptyState tab={currentTab} noData={projects.length === 0} />
             ) : (
-              <div
-                id="skills-empty-state"
-                className="
-                  flex
-                  min-h-45
-                  items-center
-                  justify-center
-                  rounded-xl
-                  border
-                  border-dashed
-                  border-white/4
-                  text-[10px]
-                  uppercase
-                  tracking-[0.15em]
-                  text-slate-700
-                "
-              >
-                No skills in this category
+              <div className="projects-grid">
+                {visible.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
               </div>
             )}
           </div>
         </div>
-
-        {/* =================================================
-            FOOTER
-        ================================================= */}
-
-        <footer
-          id="skills-footer"
-          className="
-            mt-3
-            flex
-            items-center
-            justify-between
-            px-1
-            text-[9px]
-            uppercase
-            tracking-[0.2em]
-            text-slate-700
-          "
-        >
-          <span id="skills-footer-label">
-            Technology Stack
-          </span>
-
-          <span id="skills-footer-count">
-            {filteredSkills.length}{" "}
-            {filteredSkills.length === 1
-              ? "skill"
-              : "skills"}
-          </span>
-        </footer>
       </div>
     </section>
   );
