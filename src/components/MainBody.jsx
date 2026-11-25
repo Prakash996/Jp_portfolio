@@ -4,6 +4,7 @@ import IntroSection from "@/components/IntroSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import SkillsSection from "./SkillsSection";
 import TabsSection from "@/components/TabsSection"
+import WheelCarousel from "@/components/WheelCarouselSection";
 
 export default function MainBody() {
   return (
@@ -12,7 +13,8 @@ export default function MainBody() {
           <ProfileSection personDetails={personDetails} stats={personDetails.stats}/>
           <IntroSection personDetails={personDetails} />
         </div>
-        <SkillsSection />
+        <SkillsSection/>
+        <WheelCarousel/>
         <TabsSection/>
         <ExperienceSection />
     </main>

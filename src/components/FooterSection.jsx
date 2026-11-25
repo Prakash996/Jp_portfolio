@@ -201,7 +201,7 @@ const Footer = () => {
             flex flex-col gap-4
             pt-5
             font-mono text-[9px]
-            uppercase tracking-[0.1em]
+            uppercase tracking-widest
             text-zinc-700
             sm:flex-row sm:items-center sm:justify-between
           "

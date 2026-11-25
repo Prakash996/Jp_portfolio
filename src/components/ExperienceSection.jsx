@@ -10,7 +10,6 @@ import {
   useTransform,
 } from "framer-motion";
 import {
-  FiArrowUpRight,
   FiBriefcase,
   FiCalendar,
   FiMapPin,
@@ -211,7 +210,7 @@ function TimelineBase() {
           left-1/2
           z-0
           hidden
-          w-[2px]
+          w-0.5
           -translate-x-1/2
           bg-zinc-700
           md:block
@@ -229,7 +228,7 @@ function TimelineBase() {
           inset-y-0
           left-4.25
           z-0
-          w-[2px]
+          w-0.5
           bg-zinc-700
           md:hidden
         "
@@ -259,7 +258,7 @@ function TimelineHighlight({ mouseY, visible }) {
           pointer-events-none
           absolute
           left-1/2
-          z-[40]
+          z-40
           hidden
           h-28
           w-5
@@ -286,10 +285,10 @@ function TimelineHighlight({ mouseY, visible }) {
           pointer-events-none
           absolute
           left-1/2
-          z-[50]
+          z-50
           hidden
           h-24
-          w-[2px]
+          w-0.5
           -translate-x-1/2
           -translate-y-1/2
           rounded-full
@@ -313,7 +312,7 @@ function TimelineHighlight({ mouseY, visible }) {
           pointer-events-none
           absolute
           left-4.25
-          z-[40]
+          z-40
           h-24
           w-5
           -translate-x-1/2
@@ -339,9 +338,9 @@ function TimelineHighlight({ mouseY, visible }) {
           pointer-events-none
           absolute
           left-4.25
-          z-[50]
+          z-50
           h-20
-          w-[2px]
+          w-0.5
           -translate-x-1/2
           -translate-y-1/2
           rounded-full
@@ -417,7 +416,7 @@ function ExperienceItem({ experience, index }) {
           absolute
           left-4.25
           top-7
-          z-[60]
+          z-60
           -translate-x-1/2
 
           md:static
@@ -836,7 +835,7 @@ function ExperienceCard({
             text-emerald-400/5.5
             transition-colors
             duration-500
-            group-hover:text-emerald-400/[0.09]
+            group-hover:text-emerald-400/9
             md:text-[175px]
           "
         >
@@ -856,7 +855,7 @@ function ExperienceCard({
             inset-x-0
             top-0
             h-px
-            bg-gradient-to-r
+            bg-linear-to-r
             from-transparent
             via-emerald-400/70
             to-transparent
@@ -876,7 +875,7 @@ function ExperienceCard({
             className="
               my-6
               h-px
-              bg-gradient-to-r
+              bg-linear-to-r
               from-emerald-400/20
               via-white/[0.07]
               to-transparent
@@ -908,7 +907,7 @@ function ExperienceCard({
                     transition-all
                     duration-300
                     hover:border-emerald-400/30
-                    hover:bg-emerald-400/[0.08]
+                    hover:bg-emerald-400/8
                     hover:text-emerald-300
                   "
                 >
@@ -937,7 +936,7 @@ function ExperienceCard({
             left-0
             h-px
             w-full
-            bg-gradient-to-r
+            bg-linear-to-r
             from-transparent
             via-emerald-400/80
             to-transparent
@@ -1072,8 +1071,8 @@ function CardHeader({
           self-start
           rounded-full
           border
-          border-white/[0.08]
-          bg-white/[0.025]
+          border-white/8
+          bg-white/2.5
           px-3
           py-1.5
           font-mono

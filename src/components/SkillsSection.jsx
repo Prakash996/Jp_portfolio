@@ -5,6 +5,7 @@ import "@/css/SkillsSection.css";
 import LayerComposition from "./ui/LayerComposition";
 import TextReveal from "@/components/ui/TextReveal"
 import Badge from "./ui/Badge";
+import BorderBottomLine from "@/components/ui/BorderBottomLine";
 
 function SkillsSection() {
   return (
@@ -249,29 +250,12 @@ function SkillsSection() {
           </div>
 
           {/* Bottom system bar */}
-          <div
-            className="
-              flex
-              h-9
-              items-center
-              justify-between
-              border-t
-              border-emerald-400/6
-              px-5
-              my-10
-              text-[8px]
-              uppercase
-              tracking-[0.25em]
-              text-white/20
-              sm:px-8
-            "
-          >
+          <BorderBottomLine className="mt-10 sm:mt-12">
             <span>SYS // TECHNOLOGY_MATRIX</span>
-
             <span className="text-emerald-400/40">
               ONLINE
             </span>
-          </div>
+          </BorderBottomLine>
         </div>
       </div>
     </section>

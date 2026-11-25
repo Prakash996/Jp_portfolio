@@ -1,0 +1,247 @@
+[
+  {
+    "name": "JavaScript",
+    "category": "core",
+    "icon": "simple-icons:javascript",
+    "color": "#F7DF1E",
+    "note": "The language behind interactive interfaces, browser behavior, and modern web applications."
+  },
+  {
+    "name": "React.js",
+    "category": "core",
+    "icon": "simple-icons:react",
+    "color": "#61DAFB",
+    "note": "Component-driven interfaces with clean state, reusable patterns, and predictable data flow."
+  },
+  {
+    "name": "Next.js",
+    "category": "core",
+    "icon": "simple-icons:nextdotjs",
+    "color": "#FFFFFF",
+    "note": "A React framework for routing, server rendering, and production-ready web applications."
+  },
+  {
+    "name": "Node.js",
+    "category": "core",
+    "icon": "simple-icons:nodedotjs",
+    "color": "#339933",
+    "note": "JavaScript runtime used to build APIs, automation, and developer tooling."
+  },
+  {
+    "name": "HTML5",
+    "category": "frontend",
+    "icon": "simple-icons:html5",
+    "color": "#E34F26",
+    "note": "Semantic, accessible markup that gives web pages their structure and meaning."
+  },
+  {
+    "name": "CSS3",
+    "category": "frontend",
+    "icon": "simple-icons:css3",
+    "color": "#1572B6",
+    "note": "Responsive layouts, visual styling, and animation for polished web experiences."
+  },
+  {
+    "name": "Bootstrap",
+    "category": "frontend",
+    "icon": "simple-icons:bootstrap",
+    "color": "#7952B3",
+    "note": "A component and utility toolkit for building responsive interfaces quickly."
+  },
+  {
+    "name": "jQuery",
+    "category": "frontend",
+    "icon": "simple-icons:jquery",
+    "color": "#0769AD",
+    "note": "A JavaScript library for DOM manipulation, events, and maintaining legacy interfaces."
+  },
+  {
+    "name": "Responsive Design",
+    "category": "frontend",
+    "icon": "simple-icons:css3",
+    "color": "#10B981",
+    "note": "Layouts and interactions that adapt cleanly across mobile, tablet, and desktop screens."
+  },
+  {
+    "name": "Angular",
+    "category": "frameworks",
+    "icon": "simple-icons:angular",
+    "color": "#DD0031",
+    "note": "A structured framework for developing feature-rich, component-based web applications."
+  },
+  {
+    "name": "Redux",
+    "category": "frameworks",
+    "icon": "simple-icons:redux",
+    "color": "#764ABC",
+    "note": "Predictable state management for applications with shared and evolving UI state."
+  },
+  {
+    "name": "Express.js",
+    "category": "frameworks",
+    "icon": "simple-icons:express",
+    "color": "#FFFFFF",
+    "note": "A lightweight Node.js framework for building APIs and server-side web routes."
+  },
+  {
+    "name": "Electron.js",
+    "category": "frameworks",
+    "icon": "simple-icons:electron",
+    "color": "#47848F",
+    "note": "A framework for building cross-platform desktop applications with web technologies."
+  },
+  {
+    "name": "NW.js",
+    "category": "frameworks",
+    "icon": "mdi:compass-outline",
+    "color": "#34D399",
+    "note": "A runtime for creating desktop applications with JavaScript and web technologies."
+  },
+  {
+    "name": "HCL Volt Iris",
+    "category": "frameworks",
+    "icon": "simple-icons:hcl",
+    "color": "#1261FE",
+    "note": "An enterprise low-code platform for creating and modernizing business applications."
+  },
+  {
+    "name": "TestNG",
+    "category": "testing",
+    "icon": null,
+    "color": "#FF6F00",
+    "note": "A Java testing framework for organizing and running automated test suites."
+  },
+  {
+    "name": "Sikuli",
+    "category": "testing",
+    "icon": "simple-icons:python",
+    "color": "#3776AB",
+    "note": "Visual automation for interacting with application interfaces through image recognition."
+  },
+  {
+    "name": "Selenium",
+    "category": "testing",
+    "icon": "simple-icons:selenium",
+    "color": "#43B02A",
+    "note": "Browser automation for exercising web applications across browsers and environments."
+  },
+  {
+    "name": "Mocha",
+    "category": "testing",
+    "icon": "simple-icons:mocha",
+    "color": "#8D6748",
+    "note": "A flexible JavaScript test framework for running and reporting automated tests."
+  },
+  {
+    "name": "Git",
+    "category": "tools",
+    "icon": "simple-icons:git",
+    "color": "#F05032",
+    "note": "Version control for tracking changes and collaborating safely across branches."
+  },
+  {
+    "name": "GitHub",
+    "category": "tools",
+    "icon": "simple-icons:github",
+    "color": "#FFFFFF",
+    "note": "Code hosting and collaboration through reviews, issues, and automation workflows."
+  },
+  {
+    "name": "Jenkins",
+    "category": "tools",
+    "icon": "simple-icons:jenkins",
+    "color": "#D24939",
+    "note": "Automation server used to build, test, and deploy software through CI pipelines."
+  },
+  {
+    "name": "Jira",
+    "category": "tools",
+    "icon": "simple-icons:jira",
+    "color": "#0052CC",
+    "note": "Project tracking for organizing issues, tasks, and software delivery workflows."
+  },
+  {
+    "name": "Eclipse",
+    "category": "tools",
+    "icon": "simple-icons:eclipseide",
+    "color": "#A88BFF",
+    "note": "An extensible IDE for developing and debugging applications across multiple languages."
+  },
+  {
+    "name": "Eclipse Theia",
+    "category": "tools",
+    "icon": "mdi:code-braces",
+    "color": "#24BFA5",
+    "note": "An extensible platform for building cloud and desktop developer tools."
+  },
+  {
+    "name": "MySQL",
+    "category": "database",
+    "icon": "simple-icons:mysql",
+    "color": "#4479A1",
+    "note": "A relational database for storing and querying structured application data."
+  },
+  {
+    "name": "SQLite",
+    "category": "database",
+    "icon": "simple-icons:sqlite",
+    "color": "#003B57",
+    "note": "A lightweight embedded relational database stored directly in an application file."
+  },
+  {
+    "name": "HCL Domino",
+    "category": "database",
+    "icon": "simple-icons:hcl",
+    "color": "#1261FE",
+    "note": "An enterprise platform for collaboration, application services, and business data."
+  },
+  {
+    "name": "HCL HEI",
+    "category": "database",
+    "icon": "simple-icons:hcl",
+    "color": "#1261FE",
+    "note": "Integration tooling for connecting enterprise systems and synchronizing business data."
+  },
+  {
+    "name": "TypeScript",
+    "category": "core",
+    "icon": "simple-icons:typescript",
+    "color": "#3178C6",
+    "note": "Typed JavaScript that helps catch mistakes early and makes larger codebases easier to maintain."
+  },
+  {
+    "name": "Tailwind CSS",
+    "category": "frontend",
+    "icon": "simple-icons:tailwindcss",
+    "color": "#06B6D4",
+    "note": "Utility-first styling for building consistent, responsive interfaces directly in markup."
+  },
+  {
+    "name": "Figma",
+    "category": "tools",
+    "icon": "simple-icons:figma",
+    "color": "#F24E1E",
+    "note": "Collaborative interface design and prototyping for translating ideas into usable UI."
+  },
+  {
+    "name": "MongoDB",
+    "category": "database",
+    "icon": "simple-icons:mongodb",
+    "color": "#47A248",
+    "note": "A document database for storing flexible JSON-like application data."
+  },
+  {
+    "name": "Firebase",
+    "category": "database",
+    "icon": "simple-icons:firebase",
+    "color": "#FFCA28",
+    "note": "A backend platform offering services such as authentication, realtime data, and hosting."
+  },
+  {
+    "name": "Python",
+    "category": "core",
+    "icon": "simple-icons:python",
+    "color": "#3776AB",
+    "note": "A versatile language for scripting, automation, and general-purpose development."
+  }
+]

@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
 
-export default function Badge({ text = "Work in Progress" }) {
+export default function Badge({ text = "Work in Progress", className = "" }) {
   return (
     <motion.div
-      className="
+      className={`
         mb-6
         flex
         w-fit
@@ -19,7 +19,8 @@ export default function Badge({ text = "Work in Progress" }) {
         uppercase
         tracking-[0.2em]
         text-emerald-300/90
-      "
+        ${className}
+      `}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{

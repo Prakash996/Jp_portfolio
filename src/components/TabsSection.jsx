@@ -22,11 +22,14 @@ import {
   SiGithub,
   SiHcl,
   SiHtml5,
+  SiFigma,
+  SiFirebase,
   SiJenkins,
   SiJira,
   SiJavascript,
   SiJquery,
   SiMocha,
+  SiMongodb,
   SiMysql,
   SiNextdotjs,
   SiNodedotjs,
@@ -35,9 +38,12 @@ import {
   SiRedux,
   SiSelenium,
   SiSqlite,
+  SiTailwindcss,
+  SiTypescript,
 } from "react-icons/si";
 
 import "@/css/TabsSection.css";
+import skillsData from "@/data/skills.json";
 
 const ICONS = {
   "simple-icons:javascript": SiJavascript,
@@ -63,6 +69,11 @@ const ICONS = {
   "simple-icons:eclipseide": SiEclipseide,
   "simple-icons:mysql": SiMysql,
   "simple-icons:sqlite": SiSqlite,
+  "simple-icons:tailwindcss": SiTailwindcss,
+  "simple-icons:typescript": SiTypescript,
+  "simple-icons:figma": SiFigma,
+  "simple-icons:firebase": SiFirebase,
+  "simple-icons:mongodb": SiMongodb,
   "mdi:compass-outline": Compass,
   "mdi:code-braces": Code2,
   "mdi:view-grid-outline": LayoutGrid,
@@ -74,216 +85,6 @@ const ICONS = {
   "mdi:database-outline": Database,
   "mdi:help-circle-outline": CircleHelp,
 };
-
-/* =========================================================
-   SKILLS DATA
-========================================================= */
-
-const SKILLS = [
-  /* =======================================================
-     CORE
-  ======================================================= */
-
-  {
-    name: "JavaScript",
-    category: "core",
-    icon: "simple-icons:javascript",
-    color: "#F7DF1E",
-  },
-  {
-    name: "React.js",
-    category: "core",
-    icon: "simple-icons:react",
-    color: "#61DAFB",
-  },
-  {
-    name: "Next.js",
-    category: "core",
-    icon: "simple-icons:nextdotjs",
-    color: "#FFFFFF",
-  },
-  {
-    name: "Node.js",
-    category: "core",
-    icon: "simple-icons:nodedotjs",
-    color: "#339933",
-  },
-
-  /* =======================================================
-     FRONTEND
-  ======================================================= */
-
-  {
-    name: "HTML5",
-    category: "frontend",
-    icon: "simple-icons:html5",
-    color: "#E34F26",
-  },
-  {
-    name: "CSS3",
-    category: "frontend",
-    icon: "simple-icons:css3",
-    color: "#1572B6",
-  },
-  {
-    name: "Bootstrap",
-    category: "frontend",
-    icon: "simple-icons:bootstrap",
-    color: "#7952B3",
-  },
-  {
-    name: "jQuery",
-    category: "frontend",
-    icon: "simple-icons:jquery",
-    color: "#0769AD",
-  },
-  {
-    name: "Responsive Design",
-    category: "frontend",
-    icon: "simple-icons:css3",
-    color: "#10B981",
-  },
-
-  /* =======================================================
-     FRAMEWORKS & RUNTIMES
-  ======================================================= */
-
-  {
-    name: "Angular",
-    category: "frameworks",
-    icon: "simple-icons:angular",
-    color: "#DD0031",
-  },
-  {
-    name: "Redux",
-    category: "frameworks",
-    icon: "simple-icons:redux",
-    color: "#764ABC",
-  },
-  {
-    name: "Express.js",
-    category: "frameworks",
-    icon: "simple-icons:express",
-    color: "#FFFFFF",
-  },
-  {
-    name: "Electron.js",
-    category: "frameworks",
-    icon: "simple-icons:electron",
-    color: "#47848F",
-  },
-  {
-    name: "NW.js",
-    category: "frameworks",
-    icon: "mdi:compass-outline",
-    color: "#34D399",
-  },
-  {
-    name: "HCL Volt Iris",
-    category: "frameworks",
-    icon: "simple-icons:hcl",
-    color: "#1261FE",
-  },
-
-  /* =======================================================
-     TESTING & AUTOMATION
-  ======================================================= */
-
-  {
-    name: "TestNG",
-    category: "testing",
-    icon: null,
-    color: "#FF6F00",
-  },
-  {
-    name: "Sikuli",
-    category: "testing",
-    icon: "simple-icons:python",
-    color: "#3776AB",
-  },
-  {
-    name: "Selenium",
-    category: "testing",
-    icon: "simple-icons:selenium",
-    color: "#43B02A",
-  },
-  {
-    name: "Mocha",
-    category: "testing",
-    icon: "simple-icons:mocha",
-    color: "#8D6748",
-  },
-
-  /* =======================================================
-     DEVELOPER TOOLS
-  ======================================================= */
-
-  {
-    name: "Git",
-    category: "tools",
-    icon: "simple-icons:git",
-    color: "#F05032",
-  },
-  {
-    name: "GitHub",
-    category: "tools",
-    icon: "simple-icons:github",
-    color: "#FFFFFF",
-  },
-  {
-    name: "Jenkins",
-    category: "tools",
-    icon: "simple-icons:jenkins",
-    color: "#D24939",
-  },
-  {
-    name: "Jira",
-    category: "tools",
-    icon: "simple-icons:jira",
-    color: "#0052CC",
-  },
-  {
-    name: "Eclipse",
-    category: "tools",
-    icon: "simple-icons:eclipseide",
-    color: "#A88BFF",
-  },
-  {
-    name: "Eclipse Theia",
-    category: "tools",
-    icon: "mdi:code-braces",
-    color: "#24BFA5",
-  },
-
-  /* =======================================================
-     DATABASES & SYSTEMS
-  ======================================================= */
-
-  {
-    name: "MySQL",
-    category: "database",
-    icon: "simple-icons:mysql",
-    color: "#4479A1",
-  },
-  {
-    name: "SQLite",
-    category: "database",
-    icon: "simple-icons:sqlite",
-    color: "#003B57",
-  },
-  {
-    name: "HCL Domino",
-    category: "database",
-    icon: "simple-icons:hcl",
-    color: "#1261FE",
-  },
-  {
-    name: "HCL HEI",
-    category: "database",
-    icon: "simple-icons:hcl",
-    color: "#1261FE",
-  },
-];
 
 /* =========================================================
    SKILL TABS
@@ -555,7 +356,7 @@ function SkillCard({ skill, index }) {
           bottom-2
           h-px
           w-0
-          bg-[var(--brand-color)]
+          bg-(--brand-color)
           opacity-0
           transition-all
           duration-300
@@ -600,7 +401,7 @@ function SkillTab({
         text-[9px]
         font-semibold
         uppercase
-        tracking-[0.1em]
+        tracking-widest
         transition-all
         duration-300
 
@@ -615,8 +416,8 @@ function SkillTab({
               border-transparent
               bg-transparent
               text-slate-600
-              hover:border-white/[0.04]
-              hover:bg-white/[0.02]
+              hover:border-white/4
+              hover:bg-white/2
               hover:text-slate-400
             `
         }
@@ -676,7 +477,7 @@ function SkillTab({
 ========================================================= */
 
 export default function SkillGrid({
-  data = SKILLS,
+  data = skillsData,
 }) {
   const [activeTab, setActiveTab] = useState("all");
 
@@ -769,7 +570,7 @@ export default function SkillGrid({
               id="skills-title-wrapper"
               className="
                 shrink-0
-                sm:w-[105px]
+                sm:w-26.25
               "
             >
               <h2
@@ -849,7 +650,7 @@ export default function SkillGrid({
                 hidden
                 shrink-0
                 sm:block
-                sm:w-[75px]
+                sm:w-18.75
                 sm:text-right
               "
             >
@@ -859,7 +660,7 @@ export default function SkillGrid({
                   rounded-full
                   border
                   border-emerald-400/10
-                  bg-emerald-400/[0.04]
+                  bg-emerald-400/4
                   px-2.5
                   py-1
                   text-[9px]

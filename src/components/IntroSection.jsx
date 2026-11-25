@@ -2,7 +2,6 @@
 
 import { motion } from "motion/react";
 import {
-  ArrowDownRight,
   Code2,
   MapPin,
   Sparkles,

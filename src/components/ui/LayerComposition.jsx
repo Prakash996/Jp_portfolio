@@ -1,4 +1,4 @@
-import React, {
+import {
   memo,
   useCallback,
   useEffect,
@@ -1283,7 +1283,7 @@ export function LayerCompositionDemo() {
     <section
       className="
         relative
-        min-h-[680px]
+        min-h-170
         w-full
         overflow-hidden
         bg-[#010604]
@@ -1553,11 +1553,11 @@ export function LayerCompositionDemo() {
           className="
             relative
             flex
-            min-h-[520px]
+            min-h-130
             w-full
             items-center
             justify-center
-            md:min-h-[620px]
+            md:min-h-155
             md:justify-end
             lg:justify-center
           "
@@ -1565,10 +1565,10 @@ export function LayerCompositionDemo() {
           <div
             className="
               relative
-              h-[540px]
+              h-135
               w-full
-              max-w-[580px]
-              md:h-[600px]
+              max-w-145
+              md:h-150
             "
           >
             <LayerComposition
